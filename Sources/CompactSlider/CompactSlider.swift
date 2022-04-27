@@ -7,6 +7,8 @@ import SwiftUI
 
 public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View {
     
+    public typealias Progress = (from: Double, to: Double)
+    
     @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.isEnabled) var isEnabled
     
@@ -16,7 +18,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     private let scaleStep: Value
     private let isRangeValue: Bool
     private let direction: CompactSliderDirection
-    @ViewBuilder private var valueLabel: () -> ValueLabel
+    private let handleVisibility: HandleVisibility
+    @ViewBuilder private var valueLabel: (Progress) -> ValueLabel
     
     private var progressStep: Double = 0
     private var steps: Int = 0
@@ -33,7 +36,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         in range: ClosedRange<Value> = 0...1,
         step: Value = 0,
         direction: CompactSliderDirection = .leading,
-        @ViewBuilder valueLabel: @escaping () -> ValueLabel
+        handleVisibility: HandleVisibility = .standard,
+        @ViewBuilder valueLabel: @escaping (Progress) -> ValueLabel
     ) {
         _fromValue = value
         _toValue = .constant(0)
@@ -41,6 +45,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         scaleRange = range
         scaleStep = step
         self.direction = direction
+        self.handleVisibility = handleVisibility
         self.valueLabel = valueLabel
         let rangeLength = Double(range.length)
         
@@ -59,7 +64,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         to value2: Binding<Value>,
         in range: ClosedRange<Value> = 0...1,
         step: Value = 0,
-        @ViewBuilder valueLabel: @escaping () -> ValueLabel
+        handleVisibility: HandleVisibility = .standard,
+        @ViewBuilder valueLabel: @escaping (Progress) -> ValueLabel
     ) {
         _fromValue = value
         _toValue = value2
@@ -67,6 +73,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         scaleRange = range
         scaleStep = step
         direction = .leading
+        self.handleVisibility = handleVisibility
         self.valueLabel = valueLabel
         let rangeLength = Double(range.length)
         
@@ -122,27 +129,32 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 ZStack(alignment: .center) {
                     progressView(in: proxy.size)
                     
-                    if isHovering || isDragging {
-                        progressHandlerView(progress, size: proxy.size)
+                    if !handleVisibility.isHidden,
+                       handleVisibility.isAlways || isHovering || isDragging {
+                        progressHandleView(progress, size: proxy.size)
                         
-                        if isRangeValue {
-                            progressHandlerView(progress2, size: proxy.size)
+                        if !handleVisibility.isHidden, isRangeValue {
+                            progressHandleView(progress2, size: proxy.size)
                         }
                         
-                        scaleView(in: proxy.size)
-                    } else if direction == .center && abs(progress - 0.5) < 0.02 {
-                        progressHandlerView(progress, size: proxy.size)
+                        if isHovering || isDragging {
+                            scaleView(in: proxy.size)
+                        }
                     } else if isRangeValue, abs(progress2 - progress) < 0.01 {
-                        progressHandlerView(progress, size: proxy.size)
+                        progressHandleView(progress, size: proxy.size)
+                    } else if direction == .center && abs(progress - 0.5) < 0.02 {
+                        progressHandleView(progress, size: proxy.size)
                     }
                 }
                 .frame(width: proxy.size.width, height: proxy.size.height)
                 .onChange(of: dragLocationX) { onDragLocationXChange($0, size: proxy.size) }
             }
             
-            HStack(content: valueLabel)
-                .padding(.horizontal, .labelPadding)
-                .foregroundColor(Color.label.opacity(isHovering || isDragging ? 1 : 0.7))
+            HStack {
+                valueLabel((from: progress, to: progress2))
+            }
+            .padding(.horizontal, .labelPadding)
+            .foregroundColor(Color.label.opacity(isHovering || isDragging ? 1 : 0.7))
         }
         .opacity(isEnabled ? 1 : 0.5)
         #if os(macOS)
@@ -151,6 +163,58 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         .frame(minHeight: 44)
         #endif
         .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+// MARK: - Handle Visibility
+
+extension CompactSlider {
+    public enum HandleVisibility {
+        case hovering(width: CGFloat)
+        case always(width: CGFloat)
+        case hidden
+        
+        public static var standard: HandleVisibility {
+            #if os(macOS)
+            .hovering(width: 3)
+            #else
+            .always(width: 3)
+            #endif
+        }
+        
+        var isHovering: Bool {
+            if case .hovering = self {
+                return true
+            }
+            
+            return false
+        }
+        
+        var isAlways: Bool {
+            if case .always = self {
+                return true
+            }
+            
+            return false
+        }
+        
+        var isHidden: Bool {
+            if case .hidden = self {
+                return true
+            }
+            
+            return false
+        }
+        
+        var width: CGFloat {
+            switch self {
+            case .hovering(width: let width),
+                 .always(width: let width):
+                return width
+            case .hidden:
+                return 0
+            }
+        }
     }
 }
 
@@ -202,14 +266,18 @@ private extension CompactSlider {
     }
 }
 
-// MARK: - Progress Handler View
+// MARK: - Progress Handle View
 
 private extension CompactSlider {
-    func progressHandlerView(_ progress: Double, size: CGSize) -> some View {
-        Rectangle()
-            .fill(isHovering || isDragging ? Color.accentColor : Color.label.opacity(0.2))
-            .frame(width: 3)
-            .offset(x: (size.width - 3) * (progress - 0.5))
+    func progressHandleView(_ progress: Double, size: CGSize) -> some View {
+        Group {
+            if handleVisibility.width > 0 {
+                Rectangle()
+                    .fill(isHovering || isDragging ? Color.accentColor : Color.label.opacity(0.2))
+                    .frame(width: handleVisibility.width)
+                    .offset(x: (size.width - handleVisibility.width) * (progress - 0.5))
+            }
+        }
     }
 }
 
@@ -354,71 +422,75 @@ struct CompactSlider_Previews: PreviewProvider {
         Group {
             contentView
                 .preferredColorScheme(.light)
-                .padding()
             
             contentView
                 .preferredColorScheme(.dark)
-                .padding()
         }
-        .previewLayout(.sizeThatFits)
+        .padding()
     }
     
     private static var contentView: some View {
         VStack(spacing: 16) {
             // 1. The default case.
-            CompactSlider(value: .constant(0.5)) {
+            CompactSlider(value: .constant(0.5)) { _ in
                 Text("Default (leading)")
                 Spacer()
                 Text("0.5")
             }
             
-            // Handler in the centre for better representation of negative values.
-            // 2.1. The value is 0, which should show the handler as there is no value to show.
-            CompactSlider(value: .constant(0.0), in: -1.0...1.0, direction: .center) {
+            // Handle in the centre for better representation of negative values.
+            // 2.1. The value is 0, which should show the handle as there is no value to show.
+            CompactSlider(value: .constant(0.0), in: -1.0...1.0, direction: .center) { _ in
                 Text("Center -1.0...1.0")
                 Spacer()
                 Text("0.0")
             }
             
             // 2.2. When the value is not 0, the value can be shown with a rectangle.
-            CompactSlider(value: .constant(0.3), in: -1.0...1.0, direction: .center) {
+            CompactSlider(value: .constant(0.3), in: -1.0...1.0, direction: .center) { _ in
                 Text("Center -1.0...1.0")
                 Spacer()
                 Text("0.3")
             }
             
             // 3. The value is filled in on the right-hand side.
-            CompactSlider(value: .constant(0.3), direction: .trailing) {
+            CompactSlider(value: .constant(0.3), direction: .trailing) { _ in
                 Text("Trailing")
                 Spacer()
                 Text("0.3")
             }
             
             // 4. Set a range of values in specific step to change.
-            CompactSlider(value: .constant(70), in: 0...200, step: 10) {
+            CompactSlider(value: .constant(70), in: 0...200, step: 10) { _ in
                 Text("Snapped")
                 Spacer()
                 Text("70")
             }
             
             // 4. Set a range of values in specific step to change from the center.
-            CompactSlider(value: .constant(0.0), in: -10...10, step: 1, direction: .center) {
+            CompactSlider(value: .constant(0.0), in: -10...10, step: 1, direction: .center) { _ in
                 Text("Center")
                 Spacer()
                 Text("0.0")
             }
             
             // 5. Get the range of values.
+            // Colourful version with `.prominent` style.
             VStack {
-                // Colourful version with `.prominent` style.
-                CompactSlider(from: .constant(0.4), to: .constant(0.7)) {
+                CompactSlider(value: .constant(0.5)) { _ in
+                    Text("Default")
+                    Spacer()
+                    Text("0.5")
+                }
+                
+                CompactSlider(from: .constant(0.4), to: .constant(0.7)) { _ in
                     Text("Range")
                     Spacer()
                     Text("0.2 - 0.7")
                 }
                 
                 // Switch back to the `.default` style.
-                CompactSlider(from: .constant(0.4), to: .constant(0.7)) {
+                CompactSlider(from: .constant(0.4), to: .constant(0.7)) { _ in
                     Text("Range")
                     Spacer()
                     Text("0.2 - 0.7")
@@ -433,6 +505,30 @@ struct CompactSlider_Previews: PreviewProvider {
                     useGradientBackground: true
                 )
             )
+            
+            // 6. Show the handle at a progress position.
+            GeometryReader { proxy in
+                CompactSlider(
+                    value: .constant(0.5),
+                    handleVisibility: .hovering(width: 3)
+                ) { progress in
+                    Text("\(Int(100 * progress.from))%")
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 8)
+                        .foregroundColor(.white)
+                        .background(Capsule().fill(Color.accentColor))
+                        .offset(
+                            x: max(
+                                proxy.size.width / -2 + 30,
+                                min(
+                                    proxy.size.width / 2 - 36,
+                                    proxy.size.width * (progress.from - 0.5)
+                                )
+                            )
+                        )
+                }
+            }
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
