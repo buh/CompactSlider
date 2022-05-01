@@ -7,17 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A4AD684281AEC0800CC51CB /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 4A4AD683281AEC0800CC51CB /* CompactSlider */; };
+		4A4AD686281AEC0D00CC51CB /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 4A4AD685281AEC0D00CC51CB /* CompactSlider */; };
 		4A6087B828174525001E3756 /* CompactSliderDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6087A828174522001E3756 /* CompactSliderDemoApp.swift */; };
 		4A6087B928174525001E3756 /* CompactSliderDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6087A828174522001E3756 /* CompactSliderDemoApp.swift */; };
 		4A6087BA28174525001E3756 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6087A928174522001E3756 /* ContentView.swift */; };
 		4A6087BB28174525001E3756 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6087A928174522001E3756 /* ContentView.swift */; };
 		4A6087BC28174525001E3756 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A6087AA28174525001E3756 /* Assets.xcassets */; };
 		4A6087BD28174525001E3756 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A6087AA28174525001E3756 /* Assets.xcassets */; };
-		4A90771F2818B44A0030829B /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 4A90771E2818B44A0030829B /* CompactSlider */; };
-		4A9077222818B4550030829B /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9077212818B4550030829B /* CompactSlider */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4A4AD681281ADC9400CC51CB /* CompactSlider */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = CompactSlider; path = ..; sourceTree = "<group>"; };
 		4A6087A828174522001E3756 /* CompactSliderDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactSliderDemoApp.swift; sourceTree = "<group>"; };
 		4A6087A928174522001E3756 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4A6087AA28174525001E3756 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -31,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A90771F2818B44A0030829B /* CompactSlider in Frameworks */,
+				4A4AD684281AEC0800CC51CB /* CompactSlider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,19 +40,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A9077222818B4550030829B /* CompactSlider in Frameworks */,
+				4A4AD686281AEC0D00CC51CB /* CompactSlider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A4AD680281ADC9400CC51CB /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				4A4AD681281ADC9400CC51CB /* CompactSlider */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		4A4AD682281AEC0800CC51CB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4A6087A228174522001E3756 = {
 			isa = PBXGroup;
 			children = (
+				4A4AD680281ADC9400CC51CB /* Packages */,
 				4A6087A728174522001E3756 /* Shared */,
 				4A6087B628174525001E3756 /* macOS */,
 				4A6087B028174525001E3756 /* Products */,
+				4A4AD682281AEC0800CC51CB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,7 +117,7 @@
 			);
 			name = "CompactSliderDemo (iOS)";
 			packageProductDependencies = (
-				4A90771E2818B44A0030829B /* CompactSlider */,
+				4A4AD683281AEC0800CC51CB /* CompactSlider */,
 			);
 			productName = "CompactSliderDemo (iOS)";
 			productReference = 4A6087AF28174525001E3756 /* CompactSliderDemo.app */;
@@ -119,7 +137,7 @@
 			);
 			name = "CompactSliderDemo (macOS)";
 			packageProductDependencies = (
-				4A9077212818B4550030829B /* CompactSlider */,
+				4A4AD685281AEC0D00CC51CB /* CompactSlider */,
 			);
 			productName = "CompactSliderDemo (macOS)";
 			productReference = 4A6087B528174525001E3756 /* CompactSliderDemo.app */;
@@ -153,8 +171,6 @@
 			);
 			mainGroup = 4A6087A228174522001E3756;
 			packageReferences = (
-				4A90771D2818B44A0030829B /* XCRemoteSwiftPackageReference "CompactSlider" */,
-				4A9077202818B4550030829B /* XCRemoteSwiftPackageReference "CompactSlider" */,
 			);
 			productRefGroup = 4A6087B028174525001E3756 /* Products */;
 			projectDirPath = "";
@@ -465,34 +481,13 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		4A90771D2818B44A0030829B /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/buh/CompactSlider.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-		4A9077202818B4550030829B /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/buh/CompactSlider.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		4A90771E2818B44A0030829B /* CompactSlider */ = {
+		4A4AD683281AEC0800CC51CB /* CompactSlider */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4A90771D2818B44A0030829B /* XCRemoteSwiftPackageReference "CompactSlider" */;
 			productName = CompactSlider;
 		};
-		4A9077212818B4550030829B /* CompactSlider */ = {
+		4A4AD685281AEC0D00CC51CB /* CompactSlider */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4A90771D2818B44A0030829B /* XCRemoteSwiftPackageReference "CompactSlider" */;
 			productName = CompactSlider;
 		};
 /* End XCSwiftPackageProductDependency section */
