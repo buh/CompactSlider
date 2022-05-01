@@ -187,8 +187,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                     isRangeValue: isRangeValue,
                     isHovering: isHovering,
                     isDragging: isDragging,
-                    progress: lowerProgress,
-                    progress2: upperProgress,
+                    lowerProgress: lowerProgress,
+                    upperProgress: upperProgress,
                     label: .init(content: contentView)
                 )
             )
@@ -526,10 +526,10 @@ public struct CompactSliderState {
     public let isHovering: Bool
     /// Returns true when dragging the handle.
     public let isDragging: Bool
-    /// The progress type represents the position of the given value within bounds, mapped into 0...1.
+    /// The progress represents the position of the given value within bounds, mapped into 0...1.
     /// This progress should be used to track a single value or a lower value for a range of values.
     public let lowerProgress: Double
-    /// The progress type represents the position of the given value within bounds, mapped into 0...1.
+    /// The progress represents the position of the given value within bounds, mapped into 0...1.
     /// This progress should only be used to track the upper value for the range of values.
     public let upperProgress: Double
     /// Position of the handle while dragging it.

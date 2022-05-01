@@ -11,6 +11,9 @@ import UIKit
 import AppKit
 #endif
 
+/// A type that applies standard interaction behaviour and a custom appearance to all sliders within a view hierarchy.
+///
+/// To configure the current slider style for a view hierarchy, use the `compactSliderStyle(_:)` modifier.
 public protocol CompactSliderStyle {
     associatedtype Body: View
     typealias Configuration = CompactSliderStyleConfiguration
@@ -20,6 +23,7 @@ public protocol CompactSliderStyle {
 
 // MARK: - Default Styles
 
+/// The default slider style.
 public struct DefaultCompactSliderStyle: CompactSliderStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -35,10 +39,14 @@ public extension CompactSliderStyle where Self == DefaultCompactSliderStyle {
     static var `default`: DefaultCompactSliderStyle { DefaultCompactSliderStyle() }
 }
 
+/// A slider style that applies prominent artwork based on the slider’s context.
 public struct ProminentCompactSliderStyle: CompactSliderStyle {
     
+    /// The color of the lower value within bounds.
     public let lowerColor: Color
+    /// The color of the upper value within bounds.
     public let upperColor: Color
+    /// Flag which allows the specified colours (`lowerColor`, `upperColor`) to be used for the gradient background.
     public var useGradientBackground: Bool = false
     
     public func makeBody(configuration: Configuration) -> some View {
@@ -62,14 +70,15 @@ public struct ProminentCompactSliderStyle: CompactSliderStyle {
             )
             .accentColor(
                 configuration.isRangeValue
-                ? abs(configuration.progress2 - 0.5) > abs(configuration.progress - 0.5) ? upperColor : lowerColor
-                : configuration.progress > 0.5 ? upperColor : lowerColor
+                ? abs(configuration.upperProgress - 0.5) > abs(configuration.lowerProgress - 0.5) ? upperColor : lowerColor
+                : configuration.lowerProgress > 0.5 ? upperColor : lowerColor
             )
             .clipShape(RoundedRectangle(cornerRadius: .cornerRadius))
     }
 }
 
 public extension CompactSliderStyle where Self == ProminentCompactSliderStyle {
+    /// A slider style that applies prominent artwork based on the slider’s context.
     static func prominent(
         lowerColor: Color,
         upperColor: Color,
@@ -85,6 +94,7 @@ public extension CompactSliderStyle where Self == ProminentCompactSliderStyle {
 
 // MARK: - Configuration
 
+/// Configuration for creating a style for the slider.
 public struct CompactSliderStyleConfiguration {
     public struct Label: View {
         public var body: AnyView
@@ -94,12 +104,21 @@ public struct CompactSliderStyleConfiguration {
         }
     }
     
+    /// A direction in which the slider will indicate the selected value.
     public let direction: CompactSliderDirection
+    /// True if the slider uses a range of values.
     public let isRangeValue: Bool
+    /// True, when hovering the slider.
     public let isHovering: Bool
+    /// True, when dragging the slider.
     public let isDragging: Bool
-    public let progress: Double
-    public let progress2: Double
+    /// The progress represents the position of the selected value within bounds, mapped into 0...1.
+    /// This progress should be used to track a single value or a lower value for a range of values.
+    public let lowerProgress: Double
+    /// The progress represents the position of the selected value within bounds, mapped into 0...1.
+    /// This progress should only be used to track the upper value for the range of values.
+    public let upperProgress: Double
+    /// A view that describes the effect of calling the slider’s action.
     public let label: Label
 }
 
@@ -128,7 +147,7 @@ public struct AnyCompactSliderStyle: CompactSliderStyle {
     }
 }
 
-public struct SecondaryAppearance {
+struct SecondaryAppearance {
     public let color: Color
     public var progressOpacity: Double = 0.075
     public var handleOpacity: Double = 0.2
@@ -136,8 +155,8 @@ public struct SecondaryAppearance {
     public var smallScaleOpacity: Double = 0.3
 }
 
-public struct CompactSliderSecondaryColorKey: EnvironmentKey {
-    public static var defaultValue = SecondaryAppearance(color: .label)
+struct CompactSliderSecondaryColorKey: EnvironmentKey {
+    static var defaultValue = SecondaryAppearance(color: .label)
 }
 
 extension EnvironmentValues {
@@ -151,10 +170,19 @@ extension EnvironmentValues {
 
 public extension View {
     
+    /// Sets the style for sliders within this view to a slider style with a custom appearance
+    /// and custom interaction behaviour.
     func compactSliderStyle<Style: CompactSliderStyle>(_ style: Style) -> some View {
         environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
     }
     
+    /// Sets secondary colors for sliders within this view to a slider style.
+    /// - Parameters:
+    ///   - color: the secondary color.
+    ///   - progressOpacity: the opacity for the progress view based on the secondary color.
+    ///   - handleOpacity: the opacity for the handle view based on the secondary color.
+    ///   - scaleOpacity: the opacity for the scale view based on the secondary color.
+    ///   - smallScaleOpacity: the opacity for the small scale view based on the secondary color.
     func compactSliderSecondaryColor(
         _ color: Color,
         progressOpacity: Double = 0.075,
