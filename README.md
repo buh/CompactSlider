@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="CompactSlider" src="https://user-images.githubusercontent.com/284922/165624054-c3404015-e746-4520-a74c-98aa79819b70.png">
+  <img width="640" alt="cover3" src="https://user-images.githubusercontent.com/284922/166153877-97536d02-1feb-4018-961a-c3646faffdc0.png">
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/Swift-5.6-orange" />
