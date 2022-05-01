@@ -23,6 +23,9 @@ public protocol CompactSliderStyle {
 public struct DefaultCompactSliderStyle: CompactSliderStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .foregroundColor(
+                Color.label.opacity(configuration.isHovering || configuration.isDragging ? 1 : 0.7)
+            )
             .background(Color.label.opacity(0.075))
             .clipShape(RoundedRectangle(cornerRadius: .cornerRadius))
     }
@@ -40,6 +43,9 @@ public struct ProminentCompactSliderStyle: CompactSliderStyle {
     
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .foregroundColor(
+                Color.label.opacity(configuration.isHovering || configuration.isDragging ? 1 : 0.7)
+            )
             .background(
                 Color.label
                     .opacity(
@@ -122,11 +128,50 @@ public struct AnyCompactSliderStyle: CompactSliderStyle {
     }
 }
 
+public struct SecondaryAppearance {
+    public let color: Color
+    public var progressOpacity: Double = 0.075
+    public var handleOpacity: Double = 0.2
+    public var scaleOpacity: Double = 0.8
+    public var smallScaleOpacity: Double = 0.3
+}
+
+public struct CompactSliderSecondaryColorKey: EnvironmentKey {
+    public static var defaultValue = SecondaryAppearance(color: .label)
+}
+
+extension EnvironmentValues {
+    var compactSliderSecondaryAppearance: SecondaryAppearance {
+        get { self[CompactSliderSecondaryColorKey.self] }
+        set { self[CompactSliderSecondaryColorKey.self] = newValue }
+    }
+}
+
 // MARK: - View Extension
 
 public extension View {
+    
     func compactSliderStyle<Style: CompactSliderStyle>(_ style: Style) -> some View {
         environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
+    }
+    
+    func compactSliderSecondaryColor(
+        _ color: Color,
+        progressOpacity: Double = 0.075,
+        handleOpacity: Double = 0.2,
+        scaleOpacity: Double = 0.8,
+        smallScaleOpacity: Double = 0.3
+    ) -> some View {
+        environment(
+            \.compactSliderSecondaryAppearance,
+             SecondaryAppearance(
+                color: color,
+                progressOpacity: progressOpacity,
+                handleOpacity: handleOpacity,
+                scaleOpacity: scaleOpacity,
+                smallScaleOpacity: smallScaleOpacity
+             )
+        )
     }
 }
 
