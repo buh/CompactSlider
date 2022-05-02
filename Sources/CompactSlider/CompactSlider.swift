@@ -73,7 +73,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     @Binding private var upperValue: Value
     private let bounds: ClosedRange<Value>
     private let step: Value
-    private let isRangeValue: Bool
+    private let isRangeValues: Bool
     private let direction: CompactSliderDirection
     private let handleVisibility: HandleVisibility
     @Binding private var state: CompactSliderState
@@ -115,7 +115,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ) {
         _lowerValue = value
         _upperValue = .constant(0)
-        isRangeValue = false
+        isRangeValues = false
         self.bounds = bounds
         self.step = step
         self.direction = direction
@@ -159,7 +159,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ) {
         _lowerValue = lowerValue
         _upperValue = upperValue
-        isRangeValue = true
+        isRangeValues = true
         self.bounds = bounds
         self.step = step
         direction = .leading
@@ -184,7 +184,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
             .makeBody(
                 configuration: CompactSliderStyleConfiguration(
                     direction: direction,
-                    isRangeValue: isRangeValue,
+                    isRangeValues: isRangeValues,
                     isHovering: isHovering,
                     isDragging: isDragging,
                     lowerProgress: lowerProgress,
@@ -229,14 +229,14 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                        handleVisibility.isAlways || isHovering || isDragging {
                         progressHandleView(lowerProgress, size: proxy.size)
                         
-                        if !handleVisibility.isHidden, isRangeValue {
+                        if !handleVisibility.isHidden, isRangeValues {
                             progressHandleView(upperProgress, size: proxy.size)
                         }
                         
                         if isHovering || isDragging {
                             scaleView(in: proxy.size)
                         }
-                    } else if isRangeValue, abs(upperProgress - lowerProgress) < 0.01 {
+                    } else if isRangeValues, abs(upperProgress - lowerProgress) < 0.01 {
                         progressHandleView(lowerProgress, size: proxy.size)
                     } else if direction == .center && abs(lowerProgress - 0.5) < 0.02 {
                         progressHandleView(lowerProgress, size: proxy.size)
@@ -275,7 +275,7 @@ private extension CompactSlider {
     }
     
     func progressWidth(_ size: CGSize) -> CGFloat {
-        if isRangeValue {
+        if isRangeValues {
             return size.width * abs(upperProgress - lowerProgress)
         }
         
@@ -293,7 +293,7 @@ private extension CompactSlider {
     func progressOffsetX(_ size: CGSize) -> CGFloat {
         let width = progressWidth(size)
         
-        if isRangeValue {
+        if isRangeValues {
             let offset = size.width * ((1 - (upperProgress - lowerProgress)) / -2 + lowerProgress)
             
             DispatchQueue.main.async {
@@ -380,7 +380,7 @@ private extension CompactSlider {
         if abs(upperProgress - lowerProgress) < 0.01 {
             isProgress2Nearest = newProgress > upperProgress
         } else {
-            isProgress2Nearest = isRangeValue && abs(lowerProgress - newProgress) > abs(upperProgress - newProgress)
+            isProgress2Nearest = isRangeValues && abs(lowerProgress - newProgress) > abs(upperProgress - newProgress)
         }
         
         guard progressStep > 0 else {
@@ -459,107 +459,6 @@ public enum CompactSliderDirection {
     case center
     /// The selected value will be indicated from the upper right-hand area of the boundary.
     case trailing
-}
-
-// MARK: - Handle Visibility
-
-extension CompactSlider {
-    /// A handle visibility determines the rules for showing the handle.
-    public enum HandleVisibility {
-        /// Shows the handle when hovering.
-        case hovering(width: CGFloat)
-        /// Always shows the handle.
-        case always(width: CGFloat)
-        /// Never shows the handle.
-        case hidden
-        
-        /// Default value.
-        public static var standard: HandleVisibility {
-            #if os(macOS)
-            .hovering(width: 3)
-            #else
-            .always(width: 3)
-            #endif
-        }
-        
-        var isHovering: Bool {
-            if case .hovering = self {
-                return true
-            }
-            
-            return false
-        }
-        
-        var isAlways: Bool {
-            if case .always = self {
-                return true
-            }
-            
-            return false
-        }
-        
-        var isHidden: Bool {
-            if case .hidden = self {
-                return true
-            }
-            
-            return false
-        }
-        
-        var width: CGFloat {
-            switch self {
-            case .hovering(width: let width),
-                 .always(width: let width):
-                return width
-            case .hidden:
-                return 0
-            }
-        }
-    }
-}
-
-// MARK: - State
-
-/// Represents the current slider state
-public struct CompactSliderState {
-    /// Returns true when the cursor is over the slider (macOS, iPadOS).
-    public let isHovering: Bool
-    /// Returns true when dragging the handle.
-    public let isDragging: Bool
-    /// The progress represents the position of the given value within bounds, mapped into 0...1.
-    /// This progress should be used to track a single value or a lower value for a range of values.
-    public let lowerProgress: Double
-    /// The progress represents the position of the given value within bounds, mapped into 0...1.
-    /// This progress should only be used to track the upper value for the range of values.
-    public let upperProgress: Double
-    /// Position of the handle while dragging it.
-    public let dragLocationX: (lower: CGFloat, upper: CGFloat)
-    
-    /// A flag for internal usage.
-    var isActive = true
-    
-    /// Initial state for the state.
-    public static let zero = CompactSliderState(
-        isHovering: false,
-        isDragging: false,
-        lowerProgress: 0,
-        upperProgress: 0,
-        dragLocationX: (0, 0)
-    )
-    
-    /// Inactive state, which will be ignored for updates.
-    public static let inactive: CompactSliderState = {
-        var state = CompactSliderState(
-            isHovering: false,
-            isDragging: false,
-            lowerProgress: 0,
-            upperProgress: 0,
-            dragLocationX: (0, 0)
-        )
-        
-        state.isActive = false
-        return state
-    }()
 }
 
 // MARK: - Scale
