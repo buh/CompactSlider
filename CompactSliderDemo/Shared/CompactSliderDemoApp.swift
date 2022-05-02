@@ -10,6 +10,7 @@ struct CompactSliderDemoApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .accentColor(.blue)
         }
     }
 }

@@ -14,33 +14,46 @@ struct RangeValuesView: View {
     @State private var upperValue2: Double = 17
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text("Range Values").font(.headline)
-            
-            // A simple example for range values.
-            CompactSlider(from: $lowerValue, to: $upperValue) {
-                Text("Range")
-                Spacer()
-                Text(String(format: "%.2f - %.2f", lowerValue, upperValue))
-                    .monospacedDigit()
-            }
-            
-            Divider()
-            Text("Stepped Range Values").font(.headline)
-            
-            // A range values with a step.
-            HStack {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                Text("Range Values").font(.headline)
+                
+                // A simple example for range values.
+                CompactSlider(from: $lowerValue, to: $upperValue) {
+                    Text("Range")
+                    Spacer()
+                    Text(String(format: "%.2f - %.2f", lowerValue, upperValue))
+                        .monospacedDigitIfPossible()
+                }
+                
+                Divider()
+                Text("Stepped Range Values").font(.headline)
+                
+                // A range values with a step.
+                #if os(watchOS)
                 Text("Working hours:")
                 CompactSlider(from: $lowerValue2, to: $upperValue2, in: 1...27, step: 1) {
-                    Text("from \(zeroLeadingHours(lowerValue2)) to \(zeroLeadingHours(upperValue2))")
-                        .monospacedDigit()
-                    Spacer()
+                    Text("\(zeroLeadingHours(lowerValue2)) - \(zeroLeadingHours(upperValue2))")
+                        .monospacedDigitIfPossible()
                 }
+                .padding(.top, -16)
+                #else
+                HStack {
+                    Text("Working hours:")
+                    CompactSlider(from: $lowerValue2, to: $upperValue2, in: 1...27, step: 1) {
+                        Text("from \(zeroLeadingHours(lowerValue2)) to \(zeroLeadingHours(upperValue2))")
+                            .monospacedDigitIfPossible()
+                        Spacer()
+                    }
+                }
+                #endif
+                
+                Spacer()
             }
-            
-            Spacer()
         }
+        #if os(macOS) || os(iOS)
         .padding()
+        #endif
     }
     
     private func zeroLeadingHours(_ value: Double) -> String {
