@@ -10,10 +10,14 @@
   <img src="https://img.shields.io/github/license/buh/CompactSlider" />
 </p>
 
-<p>
-  <code>CompactSlider</code> is a control for selecting a value from a bounded linear range of values.
-</p>
+<code>CompactSlider</code> is a control for selecting a value from a bounded linear range of values.
 
-<p>
-  The slider is a replacement for the build-in slider and is designed specifically for SwiftUI. For me, the main motivation for writing a component that already exists is the very slow performance under macOS (e.g. when you need to resize the screen with multiple sliders or when animating) and the severely outdated design. At the same time, I was inspired by the slider design that Apple's <a href="https://www.apple.com/macos/photos/#edit-gallery">Photos</a> app developed, which makes heavy use of sliders.
-</p>
+The slider is a replacement for the build-in slider and is designed specifically for SwiftUI. For me, the main motivation for writing a component that already exists is the very slow performance under macOS (e.g. when you need to resize the screen with multiple sliders or when animating) and the severely outdated design. At the same time, I was inspired by the slider design that Apple's <a href="https://www.apple.com/macos/photos/#edit-gallery">Photos</a> app developed, which makes heavy use of sliders.
+
+**macOS**
+
+https://user-images.githubusercontent.com/284922/166230021-223e1ffb-75e2-41ab-9995-618ccb414f8a.mov
+
+**iPadOS**
+
+_Documentation is coming..._
