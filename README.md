@@ -10,9 +10,33 @@
   <img src="https://img.shields.io/github/license/buh/CompactSlider" />
 </p>
 
-<code>CompactSlider</code> is a control for selecting a value from a bounded linear range of values.
+`CompactSlider` is a control for selecting a value from a bounded linear range of values.
 
-The slider is a replacement for the build-in slider and is designed specifically for SwiftUI. For me, the main motivation for writing a component that already exists is the very slow performance under macOS (e.g. when you need to resize the screen with multiple sliders or when animating) and the severely outdated design. At the same time, I was inspired by the slider design that Apple's <a href="https://www.apple.com/macos/photos/#edit-gallery">Photos</a> app developed, which makes heavy use of sliders.
+The slider is a replacement for the build-in slider and is designed specifically for SwiftUI. For me, the main motivation for writing a component that already exists is the very slow performance under macOS (e.g. when you need to resize the screen with multiple sliders or when animating) and the severely outdated design. At the same time, I was inspired by the slider design that Apple's [Photos](https://www.apple.com/macos/photos/#edit-gallery) app developed, which makes heavy use of sliders.
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Preview](#preview)
+- Documentation
+- [Usage](#usage)
+- [License](#license)
+
+# Requirements
+
+- Swift 5.6
+- Xcode 13
+- SwiftUI 2
+- macOS 11
+- iOS 14
+- watchOS 7
+
+# Installation 
+
+1. In Xcode go to `File` ⟩ `Add Packages...`.
+2. Search for https://github.com/buh/CompactSlider.git and click `Add Package`.
+3. Select to which target you want to add it and select `Add Package`.
+
+# Preview
 
 **macOS**
 
@@ -30,5 +54,10 @@ https://user-images.githubusercontent.com/284922/166308017-fab77043-80c7-4567-b0
 
 https://user-images.githubusercontent.com/284922/166314399-857a0612-1a47-4bf8-9454-48eb3b63d1ba.mov
 
+# Usage
 
-_Documentation is coming..._
+# License
+
+`CompactSlider` is available under the [MIT license](https://github.com/buh/CompactSlider/blob/main/LICENSE)
+
+
