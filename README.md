@@ -19,6 +19,12 @@ The slider is a replacement for the build-in slider and is designed specifically
 - [Preview](#preview)
 - Documentation
 - [Usage](#usage)
+  - [Single Value](#single-value)
+  - [Range Values](#range-values)
+  - [Styling](#styling)
+    - [Prominent Style](#prominent-style)
+    - Secondary Color
+  - Advanced Layout and `CompactSliderState`
 - [License](#license)
 
 # Requirements
@@ -107,6 +113,63 @@ var body: some View {
 ```
 
 ### Range values
+
+The slider allows you to retrieve a range of values. This is possible by initialising the slider with the parameters `from:` and `to:`. 
+
+The following example asks for a range of working hours:
+
+![Range Values](https://user-images.githubusercontent.com/284922/166336963-7ba1ebd8-80f1-401a-b13d-b365c30748c2.gif)
+
+```swift
+@State private var lowerValue: Double = 8
+@State private var upperValue: Double = 17
+
+var body: some View {
+    HStack {
+        Text("Working hours:")
+        CompactSlider(from: $lowerValue, to: $upperValue, in: 6...20, step: 1) {
+            Text("\(zeroLeadingHours(lowerValue)) — \(zeroLeadingHours(upperValue))")
+            Spacer()
+        }
+    }
+}
+
+private func zeroLeadingHours(_ value: Double) -> String {
+    let hours = Int(value) % 24
+    return "\(hours < 10 ? "0" : "")\(hours):00"
+}
+```
+
+## Styling
+
+The slider supports changing appearance and behaviour. In addition to the standard style, the [Prominent style](#prominent-style) is also available.
+
+To implement your own style, you need to implement the `CompactSliderStyle` protocol, which contains many parameters that allow you to define the view according to user events. The styles are implemented in the same pattern as [ButtonStyle](https://developer.apple.com/documentation/swiftui/buttonstyle).
+
+### Prominent Style
+
+Prominent style allows for a more dramatic response for the selected value.
+
+![Prominent Style](https://user-images.githubusercontent.com/284922/166339707-76f966f3-c4dd-44b3-8f72-2a44f8d8de33.gif)
+
+```swift
+@State private var speed: Double = 0
+
+var body: some View {
+    HStack {
+        Text("Speed:")
+        CompactSlider(value: $speed, in: 0...180, step: 5) {}
+            .compactSliderStyle(
+                .prominent(
+                    lowerColor: .green,
+                    upperColor: .red,
+                    useGradientBackground: true
+                )
+            )
+        Text("\(Int(speed))")
+    }
+}
+```
 
 # License
 
