@@ -39,7 +39,10 @@ The slider is a replacement for the build-in slider and is designed specifically
 # Installation 
 
 1. In Xcode go to `File` ⟩ `Add Packages...`
-2. Search for https://github.com/buh/CompactSlider.git and click `Add Package`
+2. Search for the link below and click `Add Package`
+```
+https://github.com/buh/CompactSlider.git
+```
 3. Select to which target you want to add it and select `Add Package`
 
 # Preview
