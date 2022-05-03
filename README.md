@@ -23,8 +23,8 @@ The slider is a replacement for the build-in slider and is designed specifically
   - [Range Values](#range-values)
 - [Styling](#styling)
   - [Configuration](#configuration)
-  - [Prominent Style](#prominent-style)
   - [Secondary Color](#secondary-color)
+  - [Prominent Style](#prominent-style)
 - [Advanced Layout](advanced-layout) and `CompactSliderState`
 - [License](#license)
 
@@ -197,6 +197,40 @@ var body: some View {
 
 <img width="640" alt="custom_style@2x" src="https://user-images.githubusercontent.com/284922/166457573-bc32328f-2211-4f4c-be58-a6196f7a24f9.png">
 
+## Secondary Color
+
+The `.compactSliderSecondaryColor` modifier allows you to set the color and transparency for the additional slider elements, such as the progress color of the selected value, when there is no hovering or dragging of the slider. 
+
+By default, you can simply change the base colour for secondary elements: `.compactSliderSecondaryColor(.orange)`
+
+But if this is still not enough, you can change the transparency of the secondary elements. Take the previous example and complement the secondary elements with orange as well:
+
+```swift
+public struct CustomCompactSliderStyle: CompactSliderStyle {
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(
+                configuration.isHovering || configuration.isDragging ? .orange : .gray
+            )
+            .background(
+                Color.orange.opacity(0.1)
+            )
+            .accentColor(.orange)
+            .compactSliderSecondaryColor(
+                .orange,
+                progressOpacity: 0.2,
+                handleOpacity: 0.5,
+                scaleOpacity: 1,
+                secondaryScaleOpacity: 1
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+```
+
+<img width="640" alt="custom_style2@2x" src="https://user-images.githubusercontent.com/284922/166585773-f9de10ac-8570-465f-bde0-aa33dbad821c.png">
+
+
 ## Prominent Style
 
 Prominent style allows for a more dramatic response for the selected value.
@@ -221,8 +255,6 @@ var body: some View {
     }
 }
 ```
-
-## Secondary Color
 
 # Advanced Layout
 
