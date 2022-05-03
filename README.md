@@ -37,6 +37,8 @@ The slider is a replacement for the build-in slider and is designed specifically
 - iOS 14
 - watchOS 7
 
+*Some of the requirements could be reduced if there is a demand for them.*
+
 # Installation 
 
 1. In Xcode go to `File` ⟩ `Add Packages...`
