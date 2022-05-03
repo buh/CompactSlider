@@ -22,8 +22,9 @@ The slider is a replacement for the build-in slider and is designed specifically
   - [Single Value](#single-value)
   - [Range Values](#range-values)
   - [Styling](#styling)
+    - [Configuration](#configuration)
     - [Prominent Style](#prominent-style)
-    - Secondary Color
+    - [Secondary Color](#secondary-color)
   - Advanced Layout and `CompactSliderState`
 - [License](#license)
 
@@ -149,6 +150,51 @@ The slider supports changing appearance and behaviour. In addition to the standa
 
 To implement your own style, you need to implement the `CompactSliderStyle` protocol, which contains many parameters that allow you to define the view according to user events. The styles are implemented in the same pattern as [ButtonStyle](https://developer.apple.com/documentation/swiftui/buttonstyle).
 
+### Configuration
+
+`CompactSliderStyleConfiguration` properties:
+
+<img width="640" alt="Configuration" src="https://user-images.githubusercontent.com/284922/166454886-b80d7a9e-928d-46f0-b1ec-a58af7f37ff4.png">
+
+The following example shows how to create your own style and use the configuration:
+
+```swift
+public struct CustomCompactSliderStyle: CompactSliderStyle {
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(
+                configuration.isHovering || configuration.isDragging ? .orange : .gray
+            )
+            .background(
+                Color.orange.opacity(0.1)
+            )
+            .accentColor(.orange)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+public extension CompactSliderStyle where Self == CustomCompactSliderStyle {
+    static var `custom`: CustomCompactSliderStyle { CustomCompactSliderStyle() }
+}
+```
+
+And now we can apply it:
+
+```swift
+@State private var value: Double = 0.5
+
+var body: some View {
+    CompactSlider(value: $value) {
+        Text("Custom Style")
+        Spacer()
+        Text(String(format: "%.2f", value))
+    }
+    .compactSliderStyle(.custom)
+}
+```
+
+<img width="640" alt="custom_style@2x" src="https://user-images.githubusercontent.com/284922/166457573-bc32328f-2211-4f4c-be58-a6196f7a24f9.png">
+
 ### Prominent Style
 
 Prominent style allows for a more dramatic response for the selected value.
@@ -173,6 +219,8 @@ var body: some View {
     }
 }
 ```
+
+### Secondary Color
 
 # License
 
