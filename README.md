@@ -21,11 +21,11 @@ The slider is a replacement for the build-in slider and is designed specifically
 - [Usage](#usage)
   - [Single Value](#single-value)
   - [Range Values](#range-values)
-  - [Styling](#styling)
-    - [Configuration](#configuration)
-    - [Prominent Style](#prominent-style)
-    - [Secondary Color](#secondary-color)
-  - Advanced Layout and `CompactSliderState`
+- [Styling](#styling)
+  - [Configuration](#configuration)
+  - [Prominent Style](#prominent-style)
+  - [Secondary Color](#secondary-color)
+- [Advanced Layout](advanced-layout) and `CompactSliderState`
 - [License](#license)
 
 # Requirements
@@ -68,7 +68,7 @@ https://user-images.githubusercontent.com/284922/166314399-857a0612-1a47-4bf8-94
 
 A slider consists of a handle that the user moves between two extremes of a linear “track”. The ends of the track represent the minimum and maximum possible values. As the user moves the handle, the slider updates its bound value.
 
-### Single value
+## Single value
 
 The following example shows a slider bound to the speed value in increments of 5. As the slider updates this value, a bound Text view shows the value updating.
 
@@ -116,7 +116,7 @@ var body: some View {
 }
 ```
 
-### Range values
+## Range values
 
 The slider allows you to retrieve a range of values. This is possible by initialising the slider with the parameters `from:` and `to:`. 
 
@@ -144,13 +144,13 @@ private func zeroLeadingHours(_ value: Double) -> String {
 }
 ```
 
-## Styling
+# Styling
 
 The slider supports changing appearance and behaviour. In addition to the standard style, the [Prominent style](#prominent-style) is also available.
 
 To implement your own style, you need to implement the `CompactSliderStyle` protocol, which contains many parameters that allow you to define the view according to user events. The styles are implemented in the same pattern as [ButtonStyle](https://developer.apple.com/documentation/swiftui/buttonstyle).
 
-### Configuration
+## Configuration
 
 `CompactSliderStyleConfiguration` properties:
 
@@ -195,7 +195,7 @@ var body: some View {
 
 <img width="640" alt="custom_style@2x" src="https://user-images.githubusercontent.com/284922/166457573-bc32328f-2211-4f4c-be58-a6196f7a24f9.png">
 
-### Prominent Style
+## Prominent Style
 
 Prominent style allows for a more dramatic response for the selected value.
 
@@ -220,7 +220,9 @@ var body: some View {
 }
 ```
 
-### Secondary Color
+## Secondary Color
+
+# Advanced Layout
 
 # License
 
