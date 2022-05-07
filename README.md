@@ -23,7 +23,7 @@ The slider is a replacement for the build-in slider and is designed specifically
   - [Range Values](#range-values)
 - [Styling](#styling)
   - [Configuration](#configuration)
-  - [Secondary Color](#secondary-color)
+  - [Secondary Appearance](#secondary-appearance)
   - [Prominent Style](#prominent-style)
 - [Advanced Layout](advanced-layout) and `CompactSliderState`
 - [License](#license)
@@ -165,7 +165,7 @@ public struct CustomCompactSliderStyle: CompactSliderStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .foregroundColor(
-                configuration.isHovering || configuration.isDragging ? .orange : .gray
+                configuration.isHovering || configuration.isDragging ? .orange : .black
             )
             .background(
                 Color.orange.opacity(0.1)
@@ -195,22 +195,26 @@ var body: some View {
 }
 ```
 
-<img width="640" alt="custom_style@2x" src="https://user-images.githubusercontent.com/284922/166457573-bc32328f-2211-4f4c-be58-a6196f7a24f9.png">
+<img width="640" alt="custom1@2x" src="https://user-images.githubusercontent.com/284922/167266441-473bdd18-e571-4dda-8128-09122a7117f4.png">
 
-## Secondary Color
+## Secondary Appearance
 
-The `.compactSliderSecondaryColor` modifier allows you to set the color and transparency for the additional slider elements, such as the progress color of the selected value, when there is no hovering or dragging of the slider. 
+The slider consists of several secondary elements, which can also be defined within their own style or directly for the slider.
 
-By default, you can simply change the base colour for secondary elements: `.compactSliderSecondaryColor(.orange)`
+1. The `.compactSliderSecondaryColor` modifier allows you to set the color and opacity for the secondary slider elements. You can simply change the base color for secondary elements: `.compactSliderSecondaryColor(.orange)`.
 
-But if this is still not enough, you can change the transparency of the secondary elements. Take the previous example and complement the secondary elements with orange as well:
+2. Using the other signature of the modifier: `.compactSliderSecondaryColor', the color can be set individually for each secondary element.
+
+3. Another modifier `.compactSliderSecondaryAppearance` gives you the ability to change the `ShapeStyle` for the progress view.
+
+Let's take the previous example and change the secondary elements:
 
 ```swift
 public struct CustomCompactSliderStyle: CompactSliderStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .foregroundColor(
-                configuration.isHovering || configuration.isDragging ? .orange : .gray
+                configuration.isHovering || configuration.isDragging ? .orange : .black
             )
             .background(
                 Color.orange.opacity(0.1)
@@ -228,7 +232,42 @@ public struct CustomCompactSliderStyle: CompactSliderStyle {
 }
 ```
 
-<img width="640" alt="custom_style2@2x" src="https://user-images.githubusercontent.com/284922/166585773-f9de10ac-8570-465f-bde0-aa33dbad821c.png">
+<img width="640" alt="custom2@2x" src="https://user-images.githubusercontent.com/284922/167267510-a7e312d3-e955-4cd7-a5bf-dfa9a77d93bc.png">
+
+Now change the solid color of the progress view to a gradient using the `compactSliderSecondaryAppearance' modifier:
+
+```swift
+public struct CustomCompactSliderStyle: CompactSliderStyle {
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(
+                configuration.isHovering || configuration.isDragging ? .orange : .black
+            )
+            .background(
+                Color.orange.opacity(0.1)
+            )
+            .accentColor(.orange)
+            .compactSliderSecondaryAppearance(
+                progressShapeStyle: LinearGradient(
+                    colors: [.orange.opacity(0), .orange.opacity(0.5)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                ),
+                focusedProgressShapeStyle: LinearGradient(
+                    colors: [.yellow.opacity(0.2), .orange.opacity(0.7)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                ),
+                handleColor: .orange,
+                scaleColor: .orange,
+                secondaryScaleColor: .orange
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+```
+
+<img width="640" alt="custom3@2x" src="https://user-images.githubusercontent.com/284922/167268168-af0867fe-240f-41ee-a8bc-6afac7526c97.png">
 
 
 ## Prominent Style
