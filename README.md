@@ -232,7 +232,7 @@ public struct CustomCompactSliderStyle: CompactSliderStyle {
 }
 ```
 
-<img width="640" alt="custom2@2x" src="https://user-images.githubusercontent.com/284922/167267510-a7e312d3-e955-4cd7-a5bf-dfa9a77d93bc.png">
+<img width="640" alt="Custom Style 1" src="https://user-images.githubusercontent.com/284922/167267510-a7e312d3-e955-4cd7-a5bf-dfa9a77d93bc.png">
 
 Now change the solid color of the progress view to a gradient using the `compactSliderSecondaryAppearance' modifier:
 
@@ -267,8 +267,20 @@ public struct CustomCompactSliderStyle: CompactSliderStyle {
 }
 ```
 
-<img width="640" alt="custom3@2x" src="https://user-images.githubusercontent.com/284922/167268168-af0867fe-240f-41ee-a8bc-6afac7526c97.png">
+<img width="640" alt="Custom Style 2" src="https://user-images.githubusercontent.com/284922/167268168-af0867fe-240f-41ee-a8bc-6afac7526c97.png">
 
+One of the slider parameters allows you to control the visibility of the handle. For this gradient example, it can be disabled:
+
+```swift
+CompactSlider(value: $value, handleVisibility: .hidden) {
+    Text("Custom Style")
+    Spacer()
+    Text(String(format: "%.2f", value))
+}
+.compactSliderStyle(.custom)
+```
+
+![Custom Style](https://user-images.githubusercontent.com/284922/167268544-f559fb2a-5350-4bf5-b8cc-133f962c06e8.gif)
 
 ## Prominent Style
 
