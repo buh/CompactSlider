@@ -263,7 +263,6 @@ var body: some View {
                     )
                 )
             Text("\(Int(temperature))℃")
-                .monospacedDigitIfPossible()
                 .frame(width: 50, alignment: .trailing)
         }
     }
@@ -272,3 +271,6 @@ var body: some View {
 
 # Advanced Layout
 
+## CompactSliderState
+
+<img width="640" alt="CompactSliderState" src="https://user-images.githubusercontent.com/284922/167273735-4e818e10-714c-4916-87c8-d6b053cca89c.png">
