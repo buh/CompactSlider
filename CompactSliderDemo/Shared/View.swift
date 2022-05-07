@@ -9,7 +9,7 @@ import SwiftUI
 
 extension View {
     func monospacedDigitIfPossible() -> some View {
-        if #available(watchOSApplicationExtension 8.0, *) {
+        if #available(iOS 15.0, *), #available(watchOSApplicationExtension 8.0, *) {
             return AnyView(monospacedDigit())
         }
         
