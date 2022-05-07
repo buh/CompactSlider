@@ -17,15 +17,14 @@ The slider is a replacement for the build-in slider and is designed specifically
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Preview](#preview)
-- Documentation
-- [Usage](Usage.md#usage)
+- [Usage.md](Usage.md#usage)
   - [Single Value](Usage.md#single-value)
   - [Range Values](Usage.md#range-values)
-- [Styling](Usage.md#styling)
-  - [Configuration](Usage.md#configuration)
-  - [Secondary Appearance](Usage.md#secondary-appearance)
-  - [Prominent Style](Usage.md#prominent-style)
-- [Advanced Layout](Usage.md#advanced-layout) and `CompactSliderState`
+  - [Styling](Usage.md#styling)
+    - [Configuration](Usage.md#configuration)
+    - [Secondary Appearance](Usage.md#secondary-appearance)
+    - [Prominent Style](Usage.md#prominent-style)
+  - [Advanced Layout](Usage.md#advanced-layout) and `CompactSliderState`
 - [License](#license)
 
 # Requirements
@@ -66,6 +65,14 @@ https://user-images.githubusercontent.com/284922/166308017-fab77043-80c7-4567-b0
 
 https://user-images.githubusercontent.com/284922/166314399-857a0612-1a47-4bf8-9454-48eb3b63d1ba.mov
 
+# [Usage](Usage.md)
+- [Single Value](Usage.md#single-value)
+- [Range Values](Usage.md#range-values)
+- [Styling](Usage.md#styling)
+  - [Configuration](Usage.md#configuration)
+  - [Secondary Appearance](Usage.md#secondary-appearance)
+  - [Prominent Style](Usage.md#prominent-style)
+- [Advanced Layout](Usage.md#advanced-layout) and `CompactSliderState`
 
 # License
 
