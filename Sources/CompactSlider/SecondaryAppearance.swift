@@ -67,40 +67,10 @@ extension EnvironmentValues {
 
 public extension View {
     
-    /// Sets secondary colors for sliders elements.
-    /// - Parameters:
-    ///   - color: the secondary color.
-    ///   - progressOpacity: the opacity for the progress view based on the secondary color.
-    ///   - focusedProgressOpacity: the opacity for the focused progress view based on the accent color.
-    ///   - handleOpacity: the opacity for the handle view based on the secondary color.
-    ///   - scaleOpacity: the opacity for the scale view based on the secondary color.
-    ///   - smallScaleOpacity: the opacity for the small scale view based on the secondary color.
-    func compactSliderSecondaryColor(
-        progressColor: Color? = nil,
-        focusedProgressColor: Color? = nil,
-        handleColor: Color? = nil,
-        scaleColor: Color? = nil,
-        secondaryScaleColor: Color? = nil
-    ) -> some View {
-        environment(
-            \.compactSliderSecondaryAppearance,
-             SecondaryAppearance(
-                progressFillStyle: .init {
-                    $0.fill(progressColor ?? .label.opacity(CompactSliderDouble.progressOpacity))
-                        .eraseToAnyView
-                },
-                focusedProgressFillStyle: .init {
-                    $0.fill(focusedProgressColor ?? .label.opacity(CompactSliderDouble.focusedProgressOpacity))
-                        .eraseToAnyView
-                },
-                handleColor: handleColor ?? .label.opacity(CompactSliderDouble.handleOpacity),
-                scaleColor: scaleColor ?? .label.opacity(CompactSliderDouble.scaleOpacity),
-                secondaryScaleColor: secondaryScaleColor ?? .label.opacity(CompactSliderDouble.secondaryScaleOpacity)
-             )
-        )
-    }
-    
-    /// Sets secondary colors for sliders elements.
+    /// Sets the colors for the secondary slider elements based on a given color and different opacity for each element.
+    ///
+    /// - Note: The exception to this is the `focusedProgressOpacity` parameter, which sets the opacity for the accent color.
+    ///
     /// - Parameters:
     ///   - color: the secondary color.
     ///   - progressOpacity: the opacity for the progress view based on the secondary color.
@@ -134,13 +104,45 @@ public extension View {
         )
     }
     
-    /// Sets secondary appearance for sliders elements.
+    /// Sets the colors for the secondary slider elements.
     /// - Parameters:
-    ///   - progressShapeStyle: the shape style for the progress view.
+    ///   - progressColor: the default progress view color.
+    ///   - focusedProgressColor: the focused progress view color.
+    ///   - handleColor: the handle view color.
+    ///   - scaleColor: the scale color.
+    ///   - secondaryScaleColor: the secondary scale color.
+    func compactSliderSecondaryColor(
+        progressColor: Color? = nil,
+        focusedProgressColor: Color? = nil,
+        handleColor: Color? = nil,
+        scaleColor: Color? = nil,
+        secondaryScaleColor: Color? = nil
+    ) -> some View {
+        environment(
+            \.compactSliderSecondaryAppearance,
+             SecondaryAppearance(
+                progressFillStyle: .init {
+                    $0.fill(progressColor ?? .label.opacity(CompactSliderDouble.progressOpacity))
+                        .eraseToAnyView
+                },
+                focusedProgressFillStyle: .init {
+                    $0.fill(focusedProgressColor ?? .label.opacity(CompactSliderDouble.focusedProgressOpacity))
+                        .eraseToAnyView
+                },
+                handleColor: handleColor ?? .label.opacity(CompactSliderDouble.handleOpacity),
+                scaleColor: scaleColor ?? .label.opacity(CompactSliderDouble.scaleOpacity),
+                secondaryScaleColor: secondaryScaleColor ?? .label.opacity(CompactSliderDouble.secondaryScaleOpacity)
+             )
+        )
+    }
+    
+    /// Sets the appearance for the secondary slider elements.
+    /// - Parameters:
+    ///   - progressShapeStyle: the default shape style for the progress view.
     ///   - focusedProgressShapeStyle: the shape style for the focused progress view.
-    ///   - handleColor: the color for the handle view.
-    ///   - scaleColor: the color for the scale view.
-    ///   - secondaryScaleColor: the color for the secondary scale view.
+    ///   - handleColor: the handle view color.
+    ///   - scaleColor: the scale color.
+    ///   - secondaryScaleColor: the secondary scale color.
     func compactSliderSecondaryAppearance<S1: ShapeStyle, S2: ShapeStyle>(
         progressShapeStyle: S1,
         focusedProgressShapeStyle: S2,
