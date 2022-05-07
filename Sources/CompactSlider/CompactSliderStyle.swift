@@ -19,8 +19,9 @@ public protocol CompactSliderStyle {
 
 /// Configuration for creating a style for the slider.
 public struct CompactSliderStyleConfiguration {
+    
     public struct Label: View {
-        public var body: AnyView
+        public let body: AnyView
         
         init<Content: View>(content: Content) {
             body = AnyView(content)

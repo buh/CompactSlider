@@ -23,19 +23,21 @@ extension CGFloat {
         #endif
     }()
     
-    static let scaleMin: CGFloat = {
-        #if os(macOS)
-        3
-        #else
-        6
-        #endif
-    }()
+    static let scaleLineWidth: CGFloat = 0.5
     
-    static let scaleMax: CGFloat = {
+    static let scaleLength: CGFloat = {
         #if os(macOS)
         5
         #else
         10
+        #endif
+    }()
+    
+    static let secondaryScaleLength: CGFloat = {
+        #if os(macOS)
+        3
+        #else
+        6
         #endif
     }()
 }

@@ -66,29 +66,28 @@ import SwiftUI
 public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View {
     
     @Environment(\.compactSliderStyle) var compactSliderStyle
-    @Environment(\.compactSliderSecondaryAppearance) var secondaryAppearance
     @Environment(\.isEnabled) var isEnabled
     
     @Binding private var lowerValue: Value
     @Binding private var upperValue: Value
     private let bounds: ClosedRange<Value>
     private let step: Value
-    private let isRangeValues: Bool
-    private let direction: CompactSliderDirection
-    private let handleVisibility: HandleVisibility
-    @Binding private var state: CompactSliderState
+    let isRangeValues: Bool
+    let direction: CompactSliderDirection
+    let handleVisibility: HandleVisibility
+    @Binding var state: CompactSliderState
     @ViewBuilder private var valueLabel: () -> ValueLabel
     
     private var progressStep: Double = 0
     private var steps: Int = 0
     @State private var isLowerValueChangingInternally = false
     @State private var isUpperValueChangingInternally = false
-    @State private var isHovering = false
-    @State private var isDragging = false
-    @State private var lowerProgress: Double = 0
-    @State private var upperProgress: Double = 0
+    @State var isHovering = false
+    @State var isDragging = false
+    @State var lowerProgress: Double = 0
+    @State var upperProgress: Double = 0
     @State private var dragLocationX: CGFloat = 0
-    @State private var adjustedDragLocationX: (lower: CGFloat, upper: CGFloat) = (0, 0)
+    @State var adjustedDragLocationX: (lower: CGFloat, upper: CGFloat) = (0, 0)
     
     /// Creates a slider to select a value from a given bounds.
     ///
@@ -234,7 +233,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                         }
                         
                         if isHovering || isDragging {
-                            scaleView(in: proxy.size)
+                            ScaleView(steps: steps)
+                                .frame(height: proxy.size.height, alignment: .top)
                         }
                     } else if isRangeValues, abs(upperProgress - lowerProgress) < 0.01 {
                         progressHandleView(lowerProgress, size: proxy.size)
@@ -256,113 +256,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         .frame(minHeight: 44)
         #endif
         .fixedSize(horizontal: false, vertical: true)
-    }
-}
-
-// MARK: - Progress View
-
-private extension CompactSlider {
-    
-    func progressView(in size: CGSize) -> some View {
-        Rectangle()
-            .fill(
-                isHovering || isDragging
-                ? Color.accentColor.opacity(0.3)
-                : secondaryAppearance.color.opacity(secondaryAppearance.progressOpacity)
-            )
-            .frame(width: progressWidth(size))
-            .offset(x: progressOffsetX(size))
-    }
-    
-    func progressWidth(_ size: CGSize) -> CGFloat {
-        if isRangeValues {
-            return size.width * abs(upperProgress - lowerProgress)
-        }
-        
-        if direction == .trailing {
-            return size.width * (1 - lowerProgress)
-        }
-        
-        if direction == .center {
-            return size.width * abs(0.5 - lowerProgress)
-        }
-        
-        return size.width * lowerProgress
-    }
-    
-    func progressOffsetX(_ size: CGSize) -> CGFloat {
-        let width = progressWidth(size)
-        
-        if isRangeValues {
-            let offset = size.width * ((1 - (upperProgress - lowerProgress)) / -2 + lowerProgress)
-            
-            DispatchQueue.main.async {
-                adjustedDragLocationX = (offset - width / 2, offset + width / 2)
-                updateState()
-            }
-            
-            return offset
-        }
-        
-        let offset: CGFloat
-        
-        if direction == .trailing {
-            offset = size.width * lowerProgress / 2
-        } else if direction == .center {
-            offset = size.width * (lowerProgress - 0.5) / 2
-        } else {
-            offset = size.width * (1 - lowerProgress) / -2
-        }
-        
-        DispatchQueue.main.async {
-            adjustedDragLocationX = (offset + width / 2, 0)
-            updateState()
-        }
-        
-        return offset
-    }
-}
-
-// MARK: - Progress Handle View
-
-private extension CompactSlider {
-    func progressHandleView(_ progress: Double, size: CGSize) -> some View {
-        Group {
-            if handleVisibility.width > 0 {
-                Rectangle()
-                    .fill(
-                        isHovering || isDragging
-                        ? Color.accentColor
-                        : secondaryAppearance.color.opacity(secondaryAppearance.handleOpacity)
-                    )
-                    .frame(width: handleVisibility.width)
-                    .offset(x: (size.width - handleVisibility.width) * (progress - 0.5))
-            }
-        }
-    }
-}
-
-// MARK: - Scale View
-
-private extension CompactSlider {
-    @ViewBuilder
-    func scaleView(in size: CGSize) -> some View {
-        Scale(count: steps > 0 ? steps : 49)
-            .stroke(
-                secondaryAppearance.color.opacity(
-                    steps > 0 ? secondaryAppearance.scaleOpacity : secondaryAppearance.smallScaleOpacity
-                ),
-                lineWidth: 0.5
-            )
-            .frame(height: .scaleMin)
-            .offset(y: (size.height - 3) / -2)
-        
-        if steps == 0 {
-            Scale(count: 9)
-                .stroke(secondaryAppearance.color.opacity(secondaryAppearance.scaleOpacity), lineWidth: 0.5)
-                .frame(height: .scaleMax)
-                .offset(y: (size.height - 5) / -2)
-        }
     }
 }
 
@@ -435,18 +328,6 @@ private extension CompactSlider {
         let length = Double(bounds.length)
         return length != 0 ? Double(newValue - bounds.lowerBound) / length : 0
     }
-    
-    func updateState() {
-        guard state.isActive else { return }
-        
-        state = .init(
-            isHovering: isHovering,
-            isDragging: isDragging,
-            lowerProgress: lowerProgress,
-            upperProgress: upperProgress,
-            dragLocationX: adjustedDragLocationX
-        )
-    }
 }
 
 // MARK: - Direction
@@ -459,35 +340,6 @@ public enum CompactSliderDirection {
     case center
     /// The selected value will be indicated from the upper right-hand area of the boundary.
     case trailing
-}
-
-// MARK: - Scale
-
-private extension CompactSlider {
-    /// A shape that draws a scale of possible values.
-    struct Scale: Shape {
-        let count: Int
-        var minSpacing: CGFloat = 3
-        
-        func path(in rect: CGRect) -> Path {
-            Path { path in
-                guard count > 0, minSpacing > 1 else { return }
-                
-                let spacing = max(minSpacing, rect.width / CGFloat(count + 1))
-                var x = spacing
-                
-                for _ in 0..<count {
-                    path.move(to: .init(x: x, y: 0))
-                    path.addLine(to: .init(x: x, y: rect.maxY))
-                    x += spacing
-                    
-                    if x > rect.maxX {
-                        break
-                    }
-                }
-            }
-        }
-    }
 }
 
 // MARK: - Range

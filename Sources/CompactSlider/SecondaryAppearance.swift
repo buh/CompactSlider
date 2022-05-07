@@ -6,50 +6,177 @@
 import SwiftUI
 
 struct SecondaryAppearance {
-    public let color: Color
-    public var progressOpacity: Double = 0.075
-    public var handleOpacity: Double = 0.2
-    public var scaleOpacity: Double = 0.8
-    public var smallScaleOpacity: Double = 0.3
+    
+    struct ProgressFillStyle {
+        let fill: (Rectangle) -> AnyView
+        
+        init(_ fill: @escaping (Rectangle) -> AnyView) {
+            self.fill = fill
+        }
+    }
+    
+    var progressFillStyle: ProgressFillStyle
+    var focusedProgressFillStyle: ProgressFillStyle
+    var handleColor: Color
+    var scaleColor: Color
+    var secondaryScaleColor: Color
+    
+    init(
+        progressFillStyle: ProgressFillStyle,
+        focusedProgressFillStyle: ProgressFillStyle,
+        handleColor: Color,
+        scaleColor: Color,
+        secondaryScaleColor: Color
+    ) {
+        self.progressFillStyle = progressFillStyle
+        self.focusedProgressFillStyle = focusedProgressFillStyle
+        self.handleColor = handleColor
+        self.scaleColor = scaleColor
+        self.secondaryScaleColor = secondaryScaleColor
+    }
 }
 
-struct CompactSliderSecondaryColorKey: EnvironmentKey {
-    static var defaultValue = SecondaryAppearance(color: .label)
+struct CompactSliderSecondaryAppearanceKey: EnvironmentKey {
+    static var defaultValue = SecondaryAppearance(
+        progressFillStyle: .init {
+            $0.fill(
+                Color.label.opacity(CompactSliderDouble.progressOpacity)
+            )
+            .eraseToAnyView
+        },
+        focusedProgressFillStyle: .init {
+            $0.fill(
+                Color.accentColor.opacity(CompactSliderDouble.focusedProgressOpacity)
+            )
+            .eraseToAnyView
+        },
+        handleColor: Color.label.opacity(CompactSliderDouble.handleOpacity),
+        scaleColor: Color.label.opacity(CompactSliderDouble.scaleOpacity),
+        secondaryScaleColor: Color.label.opacity(CompactSliderDouble.secondaryScaleOpacity)
+    )
 }
 
 extension EnvironmentValues {
     var compactSliderSecondaryAppearance: SecondaryAppearance {
-        get { self[CompactSliderSecondaryColorKey.self] }
-        set { self[CompactSliderSecondaryColorKey.self] = newValue }
+        get { self[CompactSliderSecondaryAppearanceKey.self] }
+        set { self[CompactSliderSecondaryAppearanceKey.self] = newValue }
     }
 }
 
 // MARK: - View Extension
 
 public extension View {
-    /// Sets secondary colors for sliders within this view to a slider style.
+    
+    /// Sets secondary colors for sliders elements.
     /// - Parameters:
     ///   - color: the secondary color.
     ///   - progressOpacity: the opacity for the progress view based on the secondary color.
+    ///   - focusedProgressOpacity: the opacity for the focused progress view based on the accent color.
+    ///   - handleOpacity: the opacity for the handle view based on the secondary color.
+    ///   - scaleOpacity: the opacity for the scale view based on the secondary color.
+    ///   - smallScaleOpacity: the opacity for the small scale view based on the secondary color.
+    func compactSliderSecondaryColor(
+        progressColor: Color? = nil,
+        focusedProgressColor: Color? = nil,
+        handleColor: Color? = nil,
+        scaleColor: Color? = nil,
+        secondaryScaleColor: Color? = nil
+    ) -> some View {
+        environment(
+            \.compactSliderSecondaryAppearance,
+             SecondaryAppearance(
+                progressFillStyle: .init {
+                    $0.fill(progressColor ?? .label.opacity(CompactSliderDouble.progressOpacity))
+                        .eraseToAnyView
+                },
+                focusedProgressFillStyle: .init {
+                    $0.fill(focusedProgressColor ?? .label.opacity(CompactSliderDouble.focusedProgressOpacity))
+                        .eraseToAnyView
+                },
+                handleColor: handleColor ?? .label.opacity(CompactSliderDouble.handleOpacity),
+                scaleColor: scaleColor ?? .label.opacity(CompactSliderDouble.scaleOpacity),
+                secondaryScaleColor: secondaryScaleColor ?? .label.opacity(CompactSliderDouble.secondaryScaleOpacity)
+             )
+        )
+    }
+    
+    /// Sets secondary colors for sliders elements.
+    /// - Parameters:
+    ///   - color: the secondary color.
+    ///   - progressOpacity: the opacity for the progress view based on the secondary color.
+    ///   - focusedProgressOpacity: the opacity for the focused progress view based on the accent color.
     ///   - handleOpacity: the opacity for the handle view based on the secondary color.
     ///   - scaleOpacity: the opacity for the scale view based on the secondary color.
     ///   - smallScaleOpacity: the opacity for the small scale view based on the secondary color.
     func compactSliderSecondaryColor(
         _ color: Color,
-        progressOpacity: Double = 0.075,
-        handleOpacity: Double = 0.2,
-        scaleOpacity: Double = 0.8,
-        smallScaleOpacity: Double = 0.3
+        progressOpacity: Double? = nil,
+        focusedProgressOpacity: Double? = nil,
+        handleOpacity: Double? = nil,
+        scaleOpacity: Double? = nil,
+        secondaryScaleOpacity: Double? = nil
     ) -> some View {
         environment(
             \.compactSliderSecondaryAppearance,
              SecondaryAppearance(
-                color: color,
-                progressOpacity: progressOpacity,
-                handleOpacity: handleOpacity,
-                scaleOpacity: scaleOpacity,
-                smallScaleOpacity: smallScaleOpacity
+                progressFillStyle: .init {
+                    $0.fill(color.opacity(progressOpacity ?? CompactSliderDouble.progressOpacity))
+                        .eraseToAnyView
+                },
+                focusedProgressFillStyle: .init {
+                    $0.fill(color.opacity(focusedProgressOpacity ?? CompactSliderDouble.focusedProgressOpacity))
+                        .eraseToAnyView
+                },
+                handleColor: color.opacity(handleOpacity ?? CompactSliderDouble.handleOpacity),
+                scaleColor: color.opacity(scaleOpacity ?? CompactSliderDouble.scaleOpacity),
+                secondaryScaleColor: color.opacity(secondaryScaleOpacity ?? CompactSliderDouble.secondaryScaleOpacity)
              )
         )
+    }
+    
+    /// Sets secondary appearance for sliders elements.
+    /// - Parameters:
+    ///   - progressShapeStyle: the shape style for the progress view.
+    ///   - focusedProgressShapeStyle: the shape style for the focused progress view.
+    ///   - handleColor: the color for the handle view.
+    ///   - scaleColor: the color for the scale view.
+    ///   - secondaryScaleColor: the color for the secondary scale view.
+    func compactSliderSecondaryAppearance<S1: ShapeStyle, S2: ShapeStyle>(
+        progressShapeStyle: S1,
+        focusedProgressShapeStyle: S2,
+        handleColor: Color? = nil,
+        scaleColor: Color? = nil,
+        secondaryScaleColor: Color? = nil
+    ) -> some View {
+        environment(
+            \.compactSliderSecondaryAppearance,
+             SecondaryAppearance(
+                progressFillStyle: .init { $0.fill(progressShapeStyle).eraseToAnyView },
+                focusedProgressFillStyle: .init { $0.fill(focusedProgressShapeStyle).eraseToAnyView },
+                handleColor: handleColor ?? .label.opacity(CompactSliderDouble.handleOpacity),
+                scaleColor: scaleColor ?? .label.opacity(CompactSliderDouble.scaleOpacity),
+                secondaryScaleColor: secondaryScaleColor ?? .label.opacity(CompactSliderDouble.secondaryScaleOpacity)
+             )
+        )
+    }
+}
+
+enum CompactSliderDouble {
+    static let progressOpacity: Double = 0.075
+    static let focusedProgressOpacity: Double = 0.3
+    static let handleOpacity: Double = 0.2
+    static let scaleOpacity: Double = 0.8
+    static let secondaryScaleOpacity: Double = 0.3
+}
+
+extension Rectangle {
+    func fill(_ appearance: SecondaryAppearance.ProgressFillStyle) -> some View {
+        appearance.fill(self)
+    }
+}
+
+extension View {
+    var eraseToAnyView: AnyView {
+        AnyView(self)
     }
 }

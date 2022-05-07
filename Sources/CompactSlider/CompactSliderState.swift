@@ -46,3 +46,19 @@ public struct CompactSliderState {
         return state
     }()
 }
+
+// MARK: - Slider
+
+extension CompactSlider {
+    func updateState() {
+        guard state.isActive else { return }
+        
+        state = .init(
+            isHovering: isHovering,
+            isDragging: isDragging,
+            lowerProgress: lowerProgress,
+            upperProgress: upperProgress,
+            dragLocationX: adjustedDragLocationX
+        )
+    }
+}
