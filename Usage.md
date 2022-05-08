@@ -271,6 +271,32 @@ var body: some View {
 
 # Advanced Layout
 
-## CompactSliderState
+The slider provides a state that can be used for more advanced layouts. To do this, you must sign up to change the state via bindings.
+
+### CompactSliderState
 
 <img width="640" alt="CompactSliderState" src="https://user-images.githubusercontent.com/284922/167273735-4e818e10-714c-4916-87c8-d6b053cca89c.png">
+
+In the following example, we will show the value in the progress position:
+
+```swift
+@State private var value: Double = 0.5
+@State private var sliderState: CompactSliderState = .zero
+
+var body: some View {
+    ZStack {
+        CompactSlider(value: $value, state: $sliderState) {}
+        
+        Text("\(Int(100 * value))%")
+            .foregroundColor(.white)
+            .padding(6)
+            .background(
+                Capsule().fill(Color.blue)
+            )
+            .offset(x: sliderState.dragLocationX.lower)
+            .allowsHitTesting(false)
+    }
+}
+```
+
+![Advanced Layout](https://user-images.githubusercontent.com/284922/167297236-e8d341a1-b09b-49b7-83c4-cd5c710d978a.gif)
