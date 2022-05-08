@@ -1,8 +1,6 @@
+// The MIT License (MIT)
 //
-//  View.swift
-//  CompactSliderDemo
-//
-//  Created by bukhtin on 02/05/2022.
+// Copyright (c) 2022 Alexey Bukhtin (github.com/buh).
 //
 
 import SwiftUI

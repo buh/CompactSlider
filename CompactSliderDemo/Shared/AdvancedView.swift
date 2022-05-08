@@ -122,11 +122,16 @@ struct AdvancedView: View {
                         .padding(.horizontal, 8)
                         .background(
                             Capsule().fill(
-                                LinearGradient(colors: [.green, .green, .yellow, .yellow], startPoint: .leading, endPoint: .trailing)
+                                LinearGradient(
+                                    colors: [.green, .green, .yellow, .yellow],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
                             )
                         )
                         .offset(
-                            x: sliderState2.dragLocationX.lower + (sliderState2.dragLocationX.upper - sliderState2.dragLocationX.lower) / 2
+                            x: sliderState2.dragLocationX.lower
+                            + (sliderState2.dragLocationX.upper - sliderState2.dragLocationX.lower) / 2
                             + (sliderState2.lowerProgress < 0.1
                                ? 30
                                : (sliderState2.lowerProgress > 0.9 ? -40 : 1)),
