@@ -271,7 +271,7 @@ var body: some View {
 
 # Advanced Layout
 
-The slider provides a state that can be used for more advanced layouts. To do this, you must sign up to change the state via bindings.
+The slider provides a state that can be used for more advanced layouts. To do this, you must subscribe for state changes via bindings.
 
 ### CompactSliderState
 
