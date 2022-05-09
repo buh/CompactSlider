@@ -9,7 +9,7 @@ The ends of the track represent the minimum and maximum possible values. As the 
   - [Configuration](#configuration)
   - [Secondary Appearance](#secondary-appearance)
   - [Prominent Style](#prominent-style)
-- [Advanced Layout](advanced-layout) and `CompactSliderState`
+- [Advanced Layout](#advanced-layout) and `CompactSliderState`
 
 ## Single value
 
