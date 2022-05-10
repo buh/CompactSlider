@@ -85,5 +85,9 @@ struct SingleValueView: View {
 struct SingleValueView_Previews: PreviewProvider {
     static var previews: some View {
         SingleValueView()
+            #if os(macOS)
+            .padding()
+            .frame(width: 600, height: 500)
+            #endif
     }
 }

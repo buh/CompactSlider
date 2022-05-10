@@ -65,5 +65,9 @@ struct RangeValuesView: View {
 struct RangeValuesView_Previews: PreviewProvider {
     static var previews: some View {
         RangeValuesView()
+            #if os(macOS)
+            .padding()
+            .frame(width: 600, height: 500)
+            #endif
     }
 }
