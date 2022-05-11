@@ -39,11 +39,11 @@ struct RangeValuesView: View {
                 .padding(.top, -16)
                 #else
                 HStack {
-                    Text("Working hours:")
                     CompactSlider(from: $lowerValue2, to: $upperValue2, in: 1...27, step: 1) {
+                        Text("Working hours")
+                        Spacer()
                         Text("from \(zeroLeadingHours(lowerValue2)) to \(zeroLeadingHours(upperValue2))")
                             .monospacedDigitIfPossible()
-                        Spacer()
                     }
                 }
                 #endif

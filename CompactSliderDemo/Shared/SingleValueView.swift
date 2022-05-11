@@ -54,7 +54,7 @@ struct SingleValueView: View {
                         Text("\(Int(stepValue))")
                     }
                     #else
-                    Text("Speed (with step 5):")
+                    Text("Speed:")
                     CompactSlider(value: $stepValue, in: 0...160, step: 5) {}
                     Text("\(Int(stepValue))")
                         .monospacedDigitIfPossible()

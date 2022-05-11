@@ -59,7 +59,7 @@ struct AdvancedView: View {
                 .padding(.top, -16)
                 #else
                 HStack {
-                    Text("Speed (with background):")
+                    Text("Speed:")
                     CompactSlider(value: $defaultValue2, in: 0...180, step: 5) {}
                         .compactSliderStyle(
                             .prominent(
@@ -74,10 +74,10 @@ struct AdvancedView: View {
                 #endif
                 
                 Divider()
-                Text("Custom Layout").font(.headline)
+                Text("Advanced Layout").font(.headline)
                 customStyleWithJumpingValue
                 
-                #if os(macOS)
+                #if os(macOS) || os(iOS)
                 Divider()
                 displayOptionAndOpacity
                 #endif
@@ -106,10 +106,7 @@ struct AdvancedView: View {
                 .foregroundColor(.white)
                 .background(Capsule().fill(Color.accentColor))
                 .offset(
-                    x: sliderState.dragLocationX.lower
-                    + (sliderState.lowerProgress < 0.1
-                       ? 30
-                       : (sliderState.lowerProgress > 0.9 ? -40 : 1)),
+                    x: sliderState.dragLocationX.lower * 0.8,
                     y: sliderState.isDragging ? jumpOffsetY : 0
                 )
                 .allowsHitTesting(false)
@@ -150,10 +147,8 @@ struct AdvancedView: View {
                 )
                 .offset(
                     x: sliderState2.dragLocationX.lower
-                    + (sliderState2.dragLocationX.upper - sliderState2.dragLocationX.lower) / 2
-                    + (sliderState2.lowerProgress < 0.1
-                       ? 30
-                       : (sliderState2.lowerProgress > 0.9 ? -40 : 1)),
+                    * (sliderState2.upperProgress < 0.5 ? 0.7 : 0.6)
+                    + (sliderState2.dragLocationX.upper - sliderState2.dragLocationX.lower) / 2,
                     y: sliderState2.isDragging ? jumpOffsetY : 0
                 )
                 .allowsHitTesting(false)
@@ -164,8 +159,7 @@ struct AdvancedView: View {
                     .foregroundColor(.white)
                     .background(Capsule().fill(Color.green))
                     .offset(
-                        x: sliderState2.dragLocationX.lower
-                        + (sliderState2.lowerProgress < 0.1 ? 30 : (sliderState2.lowerProgress > 0.9 ? -40 : 1)),
+                        x: sliderState2.dragLocationX.lower * 0.8,
                         y: sliderState2.isDragging ? jumpOffsetY : 0
                     )
                     .allowsHitTesting(false)
@@ -176,10 +170,7 @@ struct AdvancedView: View {
                     .foregroundColor(.black)
                     .background(Capsule().fill(Color.yellow))
                     .offset(
-                        x: sliderState2.dragLocationX.upper
-                        + (sliderState2.upperProgress < 0.1
-                           ? 30
-                           : (sliderState2.upperProgress > 0.9 ? -40 : 1)),
+                        x: sliderState2.dragLocationX.upper * 0.8,
                         y: sliderState2.isDragging ? jumpOffsetY : 0
                     )
                     .allowsHitTesting(false)
@@ -196,9 +187,11 @@ struct AdvancedView: View {
     }
     
     private var displayOptionAndOpacity: some View {
+        
         HStack(spacing: 16) {
             Spacer()
             
+            #if os(macOS)
             VStack(alignment: .trailing, spacing: 24) {
                 Text("Display Duration")
                 
@@ -213,6 +206,7 @@ struct AdvancedView: View {
                 }
             }
             .padding(.top, 6)
+            #endif
             
             VStack(spacing: 16) {
                 HStack(spacing: 12) {
@@ -227,7 +221,9 @@ struct AdvancedView: View {
                     
                     ZStack {
                         CompactSlider(value: $displayDuration, in: 0.5...3.5, step: 0.1, state: $displayDurationSliderState) {}
+                            #if os(macOS)
                             .frame(width: 250)
+                            #endif
                             .compactSliderSecondaryColor(.blue, progressOpacity: 0.2, focusedProgressOpacity: 0.4)
                         
                         Text("\(String(format: "%0.1f", 4 - displayDuration))s")
@@ -252,25 +248,38 @@ struct AdvancedView: View {
                     }
                 }
                 
-                ZStack {
-                    CompactSlider(value: $opacity, state: $opacitySliderState) {}
-                        .frame(width: 250)
-                        .compactSliderSecondaryColor(
-                            .orange,
-                            progressOpacity: 0.35,
-                            focusedProgressOpacity: opacity
+                HStack(spacing: 24) {
+                    #if os(iOS)
+                    Circle()
+                        .fill(.orange.opacity(opacity))
+                        .frame(width: 40, height: 40)
+                        .overlay(
+                            Circle().stroke(Color(white: 0.3), lineWidth: 4)
                         )
-                    
-                    Text("\(Int(opacity * 100))%")
-                        .padding(6)
-                        .background(
-                            RoundedRectangle(cornerRadius: 4).fill(.white)
-                                .shadow(radius: 3, y: 2)
-                        )
-                        .offset(
-                            x: opacitySliderState.dragLocationX.lower * 0.9
-                        )
-                        .allowsHitTesting(false)
+                    #endif
+
+                    ZStack {
+                        CompactSlider(value: $opacity, state: $opacitySliderState) {}
+                            #if os(macOS)
+                            .frame(width: 250)
+                            #endif
+                            .compactSliderSecondaryColor(
+                                .orange,
+                                progressOpacity: 0.35,
+                                focusedProgressOpacity: opacity
+                            )
+                        
+                        Text("\(Int(opacity * 100))%")
+                            .padding(6)
+                            .background(
+                                RoundedRectangle(cornerRadius: 4).fill(.white)
+                                    .shadow(radius: 3, y: 2)
+                            )
+                            .offset(
+                                x: opacitySliderState.dragLocationX.lower * 0.9
+                            )
+                            .allowsHitTesting(false)
+                    }
                 }
             }
             
