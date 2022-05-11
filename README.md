@@ -1,12 +1,11 @@
 <p align="center">
   <img width="640" alt="cover3" src="https://user-images.githubusercontent.com/284922/166153877-97536d02-1feb-4018-961a-c3646faffdc0.png">
 </p>
+
 <p align="center">
-  <img src="https://img.shields.io/badge/Swift-5.6-orange" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fbuh%2FCompactSlider%2Fbadge%3Ftype%3Dswift-versions" />
+  <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fbuh%2FCompactSlider%2Fbadge%3Ftype%3Dplatforms" />
   <img src="https://img.shields.io/badge/SwiftUI-2-blue" />
-  <img src="https://img.shields.io/badge/macOS-11-lightgrey" />
-  <img src="https://img.shields.io/badge/iOS-14-blue" />
-  <img src="https://img.shields.io/badge/watchOS-7-green" />
   <img src="https://img.shields.io/github/license/buh/CompactSlider" />
 </p>
 
