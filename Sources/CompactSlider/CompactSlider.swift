@@ -65,9 +65,10 @@ import SwiftUI
 /// ```
 public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View {
     
-    @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.isEnabled) var isEnabled
-    
+    @Environment(\.compactSliderStyle) var compactSliderStyle
+    @Environment(\.compactSliderDisabledHapticFeedback) var disabledHapticFeedback
+
     @Binding private var lowerValue: Value
     @Binding private var upperValue: Value
     private let bounds: ClosedRange<Value>
@@ -278,9 +279,19 @@ private extension CompactSlider {
         
         guard progressStep > 0 else {
             if isProgress2Nearest {
-                upperProgress = newProgress
-            } else {
+                if upperProgress != newProgress {
+                    upperProgress = newProgress
+                    
+                    if upperProgress == 1 {
+                        HapticFeedback.vibrate(disabledHapticFeedback)
+                    }
+                }
+            } else if lowerProgress != newProgress {
                 lowerProgress = newProgress
+                
+                if lowerProgress == 0 || lowerProgress == 1 {
+                    HapticFeedback.vibrate(disabledHapticFeedback)
+                }
             }
             
             return
@@ -291,9 +302,11 @@ private extension CompactSlider {
         if isProgress2Nearest {
             if rounded != upperProgress {
                 upperProgress = rounded
+                HapticFeedback.vibrate(disabledHapticFeedback)
             }
         } else if rounded != lowerProgress {
             lowerProgress = rounded
+            HapticFeedback.vibrate(disabledHapticFeedback)
         }
     }
     
@@ -358,6 +371,9 @@ struct CompactSlider_Previews: PreviewProvider {
             contentView.preferredColorScheme(.dark)
         }
         .padding()
+        #if os(macOS)
+        .frame(height: 500)
+        #endif
     }
     
     private static var contentView: some View {
@@ -395,6 +411,8 @@ struct CompactSlider_Previews: PreviewProvider {
                     Text("0.3")
                 }
                 
+                Divider()
+                
                 // 4. Set a range of values in specific step to change.
                 CompactSlider(value: .constant(70), in: 0...200, step: 10) {
                     Text("Snapped")
@@ -408,6 +426,7 @@ struct CompactSlider_Previews: PreviewProvider {
                     Spacer()
                     Text("0.0")
                 }
+                .compactSliderDisabledHapticFeedback(true)
             }
             
             Divider()
