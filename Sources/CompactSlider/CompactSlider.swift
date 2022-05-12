@@ -251,11 +251,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 .padding(.horizontal, .labelPadding)
         }
         .opacity(isEnabled ? 1 : 0.5)
-        #if os(macOS)
-        .frame(minHeight: 24)
-        #else
-        .frame(minHeight: 44)
-        #endif
+        .frame(minHeight: .compactSliderMinHeight)
         .fixedSize(horizontal: false, vertical: true)
     }
 }

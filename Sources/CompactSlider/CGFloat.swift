@@ -7,6 +7,15 @@ import SwiftUI
 
 extension CGFloat {
     
+    /// The min height of the `CompactSlider`.
+    public static let compactSliderMinHeight: CGFloat = {
+        #if os(macOS)
+        24
+        #else
+        44
+        #endif
+    }()
+    
     static let labelPadding: CGFloat = {
         #if os(macOS)
         6

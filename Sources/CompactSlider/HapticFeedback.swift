@@ -34,6 +34,7 @@ enum HapticFeedback {
 }
 
 // MARK: - Environment
+
 struct CompactSliderDisabledHapticFeedbackKey: EnvironmentKey {
     static var defaultValue = false
 }
@@ -45,7 +46,11 @@ extension EnvironmentValues {
     }
 }
 
+// MARK: - View
+
 public extension View {
+    /// Adds a condition that controls haptic feedback to the user.
+    /// - Parameter disabled: a boolean value that determines whether users can receive haptic feedback.
     func compactSliderDisabledHapticFeedback(_ disabled: Bool) -> some View {
         environment(\.compactSliderDisabledHapticFeedback, disabled)
     }
