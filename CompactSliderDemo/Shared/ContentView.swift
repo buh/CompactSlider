@@ -8,14 +8,6 @@ import CompactSlider
 
 struct ContentView: View {
     
-    @State private var defaultValue: Double = 0.5
-    @State private var defaultValue2: Double = 0.0
-    @State private var stepValue: Double = 50
-    @State private var lowerValue: Double = 0.4
-    @State private var upperValue: Double = 0.6
-    @State private var sliderState: CompactSliderState = .zero
-    @State private var sliderState2: CompactSliderState = .zero
-
     var body: some View {
         TabView {
             SingleValueView()
