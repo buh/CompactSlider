@@ -77,7 +77,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     let direction: CompactSliderDirection
     let handleVisibility: HandleVisibility
     @Binding var state: CompactSliderState
-    @ViewBuilder private var valueLabel: () -> ValueLabel
+    private let valueLabel: ValueLabel
     
     private var progressStep: Double = 0
     private var steps: Int = 0
@@ -111,7 +111,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         direction: CompactSliderDirection = .leading,
         handleVisibility: HandleVisibility = .standard,
         state: Binding<CompactSliderState> = .constant(.inactive),
-        @ViewBuilder valueLabel: @escaping () -> ValueLabel
+        @ViewBuilder valueLabel: () -> ValueLabel
     ) {
         _lowerValue = value
         _upperValue = .constant(0)
@@ -121,7 +121,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.direction = direction
         self.handleVisibility = handleVisibility
         _state = state
-        self.valueLabel = valueLabel
+        self.valueLabel = valueLabel()
         let rangeLength = Double(bounds.length)
         
         guard rangeLength > 0 else { return }
@@ -155,7 +155,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         step: Value = 0,
         handleVisibility: HandleVisibility = .standard,
         state: Binding<CompactSliderState> = .constant(.inactive),
-        @ViewBuilder valueLabel: @escaping () -> ValueLabel
+        @ViewBuilder valueLabel: () -> ValueLabel
     ) {
         _lowerValue = lowerValue
         _upperValue = upperValue
@@ -165,7 +165,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         direction = .leading
         self.handleVisibility = handleVisibility
         _state = state
-        self.valueLabel = valueLabel
+        self.valueLabel = valueLabel()
         let rangeLength = Double(bounds.length)
         
         guard rangeLength > 0 else { return }
@@ -247,7 +247,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 .onChange(of: dragLocationX) { onDragLocationXChange($0, size: proxy.size) }
             }
             
-            HStack(content: valueLabel)
+            HStack { valueLabel }
                 .padding(.horizontal, .labelPadding)
         }
         .opacity(isEnabled ? 1 : 0.5)
