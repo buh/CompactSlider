@@ -29,12 +29,12 @@ The slider is a replacement for the build-in slider and is designed specifically
 
 # Requirements
 
-- Swift 5.6
-- Xcode 13
-- SwiftUI 2
-- macOS 11
-- iOS 14
-- watchOS 7
+- Swift 5.5+
+- Xcode 13+
+- SwiftUI 2+
+- macOS 11+
+- iOS 14+
+- watchOS 7+
 
 *Some of the requirements could be reduced if there is a demand for them.*
 
