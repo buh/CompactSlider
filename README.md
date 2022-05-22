@@ -78,6 +78,12 @@ https://user-images.githubusercontent.com/284922/166314399-857a0612-1a47-4bf8-94
 
 You can find the generated DocC documentation [here](https://prowork.today/CompactSlider/documentation/compactslider).
 
+https://www.buymeacoffee.com/bukhtin
+
+# Support
+
+You can buy me a coffee [here](https://www.buymeacoffee.com/bukhtin) ☕️
+
 # License
 
 `CompactSlider` is available under the [MIT license](https://github.com/buh/CompactSlider/blob/main/LICENSE)
