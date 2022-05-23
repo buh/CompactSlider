@@ -25,6 +25,7 @@ The slider is a replacement for the build-in slider and is designed specifically
     - [Prominent Style](Usage.md#prominent-style)
   - [Advanced Layout](Usage.md#advanced-layout) and `CompactSliderState`
 - [Documentation](https://prowork.today/CompactSlider/documentation/compactslider)
+- [Support](#support)
 - [License](#license)
 
 # Requirements
