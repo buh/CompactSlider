@@ -198,19 +198,15 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 updateState()
             }
             #endif
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged {
-                        isDragging = true
-                        updateState()
-                        dragLocationX = $0.location.x
-                    }
-                    .onEnded {
-                        isDragging = false
-                        updateState()
-                        dragLocationX = $0.location.x
-                    }
-            )
+            .dragGesture(onChanged: {
+                isDragging = true
+                updateState()
+                dragLocationX = $0.location.x
+            }, onEnded: {
+                isDragging = false
+                updateState()
+                dragLocationX = $0.location.x
+            })
             .onChange(of: lowerProgress, perform: onLowerProgressChange)
             .onChange(of: upperProgress, perform: onUpperProgressChange)
             .onChange(of: lowerValue, perform: onLowerValueChange)
@@ -256,7 +252,75 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     }
 }
 
-// MARK: - On Change
+// MARK: - Dragging
+
+private extension View {
+    @ViewBuilder
+    func dragGesture(
+        onChanged: @escaping (DragGesture.Value) -> Void,
+        onEnded: @escaping (DragGesture.Value) -> Void
+    ) -> some View {
+#if os(macOS)
+        gesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged(onChanged)
+                .onEnded(onEnded)
+        )
+#else
+        modifier(DelaysTouchesModifier(delay: 0.1))
+            .gesture(
+                DragGesture(minimumDistance: 1)
+                    .onChanged(onChanged)
+                    .onEnded(onEnded)
+            )
+#endif
+    }
+}
+
+private struct DelaysTouchesModifier: ViewModifier {
+    
+    let delay: TimeInterval
+    @State private var disabled = false
+    @State private var pressedDate: Date?
+    
+    func body(content: Content) -> some View {
+        Button(action: {}) {
+            content
+        }
+        .buttonStyle(DelaysTouchesButtonStyle(delay: delay, disabled: $disabled, pressedDate: $pressedDate))
+        .disabled(disabled)
+    }
+}
+
+private struct DelaysTouchesButtonStyle: ButtonStyle {
+    
+    var delay: TimeInterval
+    @Binding var disabled: Bool
+    @Binding var pressedDate: Date?
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .onChange(of: configuration.isPressed, perform: handleIsPressed)
+    }
+
+    private func handleIsPressed(isPressed: Bool) {
+        guard isPressed else {
+            pressedDate = nil
+            disabled = false
+            return
+        }
+        
+        let date = Date()
+        pressedDate = date
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + max(delay, 0)) {
+            if date == pressedDate {
+                disabled = true
+                DispatchQueue.main.async { disabled = false }
+            }
+        }
+    }
+}
 
 private extension CompactSlider {
     
@@ -363,7 +427,14 @@ struct CompactSlider_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            contentView.preferredColorScheme(.light)
+            ScrollView {
+                VStack {
+                    contentView
+                    contentView
+                }
+            }
+            .preferredColorScheme(.light)
+            
             contentView.preferredColorScheme(.dark)
         }
         .padding()
