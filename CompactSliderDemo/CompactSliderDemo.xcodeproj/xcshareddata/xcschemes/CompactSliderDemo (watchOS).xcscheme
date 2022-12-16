@@ -54,10 +54,8 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.Carousel"
-         RemotePath = "/watchOS">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4A7EB06128206A640013AC91"
@@ -65,7 +63,7 @@
             BlueprintName = "watchOS"
             ReferencedContainer = "container:CompactSliderDemo.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -73,10 +71,8 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.Carousel"
-         RemotePath = "/watchOS">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4A7EB06128206A640013AC91"
@@ -84,16 +80,7 @@
             BlueprintName = "watchOS"
             ReferencedContainer = "container:CompactSliderDemo.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4A7EB06128206A640013AC91"
-            BuildableName = "watchOS.app"
-            BlueprintName = "watchOS"
-            ReferencedContainer = "container:CompactSliderDemo.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

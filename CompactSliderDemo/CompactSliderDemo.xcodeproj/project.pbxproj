@@ -35,6 +35,9 @@
 		4A9A19B2281F143E009DB733 /* RangeValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9A19B0281F143E009DB733 /* RangeValuesView.swift */; };
 		4A9A19B4281F1473009DB733 /* AdvancedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9A19B3281F1473009DB733 /* AdvancedView.swift */; };
 		4A9A19B5281F1473009DB733 /* AdvancedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9A19B3281F1473009DB733 /* AdvancedView.swift */; };
+		CA17D7DB2947944400093595 /* InsideFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA17D7DA2947944400093595 /* InsideFormView.swift */; };
+		CA17D7DC2947944400093595 /* InsideFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA17D7DA2947944400093595 /* InsideFormView.swift */; };
+		CA17D7DD2947950900093595 /* InsideFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA17D7DA2947944400093595 /* InsideFormView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +100,7 @@
 		4A9A19AD281F142E009DB733 /* SingleValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleValueView.swift; sourceTree = "<group>"; };
 		4A9A19B0281F143E009DB733 /* RangeValuesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeValuesView.swift; sourceTree = "<group>"; };
 		4A9A19B3281F1473009DB733 /* AdvancedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedView.swift; sourceTree = "<group>"; };
+		CA17D7DA2947944400093595 /* InsideFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsideFormView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +165,7 @@
 				4A6087A828174522001E3756 /* CompactSliderDemoApp.swift */,
 				4A6087A928174522001E3756 /* ContentView.swift */,
 				4A9A19AD281F142E009DB733 /* SingleValueView.swift */,
+				CA17D7DA2947944400093595 /* InsideFormView.swift */,
 				4A9A19B0281F143E009DB733 /* RangeValuesView.swift */,
 				4A9A19B3281F1473009DB733 /* AdvancedView.swift */,
 				4A7EB05D28206A310013AC91 /* View.swift */,
@@ -387,6 +392,7 @@
 				4A9A19B4281F1473009DB733 /* AdvancedView.swift in Sources */,
 				4A9A19AE281F142E009DB733 /* SingleValueView.swift in Sources */,
 				4A7EB05E28206A310013AC91 /* View.swift in Sources */,
+				CA17D7DB2947944400093595 /* InsideFormView.swift in Sources */,
 				4A9A19B1281F143E009DB733 /* RangeValuesView.swift in Sources */,
 				4A6087BA28174525001E3756 /* ContentView.swift in Sources */,
 				4A6087B828174525001E3756 /* CompactSliderDemoApp.swift in Sources */,
@@ -400,6 +406,7 @@
 				4A9A19B5281F1473009DB733 /* AdvancedView.swift in Sources */,
 				4A9A19AF281F142E009DB733 /* SingleValueView.swift in Sources */,
 				4A7EB05F28206A310013AC91 /* View.swift in Sources */,
+				CA17D7DC2947944400093595 /* InsideFormView.swift in Sources */,
 				4A9A19B2281F143E009DB733 /* RangeValuesView.swift in Sources */,
 				4A6087BB28174525001E3756 /* ContentView.swift in Sources */,
 				4A6087B928174525001E3756 /* CompactSliderDemoApp.swift in Sources */,
@@ -413,6 +420,7 @@
 				4A7EB08928206A870013AC91 /* SingleValueView.swift in Sources */,
 				4A7EB08A28206A870013AC91 /* RangeValuesView.swift in Sources */,
 				4A7EB08D28206A870013AC91 /* View.swift in Sources */,
+				CA17D7DD2947950900093595 /* InsideFormView.swift in Sources */,
 				4A7EB08C28206A870013AC91 /* CompactSliderDemoApp.swift in Sources */,
 				4A7EB08B28206A870013AC91 /* AdvancedView.swift in Sources */,
 				4A7EB08828206A870013AC91 /* ContentView.swift in Sources */,

@@ -7,7 +7,7 @@ import SwiftUI
 import CompactSlider
 
 struct ContentView: View {
-    
+
     var body: some View {
         TabView {
             SingleValueView()
@@ -18,6 +18,12 @@ struct ContentView: View {
                 .tabItem {
                     Label("Range Values", systemImage: "rectangle.split.3x1.fill")
                 }
+            
+            InsideFormView()
+                .tabItem {
+                    Label("Form", systemImage: "rectangle.and.pencil.and.ellipsis.rtl")
+                }
+
             AdvancedView()
                 .tabItem {
                     Label("Advanced", systemImage: "capsule.lefthalf.filled")

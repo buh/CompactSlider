@@ -14,70 +14,81 @@ struct SingleValueView: View {
     @State private var stepValue: Double = 50
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                Text("Single Value").font(.headline)
-                
-                // 1. The default case.
-                CompactSlider(value: $defaultValue) {
-                    Text("Default")
+        VStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    Text("Single Value").font(.headline)
+                    singleValueSliders
+
+                    Divider()
+
+                    Text("Snapped Value").font(.headline)
+                    snappedValueSliders
+
                     Spacer()
-                    Text(String(format: "%.2f", defaultValue))
-                        .monospacedDigitIfPossible()
                 }
-                
-                // 2. Handle in the centre for better representation of negative values.
-                CompactSlider(value: $defaultValue2, in: -1.0...1.0, direction: .center) {
-                    Text("Center")
-                    Spacer()
-                    Text(String(format: "%.2f", defaultValue2))
-                        .monospacedDigitIfPossible()
-                }
-                
-                // 3. The value is filled in on the right-hand side.
-                CompactSlider(value: $defaultValue, direction: .trailing) {
-                    Text("Trailing")
-                    Spacer()
-                    Text(String(format: "%.2f", defaultValue))
-                        .monospacedDigitIfPossible()
-                }
-                
-                Divider()
-                Text("Snapped Value").font(.headline)
-                
-                // 4. Snapped value
-                HStack {
-                    #if os(watchOS)
-                    CompactSlider(value: $stepValue, in: 0...160, step: 5) {
-                        Text("Speed")
-                        Spacer()
-                        Text("\(Int(stepValue))")
-                    }
-                    #else
-                    Text("Speed:")
-                    CompactSlider(value: $stepValue, in: 0...160, step: 5) {}
-                    Text("\(Int(stepValue))")
-                        .monospacedDigitIfPossible()
-                    #endif
-                }
-                
-                // 5. Handle in the centre for better representation of negative values.
-                CompactSlider(value: $defaultValue3, in: -1.0...1.0, step: 0.1, direction: .center) {
-                    #if os(watchOS)
-                    Text("Center")
-                    #else
-                    Text("Center (step 10%)")
-                    #endif
-                    Spacer()
-                    Text("\(Int(100 * defaultValue3))%")
-                        .monospacedDigitIfPossible()
-                }
-                
-                Spacer()
             }
             #if os(macOS) || os(iOS)
             .padding()
             #endif
+        }
+    }
+
+    @ViewBuilder
+    private var singleValueSliders: some View {
+        // 1. The default case.
+        CompactSlider(value: $defaultValue) {
+            Text("Default")
+            Spacer()
+            Text(String(format: "%.2f", defaultValue))
+                .monospacedDigitIfPossible()
+        }
+
+        // 2. Handle in the centre for better representation of negative values.
+        CompactSlider(value: $defaultValue2, in: -1.0...1.0, direction: .center) {
+            Text("Center")
+            Spacer()
+            Text(String(format: "%.2f", defaultValue2))
+                .monospacedDigitIfPossible()
+        }
+
+        // 3. The value is filled in on the right-hand side.
+        CompactSlider(value: $defaultValue, direction: .trailing) {
+            Text("Trailing")
+            Spacer()
+            Text(String(format: "%.2f", defaultValue))
+                .monospacedDigitIfPossible()
+        }
+    }
+
+    @ViewBuilder
+    private var snappedValueSliders: some View {
+        // 4. Snapped value
+        HStack {
+            #if os(watchOS)
+            CompactSlider(value: $stepValue, in: 0...160, step: 5) {
+                Text("Speed")
+                Spacer()
+                Text("\(Int(stepValue))")
+            }
+            #else
+            Text("Speed:")
+            CompactSlider(value: $stepValue, in: 0...160, step: 5) {}
+            Text("\(Int(stepValue))")
+                .monospacedDigitIfPossible()
+            #endif
+        }
+
+        // 5. Handle in the centre for better representation of negative values.
+        CompactSlider(value: $defaultValue3, in: -1.0...1.0, step: 0.1, direction: .center) {
+            #if os(watchOS)
+            Text("Center")
+            #else
+            Text("Center (step 10%)")
+            #endif
+            Spacer()
+            Text("\(Int(100 * defaultValue3))%")
+                .monospacedDigitIfPossible()
         }
     }
 }
