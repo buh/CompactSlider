@@ -76,6 +76,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     let isRangeValues: Bool
     let direction: CompactSliderDirection
     let handleVisibility: HandleVisibility
+    let enableDragGestureDelayForiOS: Bool
     @Binding var state: CompactSliderState
     private let valueLabel: ValueLabel
     
@@ -101,6 +102,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ///   - step: the distance between each valid value.
     ///   - direction: the direction in which the slider will indicate the selected value.
     ///   - handleVisibility: the handle visibility determines the rules for showing the handle.
+    ///   - enableDragGestureDelayForiOS: enables delay for iOS when sliders inside ``ScrollView`` or ``Form``.
     ///   - state: the state of the slider with tracking information.
     ///   - valueLabel: a `View` that describes the purpose of the instance.
     ///                 This view is contained in the `HStack` with central alignment.
@@ -110,6 +112,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         step: Value = 0,
         direction: CompactSliderDirection = .leading,
         handleVisibility: HandleVisibility = .standard,
+        enableDragGestureDelayForiOS: Bool = true,
         state: Binding<CompactSliderState> = .constant(.inactive),
         @ViewBuilder valueLabel: () -> ValueLabel
     ) {
@@ -120,6 +123,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.step = step
         self.direction = direction
         self.handleVisibility = handleVisibility
+        self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
         _state = state
         self.valueLabel = valueLabel()
         let rangeLength = Double(bounds.length)
@@ -145,6 +149,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ///   - bounds: the range of the valid values. Defaults to 0...1.
     ///   - step: the distance between each valid value.
     ///   - handleVisibility: the handle visibility determines the rules for showing the handle.
+    ///   - enableDragGestureDelayForiOS: enables delay for iOS when sliders inside ``ScrollView`` or ``Form``.
     ///   - state: the state of the slider with tracking information.
     ///   - valueLabel: a `View` that describes the purpose of the instance.
     ///                 This view is contained in the `HStack` with central alignment.
@@ -154,6 +159,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
         handleVisibility: HandleVisibility = .standard,
+        enableDragGestureDelayForiOS: Bool = true,
         state: Binding<CompactSliderState> = .constant(.inactive),
         @ViewBuilder valueLabel: () -> ValueLabel
     ) {
@@ -164,6 +170,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.step = step
         direction = .leading
         self.handleVisibility = handleVisibility
+        self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
         _state = state
         self.valueLabel = valueLabel()
         let rangeLength = Double(bounds.length)
@@ -198,15 +205,18 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 updateState()
             }
             #endif
-            .dragGesture(onChanged: {
-                isDragging = true
-                updateState()
-                dragLocationX = $0.location.x
-            }, onEnded: {
-                isDragging = false
-                updateState()
-                dragLocationX = $0.location.x
-            })
+            .dragGesture(
+                enableDragGestureDelayForiOS: enableDragGestureDelayForiOS,
+                onChanged: {
+                    isDragging = true
+                    updateState()
+                    dragLocationX = $0.location.x
+                }, onEnded: {
+                    isDragging = false
+                    updateState()
+                    dragLocationX = $0.location.x
+                }
+            )
             .onChange(of: lowerProgress, perform: onLowerProgressChange)
             .onChange(of: upperProgress, perform: onUpperProgressChange)
             .onChange(of: lowerValue, perform: onLowerValueChange)
@@ -257,6 +267,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
 private extension View {
     @ViewBuilder
     func dragGesture(
+        enableDragGestureDelayForiOS: Bool,
         onChanged: @escaping (DragGesture.Value) -> Void,
         onEnded: @escaping (DragGesture.Value) -> Void
     ) -> some View {
@@ -267,7 +278,7 @@ private extension View {
                 .onEnded(onEnded)
         )
 #else
-        modifier(DelaysTouchesModifier(delay: 0.1))
+        delayedGesture(enableDragGestureDelayForiOS)
             .gesture(
                 DragGesture(minimumDistance: 1)
                     .onChanged(onChanged)
@@ -275,49 +286,13 @@ private extension View {
             )
 #endif
     }
-}
 
-private struct DelaysTouchesModifier: ViewModifier {
-    
-    let delay: TimeInterval
-    @State private var disabled = false
-    @State private var pressedDate: Date?
-    
-    func body(content: Content) -> some View {
-        Button(action: {}) {
-            content
-        }
-        .buttonStyle(DelaysTouchesButtonStyle(delay: delay, disabled: $disabled, pressedDate: $pressedDate))
-        .disabled(disabled)
-    }
-}
-
-private struct DelaysTouchesButtonStyle: ButtonStyle {
-    
-    var delay: TimeInterval
-    @Binding var disabled: Bool
-    @Binding var pressedDate: Date?
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .onChange(of: configuration.isPressed, perform: handleIsPressed)
-    }
-
-    private func handleIsPressed(isPressed: Bool) {
-        guard isPressed else {
-            pressedDate = nil
-            disabled = false
-            return
-        }
-        
-        let date = Date()
-        pressedDate = date
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + max(delay, 0)) {
-            if date == pressedDate {
-                disabled = true
-                DispatchQueue.main.async { disabled = false }
-            }
+    @ViewBuilder
+    func delayedGesture(_ enableDragGestureDelayForiOS: Bool) -> some View {
+        if enableDragGestureDelayForiOS {
+            onTapGesture {}
+        } else {
+            self
         }
     }
 }
