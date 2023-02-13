@@ -76,6 +76,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     let isRangeValues: Bool
     let direction: CompactSliderDirection
     let handleVisibility: HandleVisibility
+    let minHeight: CGFloat
     let enableDragGestureDelayForiOS: Bool
     @Binding var state: CompactSliderState
     private let valueLabel: ValueLabel
@@ -112,6 +113,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         step: Value = 0,
         direction: CompactSliderDirection = .leading,
         handleVisibility: HandleVisibility = .standard,
+        minHeight: CGFloat = .compactSliderMinHeight,
         enableDragGestureDelayForiOS: Bool = true,
         state: Binding<CompactSliderState> = .constant(.inactive),
         @ViewBuilder valueLabel: () -> ValueLabel
@@ -123,6 +125,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.step = step
         self.direction = direction
         self.handleVisibility = handleVisibility
+        self.minHeight = minHeight
         self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
         _state = state
         self.valueLabel = valueLabel()
@@ -159,6 +162,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
         handleVisibility: HandleVisibility = .standard,
+        minHeight: CGFloat = .compactSliderMinHeight,
         enableDragGestureDelayForiOS: Bool = true,
         state: Binding<CompactSliderState> = .constant(.inactive),
         @ViewBuilder valueLabel: () -> ValueLabel
@@ -170,6 +174,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.step = step
         direction = .leading
         self.handleVisibility = handleVisibility
+        self.minHeight = minHeight
         self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
         _state = state
         self.valueLabel = valueLabel()
@@ -257,7 +262,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 .padding(.horizontal, .labelPadding)
         }
         .opacity(isEnabled ? 1 : 0.5)
-        .frame(minHeight: .compactSliderMinHeight)
+        .frame(minHeight: minHeight)
         .fixedSize(horizontal: false, vertical: true)
     }
 }
