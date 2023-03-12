@@ -5,6 +5,13 @@
 
 import SwiftUI
 
+extension CompactSlider {
+    /// A scale visibility determines the rules for showing the scale.
+    public enum ScaleVisibility {
+        case hovering, always, hidden
+    }
+}
+
 /// A shape that draws a scale of possible values.
 struct Scale: Shape {
     

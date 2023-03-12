@@ -76,6 +76,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     let isRangeValues: Bool
     let direction: CompactSliderDirection
     let handleVisibility: HandleVisibility
+    let scaleVisibility: ScaleVisibility
     let minHeight: CGFloat
     let enableDragGestureDelayForiOS: Bool
     @Binding var state: CompactSliderState
@@ -103,6 +104,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ///   - step: the distance between each valid value.
     ///   - direction: the direction in which the slider will indicate the selected value.
     ///   - handleVisibility: the handle visibility determines the rules for showing the handle.
+    ///   - scaleVisibility: the scale visibility determines the rules for showing the scale.
+    ///   - minHeight: the slider minimum height.
     ///   - enableDragGestureDelayForiOS: enables delay for iOS when sliders inside ``ScrollView`` or ``Form``.
     ///   - state: the state of the slider with tracking information.
     ///   - valueLabel: a `View` that describes the purpose of the instance.
@@ -113,6 +116,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         step: Value = 0,
         direction: CompactSliderDirection = .leading,
         handleVisibility: HandleVisibility = .standard,
+        scaleVisibility: ScaleVisibility = .hovering,
         minHeight: CGFloat = .compactSliderMinHeight,
         enableDragGestureDelayForiOS: Bool = true,
         state: Binding<CompactSliderState> = .constant(.inactive),
@@ -125,6 +129,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.step = step
         self.direction = direction
         self.handleVisibility = handleVisibility
+        self.scaleVisibility = scaleVisibility
         self.minHeight = minHeight
         self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
         _state = state
@@ -152,6 +157,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ///   - bounds: the range of the valid values. Defaults to 0...1.
     ///   - step: the distance between each valid value.
     ///   - handleVisibility: the handle visibility determines the rules for showing the handle.
+    ///   - scaleVisibility: the scale visibility determines the rules for showing the scale.
+    ///   - minHeight: the slider minimum height.
     ///   - enableDragGestureDelayForiOS: enables delay for iOS when sliders inside ``ScrollView`` or ``Form``.
     ///   - state: the state of the slider with tracking information.
     ///   - valueLabel: a `View` that describes the purpose of the instance.
@@ -162,6 +169,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
         handleVisibility: HandleVisibility = .standard,
+        scaleVisibility: ScaleVisibility = .hovering,
         minHeight: CGFloat = .compactSliderMinHeight,
         enableDragGestureDelayForiOS: Bool = true,
         state: Binding<CompactSliderState> = .constant(.inactive),
@@ -174,6 +182,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.step = step
         direction = .leading
         self.handleVisibility = handleVisibility
+        self.scaleVisibility = scaleVisibility
         self.minHeight = minHeight
         self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
         _state = state
@@ -244,13 +253,13 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                             progressHandleView(upperProgress, size: proxy.size)
                         }
                         
-                        if isHovering || isDragging {
+                        if isScaleVisible {
                             ScaleView(steps: steps)
                                 .frame(height: proxy.size.height, alignment: .top)
                         }
                     } else if isRangeValues, abs(upperProgress - lowerProgress) < 0.01 {
                         progressHandleView(lowerProgress, size: proxy.size)
-                    } else if direction == .center && abs(lowerProgress - 0.5) < 0.02 {
+                    } else if direction == .center, abs(lowerProgress - 0.5) < 0.02 {
                         progressHandleView(lowerProgress, size: proxy.size)
                     }
                 }
@@ -264,6 +273,18 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         .opacity(isEnabled ? 1 : 0.5)
         .frame(minHeight: minHeight)
         .fixedSize(horizontal: false, vertical: true)
+    }
+    
+    private var isScaleVisible: Bool {
+        if scaleVisibility == .hidden {
+            return false
+        }
+        
+        if scaleVisibility == .always {
+            return true
+        }
+        
+        return isHovering || isDragging
     }
 }
 
