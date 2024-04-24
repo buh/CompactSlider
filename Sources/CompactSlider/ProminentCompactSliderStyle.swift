@@ -14,6 +14,8 @@ public struct ProminentCompactSliderStyle: CompactSliderStyle {
     public let upperColor: Color
     /// Flag which allows the specified colours (`lowerColor`, `upperColor`) to be used for the gradient background.
     public var useGradientBackground: Bool = false
+    /// The threshold to switch from `lowerColor` to `upperColor`.
+    public var threshold: CGFloat = 0.5
     
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -36,8 +38,9 @@ public struct ProminentCompactSliderStyle: CompactSliderStyle {
             )
             .accentColor(
                 configuration.isRangeValues
-                ? abs(configuration.upperProgress - 0.5) > abs(configuration.lowerProgress - 0.5) ? upperColor : lowerColor
-                : configuration.lowerProgress > 0.5 ? upperColor : lowerColor
+                ? (abs(configuration.upperProgress - threshold) > abs(configuration.lowerProgress - threshold)
+                   ? upperColor : lowerColor)
+                : configuration.lowerProgress > threshold ? upperColor : lowerColor
             )
             .clipShape(RoundedRectangle(cornerRadius: .cornerRadius))
     }
@@ -48,12 +51,14 @@ public extension CompactSliderStyle where Self == ProminentCompactSliderStyle {
     static func prominent(
         lowerColor: Color,
         upperColor: Color,
-        useGradientBackground: Bool = false
+        useGradientBackground: Bool = false,
+        threshold: CGFloat = 0.5
     ) -> Self {
         ProminentCompactSliderStyle(
             lowerColor: lowerColor,
             upperColor: upperColor,
-            useGradientBackground: useGradientBackground
+            useGradientBackground: useGradientBackground,
+            threshold: threshold
         )
     }
 }
