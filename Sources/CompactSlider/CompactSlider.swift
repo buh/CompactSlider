@@ -305,7 +305,7 @@ private extension View {
         )
 #else
         delayedGesture(enableDragGestureDelayForiOS)
-            .gesture(
+            .highPriorityGesture(
                 DragGesture(minimumDistance: 1)
                     .onChanged(onChanged)
                     .onEnded(onEnded)
