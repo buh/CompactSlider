@@ -16,7 +16,8 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "CompactSlider"
+            name: "CompactSlider",
+            resources: [.process("PrivacyInfo.xcprivacy")]
         ),
     ]
 )
