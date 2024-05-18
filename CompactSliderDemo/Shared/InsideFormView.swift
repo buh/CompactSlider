@@ -40,8 +40,6 @@ struct InsideFormView: View {
     }
 }
 
-struct InsideFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        InsideFormView()
-    }
+#Preview {
+    InsideFormView()
 }

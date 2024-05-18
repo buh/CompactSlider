@@ -6,11 +6,12 @@
 import SwiftUI
 
 extension View {
+    @ViewBuilder
     func monospacedDigitIfPossible() -> some View {
         if #available(iOS 15.0, *), #available(watchOSApplicationExtension 8.0, *) {
-            return AnyView(monospacedDigit())
+            monospacedDigit()
+        } else {
+            self
         }
-        
-        return AnyView(self)
     }
 }

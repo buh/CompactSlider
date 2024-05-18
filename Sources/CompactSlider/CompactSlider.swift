@@ -424,122 +424,101 @@ private extension ClosedRange where Bound: BinaryFloatingPoint {
 
 // MARK: - Preview
 
-struct CompactSlider_Previews: PreviewProvider {
-    
-    static var previews: some View {
+#Preview {
+    VStack(spacing: 16) {
+        Text("CompactSlider")
+            .font(.title.bold())
+        
         Group {
-            ScrollView {
-                VStack {
-                    contentView
-                    contentView
-                }
+            // 1. The default case.
+            CompactSlider(value: .constant(0.5)) {
+                Text("Default (leading)")
+                Spacer()
+                Text("0.5")
             }
-            .preferredColorScheme(.light)
             
-            contentView.preferredColorScheme(.dark)
-        }
-        .padding()
-        #if os(macOS)
-        .frame(height: 500)
-        #endif
-    }
-    
-    private static var contentView: some View {
-        VStack(spacing: 16) {
-            Text("CompactSlider")
-                .font(.title.bold())
+            // Handle in the centre for better representation of negative values.
+            // 2.1. The value is 0, which should show the handle as there is no value to show.
+            CompactSlider(value: .constant(0.0), in: -1.0...1.0, direction: .center) {
+                Text("Center -1.0...1.0")
+                Spacer()
+                Text("0.0")
+            }
             
-            Group {
-                // 1. The default case.
-                CompactSlider(value: .constant(0.5)) {
-                    Text("Default (leading)")
-                    Spacer()
-                    Text("0.5")
-                }
-                
-                // Handle in the centre for better representation of negative values.
-                // 2.1. The value is 0, which should show the handle as there is no value to show.
-                CompactSlider(value: .constant(0.0), in: -1.0...1.0, direction: .center) {
-                    Text("Center -1.0...1.0")
-                    Spacer()
-                    Text("0.0")
-                }
-                
-                // 2.2. When the value is not 0, the value can be shown with a rectangle.
-                CompactSlider(value: .constant(0.3), in: -1.0...1.0, direction: .center) {
-                    Text("Center -1.0...1.0")
-                    Spacer()
-                    Text("0.3")
-                }
-                
-                // 3. The value is filled in on the right-hand side.
-                CompactSlider(value: .constant(0.3), direction: .trailing) {
-                    Text("Trailing")
-                    Spacer()
-                    Text("0.3")
-                }
-                
-                Divider()
-                
-                // 4. Set a range of values in specific step to change.
-                CompactSlider(value: .constant(70), in: 0...200, step: 10) {
-                    Text("Snapped")
-                    Spacer()
-                    Text("70")
-                }
-                
-                // 4. Set a range of values in specific step to change from the center.
-                CompactSlider(value: .constant(0.0), in: -10...10, step: 1, direction: .center) {
-                    Text("Center")
-                    Spacer()
-                    Text("0.0")
-                }
-                .compactSliderDisabledHapticFeedback(true)
+            // 2.2. When the value is not 0, the value can be shown with a rectangle.
+            CompactSlider(value: .constant(0.3), in: -1.0...1.0, direction: .center) {
+                Text("Center -1.0...1.0")
+                Spacer()
+                Text("0.3")
+            }
+            
+            // 3. The value is filled in on the right-hand side.
+            CompactSlider(value: .constant(0.3), direction: .trailing) {
+                Text("Trailing")
+                Spacer()
+                Text("0.3")
             }
             
             Divider()
             
-            // Prominent style.
-            Group {
-                CompactSlider(value: .constant(0.5)) {
-                    Text("Default")
-                    Spacer()
-                    Text("0.5")
-                }
-                .compactSliderStyle(
-                    .prominent(
-                        lowerColor: .purple,
-                        upperColor: .pink,
-                        useGradientBackground: true
-                    )
-                )
-                
-                // Get the range of values.
-                VStack(spacing: 16) {
-                    CompactSlider(from: .constant(0.4), to: .constant(0.7)) {
-                        Text("Range")
-                        Spacer()
-                        Text("0.2 - 0.7")
-                    }
-                    
-                    // Switch back to the `.default` style.
-                    CompactSlider(from: .constant(0.4), to: .constant(0.7)) {
-                        Text("Range")
-                        Spacer()
-                        Text("0.2 - 0.7")
-                    }
-                    .compactSliderStyle(.default)
-                }
-                .compactSliderStyle(
-                    .prominent(
-                        lowerColor: .green,
-                        upperColor: .yellow,
-                        useGradientBackground: true
-                    )
-                )
+            // 4. Set a range of values in specific step to change.
+            CompactSlider(value: .constant(70), in: 0...200, step: 10) {
+                Text("Snapped")
+                Spacer()
+                Text("70")
             }
             
-            Spacer()
+            // 4. Set a range of values in specific step to change from the center.
+            CompactSlider(value: .constant(0.0), in: -10...10, step: 1, direction: .center) {
+                Text("Center")
+                Spacer()
+                Text("0.0")
+            }
+            .compactSliderDisabledHapticFeedback(true)
+        }
+        
+        Divider()
+        
+        // Prominent style.
+        Group {
+            CompactSlider(value: .constant(0.5)) {
+                Text("Default")
+                Spacer()
+                Text("0.5")
+            }
+            .compactSliderStyle(
+                .prominent(
+                    lowerColor: .purple,
+                    upperColor: .pink,
+                    useGradientBackground: true
+                )
+            )
+            
+            // Get the range of values.
+            VStack(spacing: 16) {
+                CompactSlider(from: .constant(0.4), to: .constant(0.7)) {
+                    Text("Range")
+                    Spacer()
+                    Text("0.2 - 0.7")
+                }
+                
+                // Switch back to the `.default` style.
+                CompactSlider(from: .constant(0.4), to: .constant(0.7)) {
+                    Text("Range")
+                    Spacer()
+                    Text("0.2 - 0.7")
+                }
+                .compactSliderStyle(.default)
+            }
+            .compactSliderStyle(
+                .prominent(
+                    lowerColor: .green,
+                    upperColor: .yellow,
+                    useGradientBackground: true
+                )
+            )
         }
     }
+    .padding()
+    .frame(width: 600, height: 500, alignment: .top)
 }

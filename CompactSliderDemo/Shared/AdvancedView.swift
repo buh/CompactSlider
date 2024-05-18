@@ -288,12 +288,10 @@ struct AdvancedView: View {
     }
 }
 
-struct AdvancedView_Previews: PreviewProvider {
-    static var previews: some View {
-        AdvancedView()
-            #if os(macOS)
-            .padding()
-            .frame(width: 600, height: 500)
-            #endif
-    }
+#Preview {        
+    AdvancedView()
+        #if os(macOS)
+        .padding()
+        .frame(width: 600, height: 500)
+        #endif
 }

@@ -41,8 +41,6 @@ private extension Double {
     var formatted: String { String(format: "%.2f", self) }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
 }

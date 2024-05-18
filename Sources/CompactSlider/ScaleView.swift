@@ -87,37 +87,35 @@ private extension View {
     }
 }
 
-struct ScaleView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            ZStack {
-                ScaleView()
-                    .frame(height: 50, alignment: .top)
-            }
-            .background(Color.label.opacity(0.1))
-            
-            ZStack {
-                ScaleView(scaleLength: 25, secondaryScaleLength: 15, lineWidth: 2)
-                    .frame(height: 50, alignment: .top)
-            }
-            .background(Color.label.opacity(0.1))
-
-            ZStack {
-                ScaleView(scaleLength: 0, secondaryScaleLength: 0)
-                    .frame(height: 50, alignment: .top)
-            }
-            .background(Color.label.opacity(0.1))
-
-            ScaleView(steps: 30)
+#Preview {
+    VStack(spacing: 20) {
+        ZStack {
+            ScaleView()
                 .frame(height: 50, alignment: .top)
-                .background(Color.label.opacity(0.1))
-
-            ScaleView(steps: 10, scaleLength: 25, lineWidth: 5)
-                .frame(height: 50, alignment: .top)
-                .background(Color.label.opacity(0.1))
         }
-        .frame(width: 300)
-        .padding()
-        .previewLayout(.sizeThatFits)
+        .background(Color.label.opacity(0.1))
+        
+        ZStack {
+            ScaleView(scaleLength: 25, secondaryScaleLength: 15, lineWidth: 2)
+                .frame(height: 50, alignment: .top)
+        }
+        .background(Color.label.opacity(0.1))
+        
+        ZStack {
+            ScaleView(scaleLength: 0, secondaryScaleLength: 0)
+                .frame(height: 50, alignment: .top)
+        }
+        .background(Color.label.opacity(0.1))
+        
+        ScaleView(steps: 30)
+            .frame(height: 50, alignment: .top)
+            .background(Color.label.opacity(0.1))
+        
+        ScaleView(steps: 10, scaleLength: 25, lineWidth: 5)
+            .frame(height: 50, alignment: .top)
+            .background(Color.label.opacity(0.1))
     }
+    .frame(width: 300)
+    .padding()
+    .previewLayout(.sizeThatFits)
 }
