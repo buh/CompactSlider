@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct ProgressView: View {
+struct CProgressView: View {
     
     @Environment(\.compactSliderSecondaryAppearance) var secondaryAppearance
     
@@ -26,7 +26,7 @@ struct ProgressView: View {
 extension CompactSlider {
     
     func progressView(in size: CGSize) -> some View {
-        ProgressView(
+        CProgressView(
             width: progressWidth(size),
             offsetX: progressOffsetX(size),
             isFocused: isHovering || isDragging
