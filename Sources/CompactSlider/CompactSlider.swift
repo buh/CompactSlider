@@ -78,6 +78,9 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     let handleVisibility: HandleVisibility
     let scaleVisibility: ScaleVisibility
     let minHeight: CGFloat
+    // Slider height would at least be 10 pt if we do not set this explicitly since we are using Rectangle/Color in HandleView implementation.
+    // Explanation: When Color is used as a View, it would at least take 10 * 10 if we do not set its frame(width/height)/frame(maxWidth/maxHeight) explicitly.
+    let maxHeight: CGFloat?
     let enableDragGestureDelayForiOS: Bool
     @Binding var state: CompactSliderState
     private let valueLabel: ValueLabel
@@ -106,6 +109,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ///   - handleVisibility: the handle visibility determines the rules for showing the handle.
     ///   - scaleVisibility: the scale visibility determines the rules for showing the scale.
     ///   - minHeight: the slider minimum height.
+    ///   - maxHeight: the slider maximum height (optional).
     ///   - enableDragGestureDelayForiOS: enables delay for iOS when sliders inside ``ScrollView`` or ``Form``.
     ///   - state: the state of the slider with tracking information.
     ///   - valueLabel: a `View` that describes the purpose of the instance.
@@ -118,6 +122,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         handleVisibility: HandleVisibility = .standard,
         scaleVisibility: ScaleVisibility = .hovering,
         minHeight: CGFloat = .compactSliderMinHeight,
+        maxHeight: CGFloat? = nil,
         enableDragGestureDelayForiOS: Bool = true,
         state: Binding<CompactSliderState> = .constant(.inactive),
         @ViewBuilder valueLabel: () -> ValueLabel
@@ -131,6 +136,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.handleVisibility = handleVisibility
         self.scaleVisibility = scaleVisibility
         self.minHeight = minHeight
+        self.maxHeight = maxHeight
         self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
         _state = state
         self.valueLabel = valueLabel()
@@ -159,6 +165,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ///   - handleVisibility: the handle visibility determines the rules for showing the handle.
     ///   - scaleVisibility: the scale visibility determines the rules for showing the scale.
     ///   - minHeight: the slider minimum height.
+    ///   - maxHeight: the slider maximum height (optional).
     ///   - enableDragGestureDelayForiOS: enables delay for iOS when sliders inside ``ScrollView`` or ``Form``.
     ///   - state: the state of the slider with tracking information.
     ///   - valueLabel: a `View` that describes the purpose of the instance.
@@ -171,6 +178,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         handleVisibility: HandleVisibility = .standard,
         scaleVisibility: ScaleVisibility = .hovering,
         minHeight: CGFloat = .compactSliderMinHeight,
+        maxHeight: CGFloat? = nil,
         enableDragGestureDelayForiOS: Bool = true,
         state: Binding<CompactSliderState> = .constant(.inactive),
         @ViewBuilder valueLabel: () -> ValueLabel
@@ -184,6 +192,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.handleVisibility = handleVisibility
         self.scaleVisibility = scaleVisibility
         self.minHeight = minHeight
+        self.maxHeight = maxHeight
         self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
         _state = state
         self.valueLabel = valueLabel()
@@ -271,7 +280,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 .padding(.horizontal, .labelPadding)
         }
         .opacity(isEnabled ? 1 : 0.5)
-        .frame(minHeight: minHeight)
+        .frame(minHeight: minHeight, maxHeight: maxHeight)
         .fixedSize(horizontal: false, vertical: true)
     }
     
