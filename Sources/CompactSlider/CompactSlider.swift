@@ -81,7 +81,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     // Slider height would at least be 10 pt if we do not set this explicitly since we are using Rectangle/Color in HandleView implementation.
     // Explanation: When Color is used as a View, it would at least take 10 * 10 if we do not set its frame(width/height)/frame(maxWidth/maxHeight) explicitly.
     let maxHeight: CGFloat?
-    let enableDragGestureDelayForiOS: Bool
+    let gestureOptions: Set<GestureOption>
     @Binding var state: CompactSliderState
     private let valueLabel: ValueLabel
     
@@ -110,7 +110,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ///   - scaleVisibility: the scale visibility determines the rules for showing the scale.
     ///   - minHeight: the slider minimum height.
     ///   - maxHeight: the slider maximum height (optional).
-    ///   - enableDragGestureDelayForiOS: enables delay for iOS when sliders inside ``ScrollView`` or ``Form``.
+    ///   - gestureOptions: a set of drag gesture options: minimum drag distance, delayed touch, and high priority.
     ///   - state: the state of the slider with tracking information.
     ///   - valueLabel: a `View` that describes the purpose of the instance.
     ///                 This view is contained in the `HStack` with central alignment.
@@ -123,7 +123,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         scaleVisibility: ScaleVisibility = .hovering,
         minHeight: CGFloat = .compactSliderMinHeight,
         maxHeight: CGFloat? = nil,
-        enableDragGestureDelayForiOS: Bool = true,
+        gestureOptions: Set<GestureOption> = .default,
         state: Binding<CompactSliderState> = .constant(.inactive),
         @ViewBuilder valueLabel: () -> ValueLabel
     ) {
@@ -137,7 +137,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.scaleVisibility = scaleVisibility
         self.minHeight = minHeight
         self.maxHeight = maxHeight
-        self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
+        self.gestureOptions = gestureOptions
         _state = state
         self.valueLabel = valueLabel()
         let rangeLength = Double(bounds.length)
@@ -166,7 +166,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     ///   - scaleVisibility: the scale visibility determines the rules for showing the scale.
     ///   - minHeight: the slider minimum height.
     ///   - maxHeight: the slider maximum height (optional).
-    ///   - enableDragGestureDelayForiOS: enables delay for iOS when sliders inside ``ScrollView`` or ``Form``.
+    ///   - gestureOptions: a set of drag gesture options: minimum drag distance, delayed touch, and high priority.
     ///   - state: the state of the slider with tracking information.
     ///   - valueLabel: a `View` that describes the purpose of the instance.
     ///                 This view is contained in the `HStack` with central alignment.
@@ -179,7 +179,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         scaleVisibility: ScaleVisibility = .hovering,
         minHeight: CGFloat = .compactSliderMinHeight,
         maxHeight: CGFloat? = nil,
-        enableDragGestureDelayForiOS: Bool = true,
+        gestureOptions: Set<GestureOption> = .default,
         state: Binding<CompactSliderState> = .constant(.inactive),
         @ViewBuilder valueLabel: () -> ValueLabel
     ) {
@@ -193,7 +193,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
         self.scaleVisibility = scaleVisibility
         self.minHeight = minHeight
         self.maxHeight = maxHeight
-        self.enableDragGestureDelayForiOS = enableDragGestureDelayForiOS
+        self.gestureOptions = gestureOptions
         _state = state
         self.valueLabel = valueLabel()
         let rangeLength = Double(bounds.length)
@@ -229,7 +229,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
             }
             #endif
             .dragGesture(
-                enableDragGestureDelayForiOS: enableDragGestureDelayForiOS,
+                options: gestureOptions,
                 onChanged: {
                     isDragging = true
                     updateState()
@@ -298,39 +298,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
 }
 
 // MARK: - Dragging
-
-private extension View {
-    @ViewBuilder
-    func dragGesture(
-        enableDragGestureDelayForiOS: Bool,
-        onChanged: @escaping (DragGesture.Value) -> Void,
-        onEnded: @escaping (DragGesture.Value) -> Void
-    ) -> some View {
-#if os(macOS)
-        gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged(onChanged)
-                .onEnded(onEnded)
-        )
-#else
-        delayedGesture(enableDragGestureDelayForiOS)
-            .gesture(
-                DragGesture(minimumDistance: 1)
-                    .onChanged(onChanged)
-                    .onEnded(onEnded)
-            )
-#endif
-    }
-
-    @ViewBuilder
-    func delayedGesture(_ enableDragGestureDelayForiOS: Bool) -> some View {
-        if enableDragGestureDelayForiOS {
-            onTapGesture {}
-        } else {
-            self
-        }
-    }
-}
 
 private extension CompactSlider {
     
@@ -529,5 +496,7 @@ private extension ClosedRange where Bound: BinaryFloatingPoint {
         }
     }
     .padding()
+    #if os(macOS)
     .frame(width: 600, height: 500, alignment: .top)
+    #endif
 }

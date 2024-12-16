@@ -117,5 +117,4 @@ private extension View {
     }
     .frame(width: 300)
     .padding()
-    .previewLayout(.sizeThatFits)
 }
