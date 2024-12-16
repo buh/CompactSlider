@@ -34,6 +34,7 @@
 		4A9A19B2281F143E009DB733 /* RangeValuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9A19B0281F143E009DB733 /* RangeValuesView.swift */; };
 		4A9A19B4281F1473009DB733 /* AdvancedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9A19B3281F1473009DB733 /* AdvancedView.swift */; };
 		4A9A19B5281F1473009DB733 /* AdvancedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9A19B3281F1473009DB733 /* AdvancedView.swift */; };
+		8AFC39E32D10A1E600F502A5 /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = CABEC68E2BF93FCA007AEAF1 /* CompactSlider */; };
 		CA17D7DB2947944400093595 /* InsideFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA17D7DA2947944400093595 /* InsideFormView.swift */; };
 		CA17D7DC2947944400093595 /* InsideFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA17D7DA2947944400093595 /* InsideFormView.swift */; };
 		CA17D7DD2947950900093595 /* InsideFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA17D7DA2947944400093595 /* InsideFormView.swift */; };
@@ -104,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AFC39E32D10A1E600F502A5 /* CompactSlider in Frameworks */,
 				4A7EB08728206A6D0013AC91 /* CompactSlider in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -574,8 +576,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -603,8 +605,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
 				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -652,7 +654,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+				WATCHOS_DEPLOYMENT_TARGET = 8.7;
 			};
 			name = Debug;
 		};
@@ -686,7 +688,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 7.0;
+				WATCHOS_DEPLOYMENT_TARGET = 8.7;
 			};
 			name = Release;
 		};

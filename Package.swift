@@ -9,10 +9,7 @@ let package = Package(
         .macOS(.v11), .iOS(.v14), .watchOS(.v7)
     ],
     products: [
-        .library(
-            name: "CompactSlider",
-            targets: ["CompactSlider"]
-        ),
+        .library(name: "CompactSlider", targets: ["CompactSlider"]),
     ],
     targets: [
         .target(
