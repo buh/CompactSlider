@@ -24,7 +24,7 @@ The slider is a replacement for the build-in slider and is designed specifically
     - [Secondary Appearance](Usage.md#secondary-appearance)
     - [Prominent Style](Usage.md#prominent-style)
   - [Advanced Layout](Usage.md#advanced-layout) and `CompactSliderState`
-- [Documentation](https://prowork.today/CompactSlider/documentation/compactslider)
+- [Documentation](https://swiftpackageindex.com/buh/CompactSlider/1.2.0/documentation/compactslider)
 - [Support](#support)
 - [License](#license)
 
@@ -77,7 +77,7 @@ https://user-images.githubusercontent.com/284922/166314399-857a0612-1a47-4bf8-94
 
 # Documentation
 
-You can find the generated DocC documentation [here](https://prowork.today/CompactSlider/documentation/compactslider).
+You can find the generated DocC documentation [here](https://swiftpackageindex.com/buh/CompactSlider/1.2.0/documentation/compactslider).
 
 https://www.buymeacoffee.com/bukhtin
 
