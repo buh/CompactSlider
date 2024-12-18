@@ -94,6 +94,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
     @State var lowerProgress: Double = 0
     @State var upperProgress: Double = 0
     @State private var dragLocationX: CGFloat = 0
+    @State private var deltaLocationX: CGFloat = 0
     @State var adjustedDragLocationX: (lower: CGFloat, upper: CGFloat) = (0, 0)
     
     /// Creates a slider to select a value from a given bounds.
@@ -227,6 +228,13 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 isHovering = isEnabled && $0
                 updateState()
             }
+            .onScrollWheel(isEnabled: gestureOptions.contains(.scrollWheel)) { delta in
+                guard isHovering, abs(delta.x) > abs(delta.y) else { return }
+                
+                Task {
+                    deltaLocationX = delta.x
+                }
+            }
             #endif
             .dragGesture(
                 options: gestureOptions,
@@ -274,6 +282,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
                 }
                 .frame(width: proxy.size.width, height: proxy.size.height)
                 .onChange(of: dragLocationX) { onDragLocationXChange($0, size: proxy.size) }
+                .onChange(of: deltaLocationX) { onDeltaLocationXChange($0, size: proxy.size) }
             }
             
             HStack { valueLabel }
@@ -302,29 +311,40 @@ public struct CompactSlider<Value: BinaryFloatingPoint, ValueLabel: View>: View 
 private extension CompactSlider {
     
     func onDragLocationXChange(_ newValue: CGFloat, size: CGSize) {
-        guard !bounds.isEmpty else { return }
+        guard !bounds.isEmpty, size.width > 0 else { return }
         
-        let newProgress = max(0, min(1, newValue / size.width))
+        updateProgress(max(0, min(1, newValue / size.width)))
+    }
+    
+    func onDeltaLocationXChange(_ newDelta: CGFloat, size: CGSize) {
+        guard !bounds.isEmpty, size.width > 0 else { return }
+        
+        let deltaProgressStep = progressStep * (newDelta.sign == .minus ? -0.5 : 0.5)
+        let newProgress = max(0, min(1, lowerProgress + newDelta / size.width + deltaProgressStep))
+        updateProgress(newProgress)
+    }
+    
+    func updateProgress(_ newValue: Double) {
         let isProgress2Nearest: Bool
         
         // Check which progress is closest and should be in focus.
         if abs(upperProgress - lowerProgress) < 0.01 {
-            isProgress2Nearest = newProgress > upperProgress
+            isProgress2Nearest = newValue > upperProgress
         } else {
-            isProgress2Nearest = isRangeValues && abs(lowerProgress - newProgress) > abs(upperProgress - newProgress)
+            isProgress2Nearest = isRangeValues && abs(lowerProgress - newValue) > abs(upperProgress - newValue)
         }
         
         guard progressStep > 0 else {
             if isProgress2Nearest {
-                if upperProgress != newProgress {
-                    upperProgress = newProgress
+                if upperProgress != newValue {
+                    upperProgress = newValue
                     
                     if upperProgress == 1 {
                         HapticFeedback.vibrate(disabledHapticFeedback)
                     }
                 }
-            } else if lowerProgress != newProgress {
-                lowerProgress = newProgress
+            } else if lowerProgress != newValue {
+                lowerProgress = newValue
                 
                 if lowerProgress == 0 || lowerProgress == 1 {
                     HapticFeedback.vibrate(disabledHapticFeedback)
@@ -334,7 +354,7 @@ private extension CompactSlider {
             return
         }
         
-        let rounded = (newProgress / progressStep).rounded() * progressStep
+        let rounded = (newValue / progressStep).rounded() * progressStep
         
         if isProgress2Nearest {
             if rounded != upperProgress {
