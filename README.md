@@ -15,6 +15,7 @@ The slider is a replacement for the build-in slider and is designed specifically
 
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Documentation](https://swiftpackageindex.com/buh/CompactSlider/1.2.1/documentation/compactslider)
 - [Preview](#preview)
 - [Usage.md](Usage.md#usage)
   - [Single Value](Usage.md#single-value)
@@ -24,7 +25,6 @@ The slider is a replacement for the build-in slider and is designed specifically
     - [Secondary Appearance](Usage.md#secondary-appearance)
     - [Prominent Style](Usage.md#prominent-style)
   - [Advanced Layout](Usage.md#advanced-layout) and `CompactSliderState`
-- [Documentation](https://swiftpackageindex.com/buh/CompactSlider/1.2.0/documentation/compactslider)
 - [Support](#support)
 - [License](#license)
 
@@ -47,6 +47,10 @@ The slider is a replacement for the build-in slider and is designed specifically
 https://github.com/buh/CompactSlider.git
 ```
 3. Select to which target you want to add it and select `Add Package`
+
+# Documentation
+
+You can find the generated DocC documentation [here](https://swiftpackageindex.com/buh/CompactSlider/1.2.1/documentation/compactslider).
 
 # Preview
 
@@ -74,12 +78,6 @@ https://user-images.githubusercontent.com/284922/166314399-857a0612-1a47-4bf8-94
   - [Secondary Appearance](Usage.md#secondary-appearance)
   - [Prominent Style](Usage.md#prominent-style)
 - [Advanced Layout](Usage.md#advanced-layout) and `CompactSliderState`
-
-# Documentation
-
-You can find the generated DocC documentation [here](https://swiftpackageindex.com/buh/CompactSlider/1.2.0/documentation/compactslider).
-
-https://www.buymeacoffee.com/bukhtin
 
 # Support
 
