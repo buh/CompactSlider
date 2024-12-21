@@ -5,57 +5,55 @@
 
 import SwiftUI
 
-extension CompactSlider {
-    /// A handle visibility determines the rules for showing the handle.
-    public enum HandleVisibility {
-        /// Shows the handle when hovering.
-        case hovering(width: CGFloat)
-        /// Always shows the handle.
-        case always(width: CGFloat)
-        /// Never shows the handle.
-        case hidden
-        
-        /// Default value.
-        public static var standard: HandleVisibility {
-            #if os(macOS)
-            .hovering(width: 3)
-            #else
-            .always(width: 3)
-            #endif
+/// A handle visibility determines the rules for showing the handle.
+public enum HandleVisibility {
+    /// Shows the handle when hovering.
+    case hovering(width: CGFloat)
+    /// Always shows the handle.
+    case always(width: CGFloat)
+    /// Never shows the handle.
+    case hidden
+    
+    /// Default value.
+    public static var standard: HandleVisibility {
+#if os(macOS)
+        .hovering(width: 3)
+#else
+        .always(width: 3)
+#endif
+    }
+    
+    var isHovering: Bool {
+        if case .hovering = self {
+            return true
         }
         
-        var isHovering: Bool {
-            if case .hovering = self {
-                return true
-            }
-            
-            return false
+        return false
+    }
+    
+    var isAlways: Bool {
+        if case .always = self {
+            return true
         }
         
-        var isAlways: Bool {
-            if case .always = self {
-                return true
-            }
-            
-            return false
+        return false
+    }
+    
+    var isHidden: Bool {
+        if case .hidden = self {
+            return true
         }
         
-        var isHidden: Bool {
-            if case .hidden = self {
-                return true
-            }
-            
-            return false
-        }
-        
-        var width: CGFloat {
-            switch self {
-            case .hovering(width: let width),
-                 .always(width: let width):
-                return width
-            case .hidden:
-                return 0
-            }
+        return false
+    }
+    
+    var width: CGFloat {
+        switch self {
+        case .hovering(width: let width),
+                .always(width: let width):
+            return width
+        case .hidden:
+            return 0
         }
     }
 }

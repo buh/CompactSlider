@@ -17,20 +17,17 @@ struct SecondaryAppearance {
     
     var progressFillStyle: ProgressFillStyle
     var focusedProgressFillStyle: ProgressFillStyle
-    var handleColor: Color
     var scaleColor: Color
     var secondaryScaleColor: Color
     
     init(
         progressFillStyle: ProgressFillStyle,
         focusedProgressFillStyle: ProgressFillStyle,
-        handleColor: Color,
         scaleColor: Color,
         secondaryScaleColor: Color
     ) {
         self.progressFillStyle = progressFillStyle
         self.focusedProgressFillStyle = focusedProgressFillStyle
-        self.handleColor = handleColor
         self.scaleColor = scaleColor
         self.secondaryScaleColor = secondaryScaleColor
     }
@@ -50,7 +47,6 @@ struct CompactSliderSecondaryAppearanceKey: EnvironmentKey {
             )
             .eraseToAnyView
         },
-        handleColor: Color.label.opacity(CompactSliderDouble.handleOpacity),
         scaleColor: Color.label.opacity(CompactSliderDouble.scaleOpacity),
         secondaryScaleColor: Color.label.opacity(CompactSliderDouble.secondaryScaleOpacity)
     )
@@ -97,7 +93,6 @@ public extension View {
                     $0.fill(color.opacity(focusedProgressOpacity ?? CompactSliderDouble.focusedProgressOpacity))
                         .eraseToAnyView
                 },
-                handleColor: color.opacity(handleOpacity ?? CompactSliderDouble.handleOpacity),
                 scaleColor: color.opacity(scaleOpacity ?? CompactSliderDouble.scaleOpacity),
                 secondaryScaleColor: color.opacity(secondaryScaleOpacity ?? CompactSliderDouble.secondaryScaleOpacity)
              )
@@ -108,13 +103,11 @@ public extension View {
     /// - Parameters:
     ///   - progressColor: the default progress view color.
     ///   - focusedProgressColor: the focused progress view color.
-    ///   - handleColor: the handle view color.
     ///   - scaleColor: the scale color.
     ///   - secondaryScaleColor: the secondary scale color.
     func compactSliderSecondaryColor(
         progressColor: Color? = nil,
         focusedProgressColor: Color? = nil,
-        handleColor: Color? = nil,
         scaleColor: Color? = nil,
         secondaryScaleColor: Color? = nil
     ) -> some View {
@@ -129,7 +122,6 @@ public extension View {
                     $0.fill(focusedProgressColor ?? .label.opacity(CompactSliderDouble.focusedProgressOpacity))
                         .eraseToAnyView
                 },
-                handleColor: handleColor ?? .label.opacity(CompactSliderDouble.handleOpacity),
                 scaleColor: scaleColor ?? .label.opacity(CompactSliderDouble.scaleOpacity),
                 secondaryScaleColor: secondaryScaleColor ?? .label.opacity(CompactSliderDouble.secondaryScaleOpacity)
              )
@@ -140,13 +132,11 @@ public extension View {
     /// - Parameters:
     ///   - progressShapeStyle: the default shape style for the progress view.
     ///   - focusedProgressShapeStyle: the shape style for the focused progress view.
-    ///   - handleColor: the handle view color.
     ///   - scaleColor: the scale color.
     ///   - secondaryScaleColor: the secondary scale color.
     func compactSliderSecondaryAppearance<S1: ShapeStyle, S2: ShapeStyle>(
         progressShapeStyle: S1,
         focusedProgressShapeStyle: S2,
-        handleColor: Color? = nil,
         scaleColor: Color? = nil,
         secondaryScaleColor: Color? = nil
     ) -> some View {
@@ -155,7 +145,6 @@ public extension View {
              SecondaryAppearance(
                 progressFillStyle: .init { $0.fill(progressShapeStyle).eraseToAnyView },
                 focusedProgressFillStyle: .init { $0.fill(focusedProgressShapeStyle).eraseToAnyView },
-                handleColor: handleColor ?? .label.opacity(CompactSliderDouble.handleOpacity),
                 scaleColor: scaleColor ?? .label.opacity(CompactSliderDouble.scaleOpacity),
                 secondaryScaleColor: secondaryScaleColor ?? .label.opacity(CompactSliderDouble.secondaryScaleOpacity)
              )

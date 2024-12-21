@@ -17,21 +17,27 @@ struct InsideFormView: View {
             if #available(iOS 15.0, watchOSApplicationExtension 8.0, *) {
                 Section("Single Value") {
                     Text("A default single value slider.")
-                    CompactSlider(value: $defaultValue) {
-                        Spacer()
-                        Text(String(format: "%.2f", defaultValue))
-                            .monospacedDigitIfPossible()
-                    }
+                    CompactSlider(value: $defaultValue)
+                        .overlay(
+                            HStack {
+                                Spacer()
+                                Text(String(format: "%.2f", defaultValue))
+                                    .monospacedDigitIfPossible()
+                            }
+                        )
                 }
 
                 Section("Range Values") {
                     Text("A simple example for range values.")
-                    CompactSlider(from: $lowerValue, to: $upperValue) {
-                        Text("Range")
-                        Spacer()
-                        Text(String(format: "%.2f - %.2f", lowerValue, upperValue))
-                            .monospacedDigitIfPossible()
-                    }
+                    CompactSlider(from: $lowerValue, to: $upperValue)
+                        .overlay(
+                            HStack {
+                                Text("Range")
+                                Spacer()
+                                Text(String(format: "%.2f - %.2f", lowerValue, upperValue))
+                                    .monospacedDigitIfPossible()
+                            }
+                        )
                 }
             } else {
                 Text("Available on iOS 15.0+")

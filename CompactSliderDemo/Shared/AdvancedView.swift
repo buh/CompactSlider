@@ -30,12 +30,15 @@ struct AdvancedView: View {
                 Text("Prominent Style")
                     .font(.headline)
                 
-                CompactSlider(value: $defaultValue, direction: .center) {
-                    Text("Green or Red")
-                    Spacer()
-                    Text(String(format: "%.2f", defaultValue))
-                        .monospacedDigitIfPossible()
-                }
+                CompactSlider(value: $defaultValue, direction: .center)
+                    .overlay(
+                        HStack {
+                            Text("Green or Red")
+                            Spacer()
+                            Text(String(format: "%.2f", defaultValue))
+                                .monospacedDigitIfPossible()
+                        }
+                    )
                 .compactSliderStyle(
                     .prominent(
                         lowerColor: .green,
@@ -45,22 +48,23 @@ struct AdvancedView: View {
                 
                 #if os(watchOS)
                 Text("Speed:")
-                CompactSlider(value: $defaultValue2, in: 0...180, step: 5) {
-                    Text("\(Int(defaultValue2))")
-                        .monospacedDigitIfPossible()
-                }
-                .compactSliderStyle(
-                    .prominent(
-                        lowerColor: .green,
-                        upperColor: .red,
-                        useGradientBackground: true
+                CompactSlider(value: $defaultValue2, in: 0...180, step: 5)
+                    .overlay(
+                        Text("\(Int(defaultValue2))")
+                            .monospacedDigitIfPossible()
                     )
-                )
+                    .compactSliderStyle(
+                        .prominent(
+                            lowerColor: .green,
+                            upperColor: .red,
+                            useGradientBackground: true
+                        )
+                    )
                 .padding(.top, -16)
                 #else
                 HStack {
                     Text("Speed:")
-                    CompactSlider(value: $defaultValue2, in: 0...180, step: 5) {}
+                    CompactSlider(value: $defaultValue2, in: 0...180, step: 5)
                         .compactSliderStyle(
                             .prominent(
                                 lowerColor: .green,
@@ -96,9 +100,8 @@ struct AdvancedView: View {
             CompactSlider(
                 value: $defaultValue3,
                 step: 0.05,
-                handleVisibility: .hovering(width: 3),
                 state: $sliderState.animation(.easeOut(duration: 0.2))
-            ) {}
+            )
             
             Text("\(Int(100 * sliderState.lowerProgress))%")
                 .padding(.vertical, 4)
@@ -116,16 +119,15 @@ struct AdvancedView: View {
             CompactSlider(
                 from: $lowerValue,
                 to: $upperValue,
-                handleVisibility: .hovering(width: 3),
                 state: $sliderState2.animation(.easeOut(duration: 0.2))
-            ) {}
-                .compactSliderStyle(
-                    .prominent(
-                        lowerColor: .green,
-                        upperColor: .yellow,
-                        useGradientBackground: true
-                    )
+            )
+            .compactSliderStyle(
+                .prominent(
+                    lowerColor: .green,
+                    upperColor: .yellow,
+                    useGradientBackground: true
                 )
+            )
             
             if abs(sliderState2.upperProgress - sliderState2.lowerProgress) < 0.15 {
                 HStack {
@@ -220,7 +222,7 @@ struct AdvancedView: View {
                     }
                     
                     ZStack {
-                        CompactSlider(value: $displayDuration, in: 0.5...3.5, step: 0.1, state: $displayDurationSliderState) {}
+                        CompactSlider(value: $displayDuration, in: 0.5...3.5, step: 0.1, state: $displayDurationSliderState)
                             #if os(macOS)
                             .frame(width: 250)
                             #endif
@@ -259,7 +261,7 @@ struct AdvancedView: View {
                     #endif
 
                     ZStack {
-                        CompactSlider(value: $opacity, state: $opacitySliderState) {}
+                        CompactSlider(value: $opacity, state: $opacitySliderState)
                             #if os(macOS)
                             .frame(width: 250)
                             #endif

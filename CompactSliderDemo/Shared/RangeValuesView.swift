@@ -19,12 +19,15 @@ struct RangeValuesView: View {
                 Text("Range Values").font(.headline)
                 
                 // A simple example for range values.
-                CompactSlider(from: $lowerValue, to: $upperValue) {
-                    Text("Range")
-                    Spacer()
-                    Text(String(format: "%.2f - %.2f", lowerValue, upperValue))
-                        .monospacedDigitIfPossible()
-                }
+                CompactSlider(from: $lowerValue, to: $upperValue)
+                    .overlay(
+                        HStack {
+                            Text("Range")
+                            Spacer()
+                            Text(String(format: "%.2f - %.2f", lowerValue, upperValue))
+                                .monospacedDigitIfPossible()
+                        }
+                    )
                 
                 Divider()
                 Text("Stepped Range Values").font(.headline)
@@ -32,19 +35,23 @@ struct RangeValuesView: View {
                 // A range values with a step.
                 #if os(watchOS)
                 Text("Working hours:")
-                CompactSlider(from: $lowerValue2, to: $upperValue2, in: 1...27, step: 1) {
-                    Text("\(zeroLeadingHours(lowerValue2)) - \(zeroLeadingHours(upperValue2))")
-                        .monospacedDigitIfPossible()
-                }
+                CompactSlider(from: $lowerValue2, to: $upperValue2, in: 1...27, step: 1)
+                    .overlay(
+                        Text("\(zeroLeadingHours(lowerValue2)) - \(zeroLeadingHours(upperValue2))")
+                            .monospacedDigitIfPossible()
+                    )
                 .padding(.top, -16)
                 #else
                 HStack {
-                    CompactSlider(from: $lowerValue2, to: $upperValue2, in: 1...27, step: 1) {
-                        Text("Working hours")
-                        Spacer()
-                        Text("from \(zeroLeadingHours(lowerValue2)) to \(zeroLeadingHours(upperValue2))")
-                            .monospacedDigitIfPossible()
-                    }
+                    CompactSlider(from: $lowerValue2, to: $upperValue2, in: 1...27, step: 1)
+                        .overlay(
+                            HStack {
+                                Text("Working hours")
+                                Spacer()
+                                Text("from \(zeroLeadingHours(lowerValue2)) to \(zeroLeadingHours(upperValue2))")
+                                    .monospacedDigitIfPossible()
+                            }
+                        )
                 }
                 #endif
                 
