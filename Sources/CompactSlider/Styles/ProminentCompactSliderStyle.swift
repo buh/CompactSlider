@@ -18,7 +18,7 @@ public struct ProminentCompactSliderStyle: CompactSliderStyle {
     public var threshold: CGFloat = 0.5
     
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        ProgressView(configuration: configuration)
             .foregroundColor(
                 Color.label.opacity(configuration.isHovering || configuration.isDragging ? 1 : 0.7)
             )
