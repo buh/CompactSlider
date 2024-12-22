@@ -85,6 +85,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     @Binding var lowerValue: Value
     @Binding var upperValue: Value
     @Binding var values: [Value]
+    @State var isValueChangingInternally = false
     @State var progresses: [Double]
     
     @State var isHovering = false
@@ -93,11 +94,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     @State var dragLocation: CGPoint = .zero
     @State var deltaLocation: CGPoint = .zero
     @State var adjustedDragLocationX: (lower: CGFloat, upper: CGFloat) = (0, 0)
-    
-    // MARK: - Deprecated
-    @State var isLowerValueChangingInternally = false
-    @State var isUpperValueChangingInternally = false
-    // MARK: -
     
     /// Creates a slider to select a value from a given bounds.
     ///
@@ -126,7 +122,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         self.type = type
         self.gestureOptions = gestureOptions
         let rangeDistance = Double(bounds.distance)
-        print("rangeDistance", rangeDistance)
         
         guard rangeDistance > 0 else {
             _progresses = .init(initialValue: [])
@@ -136,7 +131,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         
         let progress = Double(value.wrappedValue - bounds.lowerBound) / rangeDistance
         _progresses = .init(initialValue: [progress])
-        print("progresses", progresses)
         
         if step > 0 {
             progressStep = Double(step) / rangeDistance
@@ -220,7 +214,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
             isHovering = isEnabled && $0
         }
         .onScrollWheel(isEnabled: gestureOptions.contains(.scrollWheel)) { delta in
-            print("delta", delta)
             guard isHovering else { return }
             
             if type.isHorizontal, abs(delta.x) < abs(delta.y) {
@@ -231,15 +224,15 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                 return
             }
             
-            print("GO")
             Task {
                 deltaLocation = delta
             }
         }
         #endif
-//        //            .onChange(of: lowerProgress, perform: onLowerProgressChange)
-//        //            .onChange(of: upperProgress, perform: onUpperProgressChange)
-//        //            .onChange(of: lowerValue, perform: onLowerValueChange)
+        .onChange(of: progresses, perform: onProgressesChange)
+        .onChange(of: lowerValue, perform: onLowerValueChange)
+        .onChange(of: upperValue, perform: onUpperValueChange)
+        .onChange(of: values, perform: onValuesChange)
         .animation(nil, value: lowerValue)
         .animation(nil, value: upperValue)
         .animation(nil, value: values)
@@ -323,10 +316,19 @@ public extension CompactSlider {
 
 struct CompactSliderPreview: View {
     @State private var progress: Double = 0.3
+    
     var body: some View {
         VStack(spacing: 16) {
-            Text("CompactSlider")
-                .font(.title.bold())
+            HStack {
+                Button("0%") { progress = 0 }
+                Button("25%") { progress = 0.25 }
+                
+                Text("CompactSlider")
+                    .font(.title.bold())
+                
+                Button("50%") { progress = 0.5 }
+                Button("100%") { progress = 1 }
+            }
             
             Group {
                 // 1. The default case.
@@ -337,19 +339,24 @@ struct CompactSliderPreview: View {
                             Spacer()
                             Text("\(Int(progress * 100))%")
                         }
-                        .padding(.horizontal, 6)
-                        .allowsHitTesting(false)
+                            .padding(.horizontal, 6)
+                            .allowsHitTesting(false)
                     )
                 
                 CompactSlider(value: $progress, type: .horizontal(.center))
                 CompactSlider(value: $progress, type: .horizontal(.trailing))
+            }
+            
+            Divider()
 
+            Group {
                 HStack {
                     CompactSlider(value: $progress, type: .vertical(.bottom))
                     CompactSlider(value: $progress, type: .vertical(.center))
                     CompactSlider(value: $progress, type: .vertical(.top))
                 }
-                .frame(height: 300)
+                .frame(height: 200)
+            }
                 
                 // Handle in the centre for better representation of negative values.
                 // 2.1. The value is 0, which should show the handle as there is no value to show.
@@ -408,9 +415,6 @@ struct CompactSliderPreview: View {
                 //                    .padding(.horizontal, 6)
                 //                )
                 //                .compactSliderDisabledHapticFeedback(true)
-            }
-            
-            Divider()
             
             // Prominent style.
             //        Group {

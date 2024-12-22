@@ -102,36 +102,4 @@ extension CompactSlider {
             HapticFeedback.vibrate(disabledHapticFeedback)
         }
     }
-    
-    func onLowerProgressChange(_ newValue: Double) {
-        isLowerValueChangingInternally = true
-        lowerValue = convertProgressToValue(newValue)
-        DispatchQueue.main.async { isLowerValueChangingInternally = false }
-    }
-    
-    func onUpperProgressChange(_ newValue: Double) {
-        isUpperValueChangingInternally = true
-        upperValue = convertProgressToValue(newValue)
-        DispatchQueue.main.async { isUpperValueChangingInternally = false }
-    }
-    
-    func convertProgressToValue(_ newValue: Double) -> Value {
-        let value = bounds.lowerBound + Value(newValue) * bounds.distance
-        return step > 0 ? (value / step).rounded() * step : value
-    }
-    
-    func onLowerValueChange(_ newValue: Value) {
-        if isLowerValueChangingInternally { return }
-        updateLowerProgress(convertValueToProgress(newValue))
-    }
-    
-    func onUpperValueChange(_ newValue: Value) {
-        if isUpperValueChangingInternally { return }
-        updateUpperProgress(convertValueToProgress(newValue))
-    }
-    
-    func convertValueToProgress(_ newValue: Value) -> Double {
-        let length = Double(bounds.distance)
-        return length != 0 ? Double(newValue - bounds.lowerBound) / length : 0
-    }
 }

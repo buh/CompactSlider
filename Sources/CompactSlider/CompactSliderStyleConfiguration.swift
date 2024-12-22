@@ -55,7 +55,6 @@ public extension CompactSliderStyleConfiguration {
         }
         
         var progress = isRangeValues ? abs(upperProgress - lowerProgress) : lowerProgress
-        print("progress", progress)
         
         switch type {
         case .horizontal(let direction):
