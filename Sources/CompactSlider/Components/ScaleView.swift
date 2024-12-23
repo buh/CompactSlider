@@ -65,30 +65,27 @@ struct ScaleView: View {
     
     var alignment: ScaleAlignment = .horizontal
     var steps: Int = 0
-    var scaleLength: CGFloat = .scaleLength
-    var secondaryScaleLength: CGFloat = .secondaryScaleLength
+    var scaleLength: CGFloat? = .scaleLength
+    var secondaryScaleLength: CGFloat? = .secondaryScaleLength
     var lineWidth: CGFloat = .scaleLineWidth
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Scale(alignment: alignment, count: steps > 0 ? steps : 49)
-                .stroke(
-                    steps > 0 ? secondaryAppearance.scaleColor : secondaryAppearance.secondaryScaleColor,
-                    lineWidth: lineWidth
-                )
-                .frame(
-                    width: (alignment == .vertical ? (steps > 0 ? scaleLength : secondaryScaleLength) : nil),
-                    height: (alignment == .horizontal ? (steps > 0 ? scaleLength : secondaryScaleLength) : nil)
-                )
-            
             if steps == 0 {
-                Scale(alignment: alignment, count: 9)
-                    .stroke(secondaryAppearance.scaleColor, lineWidth: lineWidth)
+                Scale(alignment: alignment, count: 49)
+                    .stroke(secondaryAppearance.secondaryScaleColor, lineWidth: lineWidth)
                     .frame(
-                        width: (alignment == .vertical ? scaleLength : nil),
-                        height: (alignment == .horizontal ? scaleLength : nil)
+                        width: (alignment == .vertical ? secondaryScaleLength : nil),
+                        height: (alignment == .horizontal ? secondaryScaleLength : nil)
                     )
             }
+            
+            Scale(alignment: alignment, count: steps > 0 ? steps : 9)
+                .stroke(secondaryAppearance.scaleColor, lineWidth: lineWidth)
+                .frame(
+                    width: (alignment == .vertical ? scaleLength : nil),
+                    height: (alignment == .horizontal ? scaleLength : nil)
+                )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
@@ -110,7 +107,7 @@ struct ScaleView: View {
             .background(Color.label.opacity(0.1))
             
             ZStack {
-                ScaleView(scaleLength: 0, secondaryScaleLength: 0)
+                ScaleView(scaleLength: 10, secondaryScaleLength: nil)
                     .frame(height: 50, alignment: .top)
             }
             .background(Color.label.opacity(0.1))

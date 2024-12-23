@@ -17,6 +17,7 @@ public struct CompactSliderStyleConfiguration {
     public let isDragging: Bool
     /// Progress values represents the position of the selected value within bounds, mapped into 0...1.
     public let progresses: [Double]
+    public let steps: Int
 }
 
 public extension CompactSliderStyleConfiguration {

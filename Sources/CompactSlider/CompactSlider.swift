@@ -193,7 +193,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                         size: proxy.size,
                         isHovering: isHovering,
                         isDragging: isDragging,
-                        progresses: progresses
+                        progresses: progresses,
+                        steps: steps
                     )
                 )
                 .dragGesture(
@@ -344,22 +345,20 @@ struct CompactSliderPreview: View {
                             .allowsHitTesting(false)
                     )
                 
-                CompactSlider(value: $centerProgress, in: -10 ... 10, type: .horizontal(.center))
+                CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, type: .horizontal(.center))
                     .overlay(
                         Text("\(centerProgress)")
                     )
                 CompactSlider(value: $progress, type: .horizontal(.trailing))
             }
             
-            Divider()
-
             Group {
                 HStack {
                     CompactSlider(value: $progress, type: .vertical(.bottom))
-                    CompactSlider(value: $centerProgress, in: -10 ... 10, type: .vertical(.center))
+                    CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, type: .vertical(.center))
                     CompactSlider(value: $progress, type: .vertical(.top))
                 }
-                .frame(height: 200)
+                .frame(height: 300)
             }
                 
                 // Handle in the centre for better representation of negative values.

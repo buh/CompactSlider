@@ -22,7 +22,10 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
             ProgressView(configuration: configuration)
             
             if configuration.type.isHorizontal || configuration.type.isVertical {
-                ScaleView(alignment: configuration.type.isHorizontal ? .horizontal : .vertical)
+                ScaleView(
+                    alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
+                    steps: configuration.steps > 0 ? configuration.steps + 1 : 0
+                )
             }
             
             RectangleHandleView(width: handleWidth, configuration: configuration)
