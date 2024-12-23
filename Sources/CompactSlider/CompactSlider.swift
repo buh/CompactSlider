@@ -316,6 +316,7 @@ public extension CompactSlider {
 
 struct CompactSliderPreview: View {
     @State private var progress: Double = 0.3
+    @State private var centerProgress: Double = 0
     
     var body: some View {
         VStack(spacing: 16) {
@@ -343,7 +344,10 @@ struct CompactSliderPreview: View {
                             .allowsHitTesting(false)
                     )
                 
-                CompactSlider(value: $progress, type: .horizontal(.center))
+                CompactSlider(value: $centerProgress, in: -10 ... 10, type: .horizontal(.center))
+                    .overlay(
+                        Text("\(centerProgress)")
+                    )
                 CompactSlider(value: $progress, type: .horizontal(.trailing))
             }
             
@@ -352,7 +356,7 @@ struct CompactSliderPreview: View {
             Group {
                 HStack {
                     CompactSlider(value: $progress, type: .vertical(.bottom))
-                    CompactSlider(value: $progress, type: .vertical(.center))
+                    CompactSlider(value: $centerProgress, in: -10 ... 10, type: .vertical(.center))
                     CompactSlider(value: $progress, type: .vertical(.top))
                 }
                 .frame(height: 200)
@@ -360,15 +364,6 @@ struct CompactSliderPreview: View {
                 
                 // Handle in the centre for better representation of negative values.
                 // 2.1. The value is 0, which should show the handle as there is no value to show.
-                //            CompactSlider(value: .constant(0.0), in: -1.0...1.0, type: .horizontal(.center))
-                //                .overlay(
-                //                    HStack {
-                //                        Text("Center -1.0...1.0")
-                //                        Spacer()
-                //                        Text("0.0")
-                //                    }
-                //                    .padding(.horizontal, 6)
-                //                )
                 //
                 //            // 2.2. When the value is not 0, the value can be shown with a rectangle.
                 //            CompactSlider(value: .constant(0.3), in: -1.0...1.0, type: .horizontal(.center))

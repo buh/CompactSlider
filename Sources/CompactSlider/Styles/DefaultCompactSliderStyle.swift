@@ -20,6 +20,11 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     public func makeBody(configuration: Configuration) -> some View {
         ZStack {
             ProgressView(configuration: configuration)
+            
+            if configuration.type.isHorizontal || configuration.type.isVertical {
+                ScaleView(alignment: configuration.type.isHorizontal ? .horizontal : .vertical)
+            }
+            
             RectangleHandleView(width: handleWidth, configuration: configuration)
         }
         .background(backgroundColor)
