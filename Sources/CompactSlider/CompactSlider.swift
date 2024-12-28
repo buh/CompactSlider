@@ -349,7 +349,8 @@ struct CompactSliderPreview: View {
                         .padding(.horizontal, 6)
                         .allowsHitTesting(false)
                     )
-                
+                    .compactSliderStyle(.init(scaleConfiguration: .init(visibility: .always)))
+
                 CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, type: .horizontal(.center))
                     .overlay(
                         Text("\(centerProgress)")
@@ -373,7 +374,23 @@ struct CompactSliderPreview: View {
             Group {
                 HStack {
                     CompactSlider(value: $progress, type: .vertical(.bottom))
+                        .compactSliderStyle(.init(
+                            scaleConfiguration: .init(
+                                visibility: .always,
+                                scaleLength: nil,
+                                secondaryScaleLength: nil,
+                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                            )
+                        ))
                     CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, type: .vertical(.center))
+                        .compactSliderStyle(.init(
+                            scaleConfiguration: .init(
+                                visibility: .always,
+                                scaleLength: nil,
+                                secondaryLineWidth: 0,
+                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                            )
+                        ))
                     CompactSlider(value: $progress, type: .vertical(.top))
                     CompactSlider(from: $fromProgress, to: $toProgress, direction: .vertical)
                 }

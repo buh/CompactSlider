@@ -50,7 +50,7 @@ public enum CompactSliderType: Equatable {
 }
 
 /// A direction in which the slider will indicate the selected value.
-public enum CompactSliderDirection {
+public enum CompactSliderDirection: Sendable {
     case horizontal
     case vertical
 }

@@ -15,6 +15,20 @@ public protocol CompactSliderStyle {
     func makeBody(configuration: Self.Configuration) -> Self.Body
 }
 
+// MARK: - View Extension
+
+public extension View {
+    /// Sets a custom style for compact sliders.
+    func compactSliderStyle<Style: CompactSliderStyle>(_ style: Style) -> some View {
+        environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
+    }
+    
+    /// Sets the default style for compact sliders.
+    func compactSliderStyle(_ style: DefaultCompactSliderStyle) -> some View {
+        environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
+    }
+}
+
 // MARK: - Environment
 
 struct CompactSliderStyleKey: EnvironmentKey {
@@ -37,15 +51,5 @@ struct AnyCompactSliderStyle: CompactSliderStyle {
     
     func makeBody(configuration: Configuration) -> some View {
         _makeBody(configuration)
-    }
-}
-
-// MARK: - View Extension
-
-public extension View {
-    /// Sets the style for sliders within this view to a slider style with a custom appearance
-    /// and custom interaction behaviour.
-    func compactSliderStyle<Style: CompactSliderStyle>(_ style: Style) -> some View {
-        environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
     }
 }
