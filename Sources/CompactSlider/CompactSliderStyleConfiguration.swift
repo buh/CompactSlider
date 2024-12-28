@@ -91,7 +91,7 @@ public extension CompactSliderStyleConfiguration {
             case .horizontal:
                 return CGPoint(x: size.width * min(lowerProgress, upperProgress), y: 0)
             case .vertical:
-                return CGPoint(x: 0, y: size.width * min(lowerProgress, upperProgress))
+                return CGPoint(x: 0, y: size.height * min(lowerProgress, upperProgress))
             default:
                 return CGPoint.zero
             }

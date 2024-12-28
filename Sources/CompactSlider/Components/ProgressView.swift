@@ -18,5 +18,6 @@ struct ProgressView: View {
             .frame(width: size.width, height: size.height)
             .offset(x: offset.x, y: offset.y)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .allowsTightening(false)
     }
 }

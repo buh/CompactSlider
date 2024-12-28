@@ -16,32 +16,56 @@ extension CompactSlider {
         }
     }
     
-    func onDeltaLocationChange(_ newDelta: CGPoint, size: CGSize) {
+    func onScrollWheelChange(_ event: ScrollWheelEvent, size: CGSize, location: CGPoint) {
         guard !bounds.isEmpty, size.width > 0 else { return }
         
         let newProgress: Double
         
         if type.isHorizontal {
-            let deltaProgressStep = progressStep * (newDelta.x.sign == .minus ? -0.5 : 0.5)
+            let xProgress = (event.location.x - location.x) / size.width
+            let currentProgress = nearestProgress(for: xProgress).progress
+            
+            let deltaProgressStep = progressStep * (event.delta.x.sign == .minus ? -0.5 : 0.5)
             
             if case .horizontal(.trailing) = type {
-                newProgress = 1 - max(0, min(1, lowerProgress + newDelta.x / -size.width + deltaProgressStep))
+                newProgress = 1 - max(0, min(1, currentProgress + event.delta.x / -size.width + deltaProgressStep))
             } else {
-                newProgress = max(0, min(1, lowerProgress + newDelta.x / size.width + deltaProgressStep))
+                newProgress = max(0, min(1, currentProgress + event.delta.x / size.width + deltaProgressStep))
             }
         } else if type.isVertical {
-            let deltaProgressStep = progressStep * (newDelta.y.sign == .minus ? -0.5 : 0.5)
+            let yProgress = (event.location.y - location.y) / size.height
+            let currentProgress = nearestProgress(for: yProgress).progress
+            
+            let deltaProgressStep = progressStep * (event.delta.y.sign == .minus ? -0.5 : 0.5)
             
             if case .vertical(.bottom) = type {
-                newProgress = max(0, min(1, lowerProgress + newDelta.y / -size.height + deltaProgressStep))
+                newProgress = max(0, min(1, currentProgress + event.delta.y / -size.height + deltaProgressStep))
             } else {
-                newProgress = 1 - max(0, min(1, lowerProgress + newDelta.y / size.height + deltaProgressStep))
+                newProgress = 1 - max(0, min(1, currentProgress + event.delta.y / size.height + deltaProgressStep))
             }
         } else {
             return
         }
         
         updateProgress(newProgress)
+    }
+    
+    private func nearestProgress(for value: Double) -> (progress: Double, index: Int) {
+        guard progresses.count > 1 else {
+            return (lowerProgress, 0)
+        }
+        
+        var progress = progresses[0]
+        var deltaProgress = abs(progresses[0] - value)
+        var index = 0
+        
+        for (i, p) in progresses.enumerated() where abs(p - value) < deltaProgress {
+            progress = p
+            deltaProgress = abs(p - value)
+            index = i
+        }
+        
+        return (progress, index)
     }
     
     func updateProgress(_ newValue: Double) {
@@ -59,30 +83,13 @@ extension CompactSlider {
             newValue = 1 - newValue
         }
         
-        var isProgress2Nearest: Bool = false
-        
-        // Check which progress is closest and should be in focus.
-        if isRangeValues {
-            if abs(upperProgress - lowerProgress) < 0.01 {
-                isProgress2Nearest = newValue > upperProgress
-            } else {
-                isProgress2Nearest = isRangeValues && abs(lowerProgress - newValue) > abs(upperProgress - newValue)
-            }
-        }
+        let progressAndIndex = nearestProgress(for: newValue)
         
         guard progressStep > 0 else {
-            if isProgress2Nearest {
-                if upperProgress != newValue {
-                    updateUpperProgress(newValue)
-                    
-                    if upperProgress == 1 {
-                        HapticFeedback.vibrate(disabledHapticFeedback)
-                    }
-                }
-            } else if lowerProgress != newValue {
-                updateLowerProgress(newValue)
+            if progressAndIndex.progress != newValue {
+                updateProgress(newValue, at: progressAndIndex.index)
                 
-                if lowerProgress == 0 || lowerProgress == 1 {
+                if newValue == 1 || newValue == 0 {
                     HapticFeedback.vibrate(disabledHapticFeedback)
                 }
             }
@@ -90,15 +97,10 @@ extension CompactSlider {
             return
         }
         
-        let rounded = (newValue / progressStep).rounded() * progressStep
+        let roundedValue = (newValue / progressStep).rounded() * progressStep
         
-        if isProgress2Nearest {
-            if rounded != upperProgress {
-                updateUpperProgress(rounded)
-                HapticFeedback.vibrate(disabledHapticFeedback)
-            }
-        } else if rounded != lowerProgress {
-            updateLowerProgress(rounded)
+        if progressAndIndex.progress != roundedValue {
+            updateProgress(roundedValue, at: progressAndIndex.index)
             HapticFeedback.vibrate(disabledHapticFeedback)
         }
     }

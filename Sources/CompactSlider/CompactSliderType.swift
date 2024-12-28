@@ -50,6 +50,12 @@ public enum CompactSliderType: Equatable {
 }
 
 /// A direction in which the slider will indicate the selected value.
+public enum CompactSliderDirection {
+    case horizontal
+    case vertical
+}
+
+/// A direction in which the slider will indicate the selected horizontal value.
 public enum CompactSliderHorizontalDirection {
     /// The selected value will be indicated from the lower left-hand area of the boundary.
     case leading
@@ -59,7 +65,7 @@ public enum CompactSliderHorizontalDirection {
     case trailing
 }
 
-/// A direction in which the slider will indicate the selected value.
+/// A direction in which the slider will indicate the selected vertical value.
 public enum CompactSliderVerticalDirection {
     /// The selected value will be indicated from the lower top-hand area of the boundary.
     case top

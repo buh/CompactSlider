@@ -92,8 +92,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     @State var isDragging = false
     @State var location: CGPoint = .zero
     @State var dragLocation: CGPoint = .zero
-    @State var deltaLocation: CGPoint = .zero
-    @State var adjustedDragLocationX: (lower: CGFloat, upper: CGFloat) = (0, 0)
+    @State var scrollWheelEvent = ScrollWheelEvent.zero
     
     /// Creates a slider to select a value from a given bounds.
     ///
@@ -154,7 +153,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         to upperValue: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
-        type: CompactSliderType = .horizontal(.leading),
+        direction: CompactSliderDirection = .horizontal,
         gestureOptions: Set<CompactSliderGestureOption> = .default
     ) {
         _lowerValue = lowerValue
@@ -162,7 +161,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         _values = .constant([])
         self.bounds = bounds
         self.step = step
-        self.type = type
+        self.type = direction == .horizontal ? .horizontal(.leading) : .vertical(.top)
         self.gestureOptions = gestureOptions
         
         let rangeDistance = Double(bounds.distance)
@@ -208,25 +207,27 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                     }
                 )
                 .onChange(of: dragLocation) { onDragLocationChange($0, size: proxy.size) }
-                .onChange(of: deltaLocation) { onDeltaLocationChange($0, size: proxy.size) }
+                .onChange(of: scrollWheelEvent) {
+                    onScrollWheelChange($0, size: proxy.size, location: proxy.frame(in: .global).origin)
+                }
         }
         #if os(macOS) || os(iOS)
         .onHover {
             isHovering = isEnabled && $0
         }
-        .onScrollWheel(isEnabled: gestureOptions.contains(.scrollWheel)) { delta in
+        .onScrollWheel(isEnabled: gestureOptions.contains(.scrollWheel)) { event in
             guard isHovering else { return }
             
-            if type.isHorizontal, abs(delta.x) < abs(delta.y) {
+            if type.isHorizontal, !event.isHorizontalDelta {
                 return
             }
             
-            if type.isVertical, abs(delta.x) > abs(delta.y) {
+            if type.isVertical, event.isHorizontalDelta {
                 return
             }
             
             Task {
-                deltaLocation = delta
+                scrollWheelEvent = event
             }
         }
         #endif
@@ -290,18 +291,20 @@ public extension CompactSlider {
 
     var lowerProgress: Double { progresses.first ?? 0 }
     
-    func updateLowerProgress(_ progress: Double) {
-        guard !progresses.isEmpty else { return }
+    func updateProgress(_ progress: Double, at index: Int) {
+        guard index < progresses.count else { return }
         
-        progresses[0] = progress
+        progresses[index] = progress
+    }
+    
+    func updateLowerProgress(_ progress: Double) {
+        updateProgress(progress, at: 0)
     }
     
     var upperProgress: Double { isRangeValues ? progresses[1] : 0 }
     
     func updateUpperProgress(_ progress: Double) {
-        if isRangeValues {
-            progresses[1] = progress
-        }
+        updateProgress(progress, at: 1)
     }
 }
 
@@ -318,6 +321,8 @@ public extension CompactSlider {
 struct CompactSliderPreview: View {
     @State private var progress: Double = 0.3
     @State private var centerProgress: Double = 0
+    @State private var fromProgress: Double = 0.3
+    @State private var toProgress: Double = 0.7
     
     var body: some View {
         VStack(spacing: 16) {
@@ -341,15 +346,28 @@ struct CompactSliderPreview: View {
                             Spacer()
                             Text("\(Int(progress * 100))%")
                         }
-                            .padding(.horizontal, 6)
-                            .allowsHitTesting(false)
+                        .padding(.horizontal, 6)
+                        .allowsHitTesting(false)
                     )
                 
                 CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, type: .horizontal(.center))
                     .overlay(
                         Text("\(centerProgress)")
+                            .allowsHitTesting(false)
                     )
+                
                 CompactSlider(value: $progress, type: .horizontal(.trailing))
+                
+                CompactSlider(from: $fromProgress, to: $toProgress)
+                    .overlay(
+                        HStack {
+                            Text("\(Int(fromProgress * 100))%")
+                            Spacer()
+                            Text("\(Int(toProgress * 100))%")
+                        }
+                        .padding(.horizontal, 6)
+                        .allowsHitTesting(false)
+                    )
             }
             
             Group {
@@ -357,58 +375,10 @@ struct CompactSliderPreview: View {
                     CompactSlider(value: $progress, type: .vertical(.bottom))
                     CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, type: .vertical(.center))
                     CompactSlider(value: $progress, type: .vertical(.top))
+                    CompactSlider(from: $fromProgress, to: $toProgress, direction: .vertical)
                 }
                 .frame(height: 300)
             }
-                
-                // Handle in the centre for better representation of negative values.
-                // 2.1. The value is 0, which should show the handle as there is no value to show.
-                //
-                //            // 2.2. When the value is not 0, the value can be shown with a rectangle.
-                //            CompactSlider(value: .constant(0.3), in: -1.0...1.0, type: .horizontal(.center))
-                //                .overlay(
-                //                    HStack {
-                //                        Text("Center -1.0...1.0")
-                //                        Spacer()
-                //                        Text("0.3")
-                //                    }
-                //                    .padding(.horizontal, 6)
-                //                )
-                //
-                //            // 3. The value is filled in on the right-hand side.
-                //            CompactSlider(value: .constant(0.3), type: .horizontal(.trailing))
-                //                .overlay(
-                //                    HStack {
-                //                        Text("Trailing")
-                //                        Spacer()
-                //                        Text("0.3")
-                //                    }
-                //                )
-                //
-                //            Divider()
-                //
-                //            // 4. Set a range of values in specific step to change.
-                //            CompactSlider(value: .constant(70), in: 0...200, step: 10)
-                //                .overlay(
-                //                    HStack {
-                //                        Text("Snapped")
-                //                        Spacer()
-                //                        Text("70")
-                //                    }
-                //                    .padding(.horizontal, 6)
-                //                )
-                //
-                //            // 4. Set a range of values in specific step to change from the center.
-                //            CompactSlider(value: .constant(0.0), in: -10...10, step: 1, type: .horizontal(.center))
-                //                .overlay(
-                //                    HStack {
-                //                        Text("Center")
-                //                        Spacer()
-                //                        Text("0.0")
-                //                    }
-                //                    .padding(.horizontal, 6)
-                //                )
-                //                .compactSliderDisabledHapticFeedback(true)
             
             // Prominent style.
             //        Group {
