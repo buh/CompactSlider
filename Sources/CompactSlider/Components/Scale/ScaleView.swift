@@ -16,36 +16,36 @@ import SwiftUI
 /// }
 /// ```
 struct ScaleView: View {
-    let direction: CompactSliderDirection
+    let alignment: Axis
     let steps: Int
-    let configuration: ScaleConfiguration
+    let configuration: ScaleStyle
     
     init(
-        direction: CompactSliderDirection = .horizontal,
+        alignment: Axis = .horizontal,
         steps: Int = 0,
-        configuration: ScaleConfiguration = ScaleConfiguration()
+        configuration: ScaleStyle = ScaleStyle()
     ) {
-        self.direction = direction
+        self.alignment = alignment
         self.steps = steps
         self.configuration = configuration
     }
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            if steps == 0, configuration.secondaryLineWidth > 0 {
-                Scale(direction: direction, count: 49)
-                    .stroke(configuration.secondaryScaleColor, lineWidth: configuration.secondaryLineWidth)
+            if steps == 0, let secondaryLine = configuration.secondaryLine {
+                Scale(alignment: alignment, count: 49)
+                    .stroke(secondaryLine.color, lineWidth: secondaryLine.thickness)
                     .frame(
-                        width: (direction == .vertical ? configuration.secondaryScaleLength : nil),
-                        height: (direction == .horizontal ? configuration.secondaryScaleLength : nil)
+                        width: (alignment == .vertical ? secondaryLine.length : nil),
+                        height: (alignment == .horizontal ? secondaryLine.length : nil)
                     )
             }
             
-            Scale(direction: direction, count: steps > 0 ? steps : 9)
-                .stroke(configuration.scaleColor, lineWidth: configuration.lineWidth)
+            Scale(alignment: alignment, count: steps > 0 ? steps : 9)
+                .stroke(configuration.line.color, lineWidth: configuration.line.thickness)
                 .frame(
-                    width: (direction == .vertical ? configuration.scaleLength : nil),
-                    height: (direction == .horizontal ? configuration.scaleLength : nil)
+                    width: (alignment == .vertical ? configuration.line.length : nil),
+                    height: (alignment == .horizontal ? configuration.line.length : nil)
                 )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -60,32 +60,33 @@ struct ScaleView: View {
                 ScaleView()
                     .frame(height: 50, alignment: .top)
             }
-            .background(Color.label.opacity(0.1))
+            .background(Defaults.label.opacity(0.1))
             
             ZStack {
-                ScaleView(configuration: .init(scaleLength: 25, secondaryScaleLength: 15, lineWidth: 2))
+                ScaleView(
+                    configuration: .init(
+                        line: .init(length: 25, thickness: 2),
+                        secondaryLine: .init(length: 15, thickness: 2)
+                    )
+                )
                     .frame(height: 50, alignment: .top)
             }
-            .background(Color.label.opacity(0.1))
+            .background(Defaults.label.opacity(0.1))
             
             ZStack {
-                ScaleView(configuration: .init(scaleLength: 10, secondaryScaleLength: nil))
+                ScaleView(configuration: .init(line: .init(length: 10), secondaryLine: nil))
                     .frame(height: 50, alignment: .top)
             }
-            .background(Color.label.opacity(0.1))
+            .background(Defaults.label.opacity(0.1))
             
             ScaleView(steps: 30)
                 .frame(height: 50, alignment: .top)
-                .background(Color.label.opacity(0.1))
+                .background(Defaults.label.opacity(0.1))
             
-            ScaleView(steps: 10, configuration: .init(scaleLength: 25, lineWidth: 5))
+            ScaleView(steps: 10, configuration: .init(line: .init(length: 25, thickness: 5)))
                 .frame(height: 50, alignment: .top)
-                .background(Color.label.opacity(0.1))
+                .background(Defaults.label.opacity(0.1))
         }
-        
-        ScaleView(direction: .vertical, configuration: .init(scaleLength: 25, secondaryScaleLength: 15))
-            .frame(width: 50, alignment: .leading)
-            .background(Color.secondary.opacity(0.1))
     }
     .frame(width: 300)
     .padding()

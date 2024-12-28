@@ -24,7 +24,12 @@ public extension View {
     }
     
     /// Sets the default style for compact sliders.
-    func compactSliderStyle(_ style: DefaultCompactSliderStyle) -> some View {
+    func compactSliderStyle<Background: View>(_ style: DefaultCompactSliderStyle<Background>) -> some View {
+        environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
+    }
+    
+    /// Sets the default style with a solid background color for compact sliders.
+    func compactSliderStyle(_ style: DefaultCompactSliderStyle<Color>) -> some View {
         environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
     }
 }

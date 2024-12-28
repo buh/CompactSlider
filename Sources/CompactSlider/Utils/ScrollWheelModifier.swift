@@ -68,6 +68,10 @@ extension View {
     }
 }
 #else
+struct ScrollWheelEvent: Equatable {
+    static let zero = ScrollWheelEvent()
+}
+
 extension View {
     func onScrollWheel(
         isEnabled: Bool = false,

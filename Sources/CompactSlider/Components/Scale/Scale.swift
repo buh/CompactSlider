@@ -7,7 +7,7 @@ import SwiftUI
 
 /// A shape that draws a scale of possible values.
 struct Scale: Shape {
-    var direction: CompactSliderDirection = .horizontal
+    var alignment: Axis = .horizontal
     let count: Int
     var minSpacing: CGFloat = 3
     
@@ -15,7 +15,7 @@ struct Scale: Shape {
         Path { path in
             guard count > 0, minSpacing > 1 else { return }
             
-            let isHorizontal = direction == .horizontal
+            let isHorizontal = alignment == .horizontal
             let length = isHorizontal ? rect.width : rect.height
             let spacing = max(minSpacing, length / CGFloat(count + 1))
             var i = spacing

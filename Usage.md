@@ -43,15 +43,15 @@ var body: some View {
 }
 ```
 
-Using the `direction:` parameter you can set the direction in which the slider will indicate the selected value:
+Using the `alignment:` parameter you can set the alignment in which the slider will indicate the selected value:
 
-![Direction](https://user-images.githubusercontent.com/284922/166335936-3e4cfdac-eafa-42c6-8da7-4010751973d8.gif)
+![Alignment](https://user-images.githubusercontent.com/284922/166335936-3e4cfdac-eafa-42c6-8da7-4010751973d8.gif)
 
 ```swift
 @State private var value = 0.5
 
 var body: some View {
-    CompactSlider(value: $value, direction: .center) {
+    CompactSlider(value: $value, alignment: .center) {
         Text("Center")
         Spacer()
         String(format: "%.2f", value)
@@ -239,7 +239,7 @@ You can also optionally apply a background gradient based on these colors.
 var body: some View {
     VStack(alignment: .leading, spacing: 24) {
         // 1.
-        CompactSlider(value: $chooseSide, direction: .center) {
+        CompactSlider(value: $chooseSide, alignment: .center) {
             Text("Red")
             Spacer()
             Text("Blue")

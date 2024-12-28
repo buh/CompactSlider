@@ -16,40 +16,6 @@ extension CompactSlider {
         }
     }
     
-    func onScrollWheelChange(_ event: ScrollWheelEvent, size: CGSize, location: CGPoint) {
-        guard !bounds.isEmpty, size.width > 0 else { return }
-        
-        let newProgress: Double
-        
-        if type.isHorizontal {
-            let xProgress = (event.location.x - location.x) / size.width
-            let currentProgress = nearestProgress(for: xProgress).progress
-            
-            let deltaProgressStep = progressStep * (event.delta.x.sign == .minus ? -0.5 : 0.5)
-            
-            if case .horizontal(.trailing) = type {
-                newProgress = 1 - max(0, min(1, currentProgress + event.delta.x / -size.width + deltaProgressStep))
-            } else {
-                newProgress = max(0, min(1, currentProgress + event.delta.x / size.width + deltaProgressStep))
-            }
-        } else if type.isVertical {
-            let yProgress = (event.location.y - location.y) / size.height
-            let currentProgress = nearestProgress(for: yProgress).progress
-            
-            let deltaProgressStep = progressStep * (event.delta.y.sign == .minus ? -0.5 : 0.5)
-            
-            if case .vertical(.bottom) = type {
-                newProgress = max(0, min(1, currentProgress + event.delta.y / -size.height + deltaProgressStep))
-            } else {
-                newProgress = 1 - max(0, min(1, currentProgress + event.delta.y / size.height + deltaProgressStep))
-            }
-        } else {
-            return
-        }
-        
-        updateProgress(newProgress)
-    }
-    
     private func nearestProgress(for value: Double) -> (progress: Double, index: Int) {
         guard progresses.count > 1 else {
             return (lowerProgress, 0)
@@ -105,3 +71,41 @@ extension CompactSlider {
         }
     }
 }
+
+#if os(macOS)
+extension CompactSlider {
+    func onScrollWheelChange(_ event: ScrollWheelEvent, size: CGSize, location: CGPoint) {
+        guard !bounds.isEmpty, size.width > 0 else { return }
+        
+        let newProgress: Double
+        
+        if type.isHorizontal {
+            let xProgress = (event.location.x - location.x) / size.width
+            let currentProgress = nearestProgress(for: xProgress).progress
+            
+            let deltaProgressStep = progressStep * (event.delta.x.sign == .minus ? -0.5 : 0.5)
+            
+            if case .horizontal(.trailing) = type {
+                newProgress = 1 - max(0, min(1, currentProgress + event.delta.x / -size.width + deltaProgressStep))
+            } else {
+                newProgress = max(0, min(1, currentProgress + event.delta.x / size.width + deltaProgressStep))
+            }
+        } else if type.isVertical {
+            let yProgress = (event.location.y - location.y) / size.height
+            let currentProgress = nearestProgress(for: yProgress).progress
+            
+            let deltaProgressStep = progressStep * (event.delta.y.sign == .minus ? -0.5 : 0.5)
+            
+            if case .vertical(.bottom) = type {
+                newProgress = max(0, min(1, currentProgress + event.delta.y / -size.height + deltaProgressStep))
+            } else {
+                newProgress = 1 - max(0, min(1, currentProgress + event.delta.y / size.height + deltaProgressStep))
+            }
+        } else {
+            return
+        }
+        
+        updateProgress(newProgress)
+    }
+}
+#endif

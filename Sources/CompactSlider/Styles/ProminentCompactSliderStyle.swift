@@ -18,31 +18,35 @@ public struct ProminentCompactSliderStyle: CompactSliderStyle {
     public var threshold: CGFloat = 0.5
     
     public func makeBody(configuration: Configuration) -> some View {
-        ProgressView(configuration: configuration)
-            .foregroundColor(
-                Color.label.opacity(configuration.isHovering || configuration.isDragging ? 1 : 0.7)
-            )
-            .background(
-                Color.label
-                    .opacity(
-                        useGradientBackground && (configuration.isDragging || configuration.isHovering) ? 0 : 0.075
-                    )
-            )
-            .background(
-                LinearGradient(
-                    colors: [lowerColor, upperColor],
-                    startPoint: .leading,
-                    endPoint: .trailing
+        ProgressView(
+            configuration: configuration,
+            fillStyle: Defaults.label.opacity(Defaults.progressOpacity),
+            focusedFillStyle: Defaults.label.opacity(Defaults.focusedProgressOpacity)
+        )
+        .foregroundColor(
+            Defaults.label.opacity(configuration.isHovering || configuration.isDragging ? 1 : 0.7)
+        )
+        .background(
+            Defaults.label
+                .opacity(
+                    useGradientBackground && (configuration.isDragging || configuration.isHovering) ? 0 : 0.075
                 )
-                .opacity(useGradientBackground && (configuration.isDragging || configuration.isHovering) ? 0.2 : 0)
+        )
+        .background(
+            LinearGradient(
+                colors: [lowerColor, upperColor],
+                startPoint: .leading,
+                endPoint: .trailing
             )
-            .accentColor(
-                configuration.isRangeValues
-                ? (abs(configuration.upperProgress - threshold) > abs(configuration.lowerProgress - threshold)
-                   ? upperColor : lowerColor)
-                : configuration.lowerProgress > threshold ? upperColor : lowerColor
-            )
-            .clipShape(RoundedRectangle(cornerRadius: .cornerRadius))
+            .opacity(useGradientBackground && (configuration.isDragging || configuration.isHovering) ? 0.2 : 0)
+        )
+        .accentColor(
+            configuration.isRangeValues
+            ? (abs(configuration.upperProgress - threshold) > abs(configuration.lowerProgress - threshold)
+               ? upperColor : lowerColor)
+            : configuration.lowerProgress > threshold ? upperColor : lowerColor
+        )
+        .clipShape(RoundedRectangle(cornerRadius: Defaults.cornerRadius))
     }
 }
 

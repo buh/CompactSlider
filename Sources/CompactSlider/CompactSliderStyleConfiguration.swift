@@ -58,8 +58,8 @@ public extension CompactSliderStyleConfiguration {
         var progress = isRangeValues ? abs(upperProgress - lowerProgress) : lowerProgress
         
         switch type {
-        case .horizontal(let direction):
-            switch direction {
+        case .horizontal(let alignment):
+            switch alignment {
             case .leading, .trailing:
                 break
             case .center:
@@ -67,8 +67,8 @@ public extension CompactSliderStyleConfiguration {
             }
             
             return OptionalCGSize(width: size.width * progress)
-        case .vertical(let direction):
-            switch direction {
+        case .vertical(let alignment):
+            switch alignment {
             case .top, .bottom:
                 break
             case .center:
@@ -98,8 +98,8 @@ public extension CompactSliderStyleConfiguration {
         }
         
         switch type {
-        case .horizontal(let direction):
-            switch direction {
+        case .horizontal(let alignment):
+            switch alignment {
             case .leading:
                 return CGPoint.zero
             case .center:
@@ -113,8 +113,8 @@ public extension CompactSliderStyleConfiguration {
                 let progressSize = progressSize()
                 return CGPoint(x: size.width - (progressSize.width ?? 0), y: 0)
             }
-        case .vertical(let direction):
-            switch direction {
+        case .vertical(let alignment):
+            switch alignment {
             case .top:
                 return CGPoint.zero
             case .center:
@@ -137,15 +137,15 @@ public extension CompactSliderStyleConfiguration {
         guard index < progresses.count else { return .zero }
         
         switch type {
-        case .horizontal(let direction):
-            switch direction {
+        case .horizontal(let alignment):
+            switch alignment {
             case .leading, .center:
                 return CGPoint(x: (size.width - handleWidth) * progresses[index], y: 0)
             case .trailing:
                 return CGPoint(x: size.width - handleWidth - (size.width - handleWidth) * progresses[index], y: 0)
             }
-        case .vertical(let direction):
-            switch direction {
+        case .vertical(let alignment):
+            switch alignment {
             case .top, .center:
                 return CGPoint(x: 0, y: (size.height - handleWidth) * progresses[index])
             case .bottom:

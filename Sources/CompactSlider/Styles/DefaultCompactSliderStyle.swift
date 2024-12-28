@@ -6,56 +6,59 @@
 import SwiftUI
 
 /// The default slider style.
-public struct DefaultCompactSliderStyle: CompactSliderStyle {
-    let backgroundColor: Color
+public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
+    let background: (_ configuration: Configuration) -> Background
     let cornerRadius: CGFloat
-    let handleConfiguration: HandleConfiguration
-    let scaleConfiguration: ScaleConfiguration?
+    let handleStyle: HandleStyle
+    let scaleStyle: ScaleStyle?
     
     public init(
-        handleWidth: CGFloat = 4,
-        backgroundColor: Color? = nil,
-        cornerRadius: CGFloat? = nil,
-        handleConfiguration: HandleConfiguration = HandleConfiguration(),
-        scaleConfiguration: ScaleConfiguration? = ScaleConfiguration()
+        cornerRadius: CGFloat = Defaults.cornerRadius,
+        handleConfiguration: HandleStyle = HandleStyle(),
+        scaleConfiguration: ScaleStyle? = ScaleStyle(),
+        background: @escaping (_ configuration: Configuration) -> Background
     ) {
-        self.backgroundColor = backgroundColor ?? .label.opacity(0.075)
-        self.cornerRadius = cornerRadius ?? .cornerRadius
-        self.handleConfiguration = handleConfiguration
-        self.scaleConfiguration = scaleConfiguration
+        self.background = background
+        self.cornerRadius = cornerRadius
+        self.handleStyle = handleConfiguration
+        self.scaleStyle = scaleConfiguration
     }
     
     public func makeBody(configuration: Configuration) -> some View {
         ZStack {
-            ProgressView(configuration: configuration)
+            ProgressView(
+                configuration: configuration,
+                fillStyle: Defaults.label.opacity(Defaults.progressOpacity),
+                focusedFillStyle: Defaults.label.opacity(Defaults.focusedProgressOpacity)
+            )
             
-            if let scaleConfiguration, isScaleVisible(configuration: configuration) {
+            if let scaleStyle, isScaleVisible(configuration: configuration) {
                 ScaleView(
-                    direction: configuration.type.isHorizontal ? .horizontal : .vertical,
+                    alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
                     steps: configuration.steps,
-                    configuration: scaleConfiguration
+                    configuration: scaleStyle
                 )
             }
             
             if isHandleVisible(configuration: configuration) {
-                RectangleHandleView(width: handleConfiguration.width, configuration: configuration)
+                HandleView(style: handleStyle, configuration: configuration)
             }
         }
-        .background(backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+        .background(background(configuration))
+        .clipRoundedShapeIf(cornerRadius: cornerRadius)
     }
     
     private func isScaleVisible(configuration: Configuration) -> Bool {
-        guard let scaleConfiguration else { return false }
+        guard let scaleStyle else { return false }
         
-        return scaleConfiguration.visibility != .hidden
+        return scaleStyle.visibility != .hidden
             && (configuration.type.isHorizontal || configuration.type.isVertical)
-            && (scaleConfiguration.visibility == .always || configuration.isFocused)
+            && (scaleStyle.visibility == .always || configuration.isFocused)
     }
     
     private func isHandleVisible(configuration: Configuration) -> Bool {
-        guard handleConfiguration.visibility == .hovering else {
-            return handleConfiguration.visibility == .always
+        guard handleStyle.visibility == .hovering else {
+            return handleStyle.visibility == .always
         }
         
         if configuration.isFocused {
@@ -67,7 +70,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         }
         
         if configuration.type.isHorizontal {
-            if configuration.type.horizontalDirection == .center {
+            if configuration.type.horizontalAlignment == .center {
                 return configuration.progress == 0.5
             }
             
@@ -75,7 +78,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         }
         
         if configuration.type.isVertical {
-            if configuration.type.verticalDirection == .center {
+            if configuration.type.verticalAlignment == .center {
                 return configuration.progress == 0.5
             }
             
@@ -86,6 +89,33 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     }
 }
 
-public extension CompactSliderStyle where Self == DefaultCompactSliderStyle {
-    static var `default`: DefaultCompactSliderStyle { DefaultCompactSliderStyle() }
+public extension DefaultCompactSliderStyle where Background == Color {
+    init(
+        backgroundColor: @escaping (_ configuration: Configuration) -> Color = { _ in
+            Defaults.label.opacity(Defaults.backgroundOpacity)
+        },
+        cornerRadius: CGFloat = Defaults.cornerRadius,
+        handleConfiguration: HandleStyle = HandleStyle(),
+        scaleConfiguration: ScaleStyle? = ScaleStyle()
+    ) {
+        self.background = { backgroundColor($0) }
+        self.cornerRadius = cornerRadius
+        self.handleStyle = handleConfiguration
+        self.scaleStyle = scaleConfiguration
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func clipRoundedShapeIf(cornerRadius: CGFloat) -> some View {
+        if cornerRadius > 0 {
+            clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+        } else {
+            self
+        }
+    }
+}
+
+public extension CompactSliderStyle where Self == DefaultCompactSliderStyle<Color> {
+    static var `default`: DefaultCompactSliderStyle<Color> { DefaultCompactSliderStyle() }
 }
