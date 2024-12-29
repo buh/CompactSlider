@@ -42,3 +42,16 @@ public extension HandleStyle {
         }
     }
 }
+
+// MARK: - Environment
+
+struct HandleStyleKey: EnvironmentKey {
+    static var defaultValue: HandleStyle = HandleStyle()
+}
+
+extension EnvironmentValues {
+    var handleStyle: HandleStyle {
+        get { self[HandleStyleKey.self] }
+        set { self[HandleStyleKey.self] = newValue }
+    }
+}

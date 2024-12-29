@@ -5,9 +5,9 @@
 
 import SwiftUI
 
-struct ProgressContainerView<P: View>: View {
+struct ProgressContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
-    let progressView: (Progress, CompactSliderStyleConfiguration.FocusState) -> P
+    let progressView: (Progress, CompactSliderStyleConfiguration.FocusState) -> V
     
     var alignment: Alignment {
         if configuration.type.isHorizontal {
@@ -17,7 +17,7 @@ struct ProgressContainerView<P: View>: View {
         return .top
     }
     
-    init(@ViewBuilder progressView: @escaping (Progress, CompactSliderStyleConfiguration.FocusState) -> P) {
+    init(progressView: @escaping (Progress, CompactSliderStyleConfiguration.FocusState) -> V) {
         self.progressView = progressView
     }
     

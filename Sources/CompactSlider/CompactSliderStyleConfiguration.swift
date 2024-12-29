@@ -154,6 +154,42 @@ public extension CompactSliderStyleConfiguration {
     }
 }
 
+// MARK: - Handle
+
+public extension CompactSliderStyleConfiguration {
+    func isHandleVisible(handleStyle: HandleStyle) -> Bool {
+        guard handleStyle.visibility == .hovering else {
+            return handleStyle.visibility == .always
+        }
+        
+        if focusState.isFocused {
+            return true
+        }
+        
+        guard progress.isSingularValue else {
+            return false
+        }
+        
+        if type.isHorizontal {
+            if type.horizontalAlignment == .center {
+                return progress.progress == 0.5
+            }
+            
+            return progress.progress == 0
+        }
+        
+        if type.isVertical {
+            if type.verticalAlignment == .center {
+                return progress.progress == 0.5
+            }
+            
+            return progress.progress == 0
+        }
+        
+        return false
+    }
+}
+
 // MARK: - Environment
 
 struct CompactSliderStyleConfigurationKey: EnvironmentKey {

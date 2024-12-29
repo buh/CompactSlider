@@ -293,6 +293,11 @@ struct CompactSliderPreview: View {
                                 )
                             )
                     }
+                    .compactSliderHandleViewKey { handleStyle, progress, index in
+                        Circle()
+                            .fill(Color.red)
+                            .frame(width: 30)
+                    }
 //                    .overlay(
 //                        HStack {
 //                            Text("Default (leading)")

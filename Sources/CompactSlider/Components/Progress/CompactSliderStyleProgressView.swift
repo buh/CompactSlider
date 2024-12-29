@@ -13,9 +13,11 @@ public struct CompactSliderStyleProgressView: View {
     }
 }
 
+// MARK: - Environment
+
 struct ProgressViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
-        ProgressContainerView() { _, focusState in
+        ProgressContainerView { _, focusState in
             ProgressView(
                 focusState: focusState,
                 fillStyle: Defaults.label.opacity(Defaults.progressOpacity),

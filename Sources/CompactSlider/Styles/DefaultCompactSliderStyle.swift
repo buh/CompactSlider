@@ -39,13 +39,14 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
                 )
             }
             
-            if isHandleVisible(configuration: configuration) {
-                HandleView(style: handleStyle, configuration: configuration)
+            if configuration.isHandleVisible(handleStyle: handleStyle) {
+                CompactSliderStyleHandleView()
             }
         }
         .background(background(configuration))
         .clipRoundedShapeIf(cornerRadius: cornerRadius)
         .environment(\.compactSliderStyleConfiguration, configuration)
+        .environment(\.handleStyle, handleStyle)
     }
     
     private func isScaleVisible(configuration: Configuration) -> Bool {
@@ -56,53 +57,22 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
             && (scaleStyle.visibility == .always || configuration.focusState.isFocused)
     }
     
-    private func isHandleVisible(configuration: Configuration) -> Bool {
-        guard handleStyle.visibility == .hovering else {
-            return handleStyle.visibility == .always
-        }
-        
-        if configuration.focusState.isFocused {
-            return true
-        }
-        
-        guard configuration.progress.isSingularValue else {
-            return false
-        }
-        
-        if configuration.type.isHorizontal {
-            if configuration.type.horizontalAlignment == .center {
-                return configuration.progress.progress == 0.5
-            }
-            
-            return configuration.progress.progress == 0
-        }
-        
-        if configuration.type.isVertical {
-            if configuration.type.verticalAlignment == .center {
-                return configuration.progress.progress == 0.5
-            }
-            
-            return configuration.progress.progress == 0
-        }
-        
-        return false
-    }
 }
 
 public extension DefaultCompactSliderStyle where Background == Color {
     init(
         type: CompactSliderType = .horizontal(.leading),
         cornerRadius: CGFloat = Defaults.cornerRadius,
-        handleConfiguration: HandleStyle = HandleStyle(),
-        scaleConfiguration: ScaleStyle? = ScaleStyle(),
+        handleStyle: HandleStyle = HandleStyle(),
+        scaleStyle: ScaleStyle? = ScaleStyle(),
         backgroundColor: @escaping (_ configuration: Configuration) -> Color = { _ in
             Defaults.label.opacity(Defaults.backgroundOpacity)
         }
     ) {
         self.type = type
         self.cornerRadius = cornerRadius
-        self.handleStyle = handleConfiguration
-        self.scaleStyle = scaleConfiguration
+        self.handleStyle = handleStyle
+        self.scaleStyle = scaleStyle
         self.background = { backgroundColor($0) }
     }
 }
