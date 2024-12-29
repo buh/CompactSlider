@@ -6,25 +6,22 @@
 import SwiftUI
 
 /// The default slider style.
-public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
+public struct DefaultCompactSliderStyle: CompactSliderStyle {
     public let type: CompactSliderType
     let cornerRadius: CGFloat
     let handleStyle: HandleStyle
     let scaleStyle: ScaleStyle?
-    let background: (_ configuration: Configuration) -> Background
-
+    
     public init(
         type: CompactSliderType = .horizontal(.leading),
         cornerRadius: CGFloat = Defaults.cornerRadius,
-        handleConfiguration: HandleStyle = HandleStyle(),
-        scaleConfiguration: ScaleStyle? = ScaleStyle(),
-        background: @escaping (_ configuration: Configuration) -> Background
+        handleStyle: HandleStyle = HandleStyle(),
+        scaleStyle: ScaleStyle? = ScaleStyle()
     ) {
         self.type = type
-        self.background = background
         self.cornerRadius = cornerRadius
-        self.handleStyle = handleConfiguration
-        self.scaleStyle = scaleConfiguration
+        self.handleStyle = handleStyle
+        self.scaleStyle = scaleStyle
     }
     
     public func makeBody(configuration: Configuration) -> some View {
@@ -43,7 +40,7 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
                 CompactSliderStyleHandleView()
             }
         }
-        .background(background(configuration))
+        .background(CompactSliderStyleBackgroundView())
         .clipRoundedShapeIf(cornerRadius: cornerRadius)
         .environment(\.compactSliderStyleConfiguration, configuration)
         .environment(\.handleStyle, handleStyle)
@@ -59,22 +56,36 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
     
 }
 
-public extension DefaultCompactSliderStyle where Background == Color {
-    init(
-        type: CompactSliderType = .horizontal(.leading),
+public extension DefaultCompactSliderStyle {
+    static func horizontal(
+        _ alignment: HorizontalAlignment = .leading,
         cornerRadius: CGFloat = Defaults.cornerRadius,
         handleStyle: HandleStyle = HandleStyle(),
-        scaleStyle: ScaleStyle? = ScaleStyle(),
-        backgroundColor: @escaping (_ configuration: Configuration) -> Color = { _ in
-            Defaults.label.opacity(Defaults.backgroundOpacity)
-        }
-    ) {
-        self.type = type
-        self.cornerRadius = cornerRadius
-        self.handleStyle = handleStyle
-        self.scaleStyle = scaleStyle
-        self.background = { backgroundColor($0) }
+        scaleStyle: ScaleStyle? = ScaleStyle()
+    ) -> DefaultCompactSliderStyle {
+        .init(
+            type: .horizontal(alignment),
+            cornerRadius: cornerRadius,
+            handleStyle: handleStyle,
+            scaleStyle: scaleStyle
+        )
     }
+    
+    static func vertical(
+        _ alignment: VerticalAlignment = .top,
+        cornerRadius: CGFloat = Defaults.cornerRadius,
+        handleStyle: HandleStyle = HandleStyle(),
+        scaleStyle: ScaleStyle? = ScaleStyle()
+    ) -> DefaultCompactSliderStyle {
+        .init(
+            type: .vertical(alignment),
+            cornerRadius: cornerRadius,
+            handleStyle: handleStyle,
+            scaleStyle: scaleStyle
+        )
+    }
+    
+    // TODO: Scrollable
 }
 
 private extension View {
@@ -86,8 +97,4 @@ private extension View {
             self
         }
     }
-}
-
-public extension CompactSliderStyle where Self == DefaultCompactSliderStyle<Color> {
-    static var `default`: DefaultCompactSliderStyle<Color> { DefaultCompactSliderStyle() }
 }

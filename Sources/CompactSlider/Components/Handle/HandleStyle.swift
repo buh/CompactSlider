@@ -12,13 +12,13 @@ public struct HandleStyle: Equatable {
     let visibility: Visibility
     
     public init(
+        visibility: Visibility = .default,
         width: CGFloat = Defaults.handleWidth,
-        cornerRadius: CGFloat = Defaults.handleCornerRadius,
-        visibility: Visibility = .default
+        cornerRadius: CGFloat = Defaults.handleCornerRadius
     ) {
+        self.visibility = visibility
         self.width = width
         self.cornerRadius = cornerRadius
-        self.visibility = visibility
     }
 }
 

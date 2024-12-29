@@ -279,25 +279,36 @@ struct CompactSliderPreview: View {
             
             Group {
                 // 1. The default case.
-                CompactSlider(value: $progress)
-                    .compactSliderProgressView { progress, focusState in
+                CompactSlider(from: $fromProgress, to: $toProgress)
+                    .compactSliderStyle(default: .vertical(
+                        cornerRadius: 0,
+                        handleStyle: .init(visibility: .always, width: 30),
+                        scaleStyle: .init(visibility: .hidden)
+                    ))
+                    .compactSliderProgressView { _, _ in
                         Capsule()
                             .fill(
                                 LinearGradient(
                                     stops: [
-                                        .init(color: .blue.opacity(0.1), location: 0),
+                                        .init(color: .blue.opacity(0.5), location: 0),
                                         .init(color: .purple.opacity(0.5), location: 1),
                                     ],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
+                                    startPoint: .top,
+                                    endPoint: .bottom
                                 )
                             )
+//                            .frame(maxWidth: 10)
                     }
-                    .compactSliderHandleViewKey { handleStyle, progress, index in
+                    .compactSliderHandleView { _, _, index in
                         Circle()
-                            .fill(Color.red)
-                            .frame(width: 30)
+                            .fill(index == 1 ? Color.purple : .blue)
                     }
+                    .compactSliderBackgroundView { _ in
+                        Capsule()
+                            .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
+                            .frame(maxWidth: 10)
+                    }
+                
 //                    .overlay(
 //                        HStack {
 //                            Text("Default (leading)")
@@ -341,7 +352,7 @@ struct CompactSliderPreview: View {
 //                        .allowsHitTesting(false)
 //                    )
             }
-            .frame(maxHeight: 30)
+            .frame(maxWidth: 30)
             
             HStack {
 //                Group {
