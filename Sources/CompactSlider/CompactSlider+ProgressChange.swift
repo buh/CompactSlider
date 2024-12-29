@@ -6,8 +6,8 @@
 import SwiftUI
 
 extension CompactSlider {
-    func onProgressesChange(_ newValues: [Double]) {
-        guard !newValues.isEmpty else { return }
+    func onProgressesChange(_ newValue: Progress) {
+        guard !newValue.progresses.isEmpty else { return }
         
         isValueChangingInternally = true
         defer {
@@ -16,15 +16,15 @@ extension CompactSlider {
             }
         }
         
-        lowerValue = convertProgressToValue(newValues[0])
+        lowerValue = convertProgressToValue(newValue.progresses[0])
         
-        guard isRangeValues else { return }
+        guard progress.isRangeValues else { return }
         
-        upperValue = convertProgressToValue(newValues[1])
+        upperValue = convertProgressToValue(newValue.progresses[1])
         
-        guard isMultipleValues else { return }
+        guard progress.isMultipleValues else { return }
         
-        values = newValues.map(convertProgressToValue)
+        values = newValue.progresses.map(convertProgressToValue)
     }
     
     func convertProgressToValue(_ newValue: Double) -> Value {
@@ -34,17 +34,17 @@ extension CompactSlider {
     
     func onLowerValueChange(_ newValue: Value) {
         if isValueChangingInternally { return }
-        updateLowerProgress(convertValueToProgress(newValue))
+        progress.updateLowerProgress(convertValueToProgress(newValue))
     }
     
     func onUpperValueChange(_ newValue: Value) {
         if isValueChangingInternally { return }
-        updateUpperProgress(convertValueToProgress(newValue))
+        progress.updateUpperProgress(convertValueToProgress(newValue))
     }
     
     func onValuesChange(_ newValues: [Value]) {
         if isValueChangingInternally { return }
-        progresses = newValues.map(convertValueToProgress)
+        progress.progresses = newValues.map(convertValueToProgress)
     }
 
     func convertValueToProgress(_ newValue: Value) -> Double {

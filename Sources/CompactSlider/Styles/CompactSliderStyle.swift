@@ -12,6 +12,9 @@ public protocol CompactSliderStyle {
     associatedtype Body: View
     typealias Configuration = CompactSliderStyleConfiguration
     
+    /// A slider type in which the slider will indicate the selected value.
+    var type: CompactSliderType { get }
+    
     func makeBody(configuration: Self.Configuration) -> Self.Body
 }
 
@@ -48,9 +51,11 @@ extension EnvironmentValues {
 }
 
 struct AnyCompactSliderStyle: CompactSliderStyle {
+    let type: CompactSliderType
     private let _makeBody: (Configuration) -> AnyView
     
     init<Style: CompactSliderStyle>(_ style: Style) {
+        type = style.type
         _makeBody = { AnyView(style.makeBody(configuration: $0)) }
     }
     

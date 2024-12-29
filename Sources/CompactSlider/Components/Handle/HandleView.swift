@@ -15,8 +15,8 @@ public struct HandleView: View {
         self.configuration = configuration
         
         indices = Array(stride(
-            from: configuration.progresses.startIndex,
-            to: configuration.progresses.endIndex,
+            from: configuration.progress.progresses.startIndex,
+            to: configuration.progress.progresses.endIndex,
             by: 1
         ))
     }

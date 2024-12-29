@@ -75,7 +75,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.compactSliderDisabledHapticFeedback) var disabledHapticFeedback
 
-    let type: CompactSliderType
     let gestureOptions: Set<GestureOption>
     let bounds: ClosedRange<Value>
     let step: Value
@@ -86,7 +85,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     @Binding var upperValue: Value
     @Binding var values: [Value]
     @State var isValueChangingInternally = false
-    @State var progresses: [Double]
+    @State var progress: Progress
     
     @State var isHovering = false
     @State var isDragging = false
@@ -109,7 +108,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
-        type: CompactSliderType = .horizontal(.leading),
         gestureOptions: Set<GestureOption> = .default
     ) {
         _lowerValue = value
@@ -118,18 +116,17 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         
         self.bounds = bounds
         self.step = step
-        self.type = type
         self.gestureOptions = gestureOptions
         let rangeDistance = Double(bounds.distance)
         
         guard rangeDistance > 0 else {
-            _progresses = .init(initialValue: [])
+            _progress = .init(initialValue: Progress())
             assertionFailure("Bounds distance must be greater than zero")
             return
         }
         
         let progress = Double(value.wrappedValue - bounds.lowerBound) / rangeDistance
-        _progresses = .init(initialValue: [progress])
+        _progress = .init(initialValue: Progress([progress]))
         
         if step > 0 {
             progressStep = Double(step) / rangeDistance
@@ -153,7 +150,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         to upperValue: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
-        alignment: Axis = .horizontal,
         gestureOptions: Set<GestureOption> = .default
     ) {
         _lowerValue = lowerValue
@@ -161,13 +157,13 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         _values = .constant([])
         self.bounds = bounds
         self.step = step
-        self.type = alignment == .horizontal ? .horizontal(.leading) : .vertical(.top)
+//        self.type = alignment == .horizontal ? .horizontal(.leading) : .vertical(.top)
         self.gestureOptions = gestureOptions
         
         let rangeDistance = Double(bounds.distance)
         
         guard rangeDistance > 0 else {
-            _progresses = .init(initialValue: [])
+            _progress = .init(initialValue: Progress())
             assertionFailure("Bounds distance must be greater than zero")
             return
         }
@@ -175,7 +171,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         let lowerProgress = Double(lowerValue.wrappedValue - bounds.lowerBound) / rangeDistance
         let upperProgress = Double(upperValue.wrappedValue - bounds.lowerBound) / rangeDistance
         
-        _progresses = .init(initialValue: [lowerProgress, upperProgress])
+        _progress = .init(initialValue: Progress([lowerProgress, upperProgress]))
         
         if step > 0 {
             progressStep = Double(step) / rangeDistance
@@ -188,11 +184,10 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
             compactSliderStyle
                 .makeBody(
                     configuration: CompactSliderStyleConfiguration(
-                        type: type,
+                        type: compactSliderStyle.type,
                         size: proxy.size,
-                        isHovering: isHovering,
-                        isDragging: isDragging,
-                        progresses: progresses,
+                        focusState: .init(isHovering: isHovering, isDragging: isDragging),
+                        progress: progress,
                         steps: steps
                     )
                 )
@@ -206,10 +201,17 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                         dragLocation = $0.location
                     }
                 )
-                .onChange(of: dragLocation) { onDragLocationChange($0, size: proxy.size) }
+                .onChange(of: dragLocation) {
+                    onDragLocationChange($0, size: proxy.size, type: compactSliderStyle.type)
+                }
                 #if os(macOS)
                 .onChange(of: scrollWheelEvent) {
-                    onScrollWheelChange($0, size: proxy.size, location: proxy.frame(in: .global).origin)
+                    onScrollWheelChange(
+                        $0,
+                        size: proxy.size,
+                        location: proxy.frame(in: .global).origin,
+                        type: compactSliderStyle.type
+                    )
                 }
                 #endif
         }
@@ -222,11 +224,11 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         .onScrollWheel(isEnabled: gestureOptions.contains(.scrollWheel)) { event in
             guard isHovering else { return }
             
-            if type.isHorizontal, !event.isHorizontalDelta {
+            if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
                 return
             }
             
-            if type.isVertical, event.isHorizontalDelta {
+            if compactSliderStyle.type.isVertical, event.isHorizontalDelta {
                 return
             }
             
@@ -235,7 +237,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
             }
         }
         #endif
-        .onChange(of: progresses, perform: onProgressesChange)
+        .onChange(of: progress, perform: onProgressesChange)
         .onChange(of: lowerValue, perform: onLowerValueChange)
         .onChange(of: upperValue, perform: onUpperValueChange)
         .onChange(of: values, perform: onValuesChange)
@@ -243,32 +245,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         .animation(nil, value: upperValue)
         .animation(nil, value: values)
         .opacity(isEnabled ? 1 : 0.5)
-    }
-}
-
-public extension CompactSlider {
-    var isSingularValue: Bool { progresses.count == 1 }
-    var isRangeValues: Bool { progresses.count == 2 }
-    var isMultipleValues: Bool { progresses.count > 2 }
-
-    var progress: Double { progresses.first ?? 0 }
-
-    var lowerProgress: Double { progresses.first ?? 0 }
-    
-    func updateProgress(_ progress: Double, at index: Int) {
-        guard index < progresses.count else { return }
-        
-        progresses[index] = progress
-    }
-    
-    func updateLowerProgress(_ progress: Double) {
-        updateProgress(progress, at: 0)
-    }
-    
-    var upperProgress: Double { isRangeValues ? progresses[1] : 0 }
-    
-    func updateUpperProgress(_ progress: Double) {
-        updateProgress(progress, at: 1)
     }
 }
 
@@ -304,73 +280,93 @@ struct CompactSliderPreview: View {
             Group {
                 // 1. The default case.
                 CompactSlider(value: $progress)
-                    .overlay(
-                        HStack {
-                            Text("Default (leading)")
-                            Spacer()
-                            Text("\(Int(progress * 100))%")
-                        }
-                        .padding(.horizontal, 6)
-                        .allowsHitTesting(false)
-                    )
-                    .compactSliderStyle(
-                        .init(scaleConfiguration: .init(visibility: .always)) { configuration in
-                            LinearGradient(
-                                stops: [
-                                    .init(color: .blue, location: configuration.progress),
-                                    .init(color: .purple, location: 1),
-                                ],
-                                startPoint: .leading,
-                                endPoint: .trailing
+                    .compactSliderProgressView { progress, focusState in
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    stops: [
+                                        .init(color: .blue.opacity(0.1), location: 0),
+                                        .init(color: .purple.opacity(0.5), location: 1),
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
                             )
-                            .opacity(0.2)
-                        }
-                    )
-
-                CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, type: .horizontal(.center))
-                    .overlay(
-                        Text("\(Int(centerProgress))")
-                            .allowsHitTesting(false)
-                    )
+                    }
+//                    .overlay(
+//                        HStack {
+//                            Text("Default (leading)")
+//                            Spacer()
+//                            Text("\(Int(progress * 100))%")
+//                        }
+//                        .padding(.horizontal, 6)
+//                        .allowsHitTesting(false)
+//                    )
+//                    .compactSliderStyle(
+//                        .init(scaleConfiguration: .init(visibility: .always)) { configuration in
+//                            LinearGradient(
+//                                stops: [
+//                                    .init(color: .blue.opacity(0.1), location: configuration.progress),
+//                                    .init(color: .purple.opacity(0.5), location: 1),
+//                                ],
+//                                startPoint: .leading,
+//                                endPoint: .trailing
+//                            )
+//                        }
+//                    )
                 
-                CompactSlider(value: $progress, type: .horizontal(.trailing))
-                
-                CompactSlider(from: $fromProgress, to: $toProgress)
-                    .overlay(
-                        HStack {
-                            Text("\(Int(fromProgress * 100))%")
-                            Spacer()
-                            Text("\(Int(toProgress * 100))%")
-                        }
-                        .padding(.horizontal, 6)
-                        .allowsHitTesting(false)
-                    )
+                // type: .horizontal(.center)
+//                CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
+//                    .overlay(
+//                        Text("\(Int(centerProgress))")
+//                            .allowsHitTesting(false)
+//                    )
+//                
+//                // .horizontal(.trailing)
+//                CompactSlider(value: $progress)
+//                
+//                CompactSlider(from: $fromProgress, to: $toProgress)
+//                    .overlay(
+//                        HStack {
+//                            Text("\(Int(fromProgress * 100))%")
+//                            Spacer()
+//                            Text("\(Int(toProgress * 100))%")
+//                        }
+//                        .padding(.horizontal, 6)
+//                        .allowsHitTesting(false)
+//                    )
             }
-            .frame(maxHeight: 44)
+            .frame(maxHeight: 30)
             
             HStack {
-                Group {
-                    CompactSlider(value: $progress, type: .vertical(.bottom))
-                        .compactSliderStyle(.init(
-                            scaleConfiguration: .init(
-                                visibility: .always,
-                                line: .init(length: nil),
-                                secondaryLine: .init(length: nil),
-                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
-                            )
-                        ))
-                    CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, type: .vertical(.center))
-                        .compactSliderStyle(.init(
-                            scaleConfiguration: .init(
-                                visibility: .always,
-                                line: .init(length: nil),
-                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
-                            )
-                        ))
-                    CompactSlider(value: $progress, type: .vertical(.top))
-                    CompactSlider(from: $fromProgress, to: $toProgress, alignment: .vertical)
-                }
-                .frame(maxWidth: 44)
+//                Group {
+//                    CompactSlider(value: $progress)
+//                        .compactSliderStyle(.init(
+//                            type: .vertical(.bottom),
+//                            scaleConfiguration: .init(
+//                                visibility: .always,
+//                                line: .init(length: nil),
+//                                secondaryLine: .init(length: nil),
+//                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+//                            )
+//                        ))
+
+//                    CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
+//                        .compactSliderStyle(.init(
+//                            type: .vertical(.center),
+//                            scaleConfiguration: .init(
+//                                visibility: .always,
+//                                line: .init(length: nil),
+//                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+//                            )
+//                        ))
+                    
+//                    CompactSlider(value: $progress, type: .vertical(.top))
+                    
+                    // alignment: .vertical
+//                    CompactSlider(from: $fromProgress, to: $toProgress)
+//                }
+//                .frame(maxWidth: 44)
             }
             .frame(height: 300)
 

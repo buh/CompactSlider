@@ -7,17 +7,20 @@ import SwiftUI
 
 /// The default slider style.
 public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
-    let background: (_ configuration: Configuration) -> Background
+    public let type: CompactSliderType
     let cornerRadius: CGFloat
     let handleStyle: HandleStyle
     let scaleStyle: ScaleStyle?
-    
+    let background: (_ configuration: Configuration) -> Background
+
     public init(
+        type: CompactSliderType = .horizontal(.leading),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         handleConfiguration: HandleStyle = HandleStyle(),
         scaleConfiguration: ScaleStyle? = ScaleStyle(),
         background: @escaping (_ configuration: Configuration) -> Background
     ) {
+        self.type = type
         self.background = background
         self.cornerRadius = cornerRadius
         self.handleStyle = handleConfiguration
@@ -25,12 +28,8 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
     }
     
     public func makeBody(configuration: Configuration) -> some View {
-        ZStack {
-            ProgressView(
-                configuration: configuration,
-                fillStyle: Defaults.label.opacity(Defaults.progressOpacity),
-                focusedFillStyle: Defaults.label.opacity(Defaults.focusedProgressOpacity)
-            )
+        ZStack(alignment: .center) {
+            CompactSliderStyleProgressView()
             
             if let scaleStyle, isScaleVisible(configuration: configuration) {
                 ScaleView(
@@ -46,6 +45,7 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
         }
         .background(background(configuration))
         .clipRoundedShapeIf(cornerRadius: cornerRadius)
+        .environment(\.compactSliderStyleConfiguration, configuration)
     }
     
     private func isScaleVisible(configuration: Configuration) -> Bool {
@@ -53,7 +53,7 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
         
         return scaleStyle.visibility != .hidden
             && (configuration.type.isHorizontal || configuration.type.isVertical)
-            && (scaleStyle.visibility == .always || configuration.isFocused)
+            && (scaleStyle.visibility == .always || configuration.focusState.isFocused)
     }
     
     private func isHandleVisible(configuration: Configuration) -> Bool {
@@ -61,28 +61,28 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
             return handleStyle.visibility == .always
         }
         
-        if configuration.isFocused {
+        if configuration.focusState.isFocused {
             return true
         }
         
-        guard configuration.isSingularValue else {
+        guard configuration.progress.isSingularValue else {
             return false
         }
         
         if configuration.type.isHorizontal {
             if configuration.type.horizontalAlignment == .center {
-                return configuration.progress == 0.5
+                return configuration.progress.progress == 0.5
             }
             
-            return configuration.progress == 0
+            return configuration.progress.progress == 0
         }
         
         if configuration.type.isVertical {
             if configuration.type.verticalAlignment == .center {
-                return configuration.progress == 0.5
+                return configuration.progress.progress == 0.5
             }
             
-            return configuration.progress == 0
+            return configuration.progress.progress == 0
         }
         
         return false
@@ -91,17 +91,19 @@ public struct DefaultCompactSliderStyle<Background: View>: CompactSliderStyle {
 
 public extension DefaultCompactSliderStyle where Background == Color {
     init(
-        backgroundColor: @escaping (_ configuration: Configuration) -> Color = { _ in
-            Defaults.label.opacity(Defaults.backgroundOpacity)
-        },
+        type: CompactSliderType = .horizontal(.leading),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         handleConfiguration: HandleStyle = HandleStyle(),
-        scaleConfiguration: ScaleStyle? = ScaleStyle()
+        scaleConfiguration: ScaleStyle? = ScaleStyle(),
+        backgroundColor: @escaping (_ configuration: Configuration) -> Color = { _ in
+            Defaults.label.opacity(Defaults.backgroundOpacity)
+        }
     ) {
-        self.background = { backgroundColor($0) }
+        self.type = type
         self.cornerRadius = cornerRadius
         self.handleStyle = handleConfiguration
         self.scaleStyle = scaleConfiguration
+        self.background = { backgroundColor($0) }
     }
 }
 

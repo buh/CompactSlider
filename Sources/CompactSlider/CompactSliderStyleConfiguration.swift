@@ -6,36 +6,33 @@
 import SwiftUI
 
 /// Configuration for creating a style for the slider.
-public struct CompactSliderStyleConfiguration {
+public struct CompactSliderStyleConfiguration: Equatable {
     /// A slider type in which the slider will indicate the selected value.
     public let type: CompactSliderType
     /// The slider size.
     public let size: CGSize
-    /// True, when hovering the slider.
-    public let isHovering: Bool
-    /// True, when dragging the slider.
-    public let isDragging: Bool
+    /// A dragging or hovering state of the slider.
+    public let focusState: FocusState
     /// Progress values represents the position of the selected value within bounds, mapped into 0...1.
-    public let progresses: [Double]
+    public let progress: Progress
     public let steps: Int
 }
 
 public extension CompactSliderStyleConfiguration {
-    var isFocused: Bool { isHovering || isDragging }
-    /// True if the slider uses a single value.
-    var isSingularValue: Bool { progresses.count == 1 }
-    /// True if the slider uses a range of values.
-    var isRangeValues: Bool { progresses.count == 2 }
-    /// True if the slider uses multiple values.
-    var isMultipleValues: Bool { progresses.count > 2 }
-    /// The progress represents the position of the selected value within bounds, mapped into 0...1.
-    var progress: Double { progresses.first ?? 0 }
-    /// The progress represents the position of the selected value within bounds, mapped into 0...1.
-    /// This progress should be used to track a single value or a lower value for a range of values.
-    var lowerProgress: Double { progresses.first ?? 0 }
-    /// The progress represents the position of the selected value within bounds, mapped into 0...1.
-    /// This progress should only be used to track the upper value for the range of values.
-    var upperProgress: Double { progresses.last ?? 0 }
+    /// A dragging or hovering state of the slider.
+    struct FocusState: Equatable {
+        /// True, when hovering the slider.
+        public var isHovering: Bool
+        /// True, when dragging the slider.
+        public var isDragging: Bool
+        /// True, when dragging or hovering the slider.
+        public var isFocused: Bool { isHovering || isDragging }
+        
+        public init(isHovering: Bool, isDragging: Bool) {
+            self.isHovering = isHovering
+            self.isDragging = isDragging
+        }
+    }
 }
 
 public extension CompactSliderStyleConfiguration {
@@ -51,11 +48,11 @@ public extension CompactSliderStyleConfiguration {
     }
     
     func progressSize() -> OptionalCGSize {
-        if isMultipleValues {
+        if progress.isMultipleValues {
             return OptionalCGSize()
         }
         
-        var progress = isRangeValues ? abs(upperProgress - lowerProgress) : lowerProgress
+        var progress = progress.isRangeValues ? abs(progress.upperProgress - progress.lowerProgress) : progress.lowerProgress
         
         switch type {
         case .horizontal(let alignment):
@@ -82,16 +79,16 @@ public extension CompactSliderStyleConfiguration {
     }
     
     func progressOffset() -> CGPoint {
-        if isMultipleValues {
+        if progress.isMultipleValues {
             return .zero
         }
         
-        if isRangeValues {
+        if progress.isRangeValues {
             switch type {
             case .horizontal:
-                return CGPoint(x: size.width * min(lowerProgress, upperProgress), y: 0)
+                return CGPoint(x: size.width * min(progress.lowerProgress, progress.upperProgress), y: 0)
             case .vertical:
-                return CGPoint(x: 0, y: size.height * min(lowerProgress, upperProgress))
+                return CGPoint(x: 0, y: size.height * min(progress.lowerProgress, progress.upperProgress))
             default:
                 return CGPoint.zero
             }
@@ -103,7 +100,7 @@ public extension CompactSliderStyleConfiguration {
             case .leading:
                 return CGPoint.zero
             case .center:
-                if progress > 0.5 {
+                if progress.progress > 0.5 {
                     return CGPoint(x: size.width / 2, y: 0)
                 }
                 
@@ -118,7 +115,7 @@ public extension CompactSliderStyleConfiguration {
             case .top:
                 return CGPoint.zero
             case .center:
-                if progress > 0.5 {
+                if progress.progress > 0.5 {
                     return CGPoint(x: 0, y: size.height / 2)
                 }
                 
@@ -134,25 +131,44 @@ public extension CompactSliderStyleConfiguration {
     }
     
     func offset(at index: Int, handleWidth: CGFloat = 0) -> CGPoint {
-        guard index < progresses.count else { return .zero }
+        guard index < progress.progresses.count else { return .zero }
         
         switch type {
         case .horizontal(let alignment):
             switch alignment {
             case .leading, .center:
-                return CGPoint(x: (size.width - handleWidth) * progresses[index], y: 0)
+                return CGPoint(x: (size.width - handleWidth) * progress.progresses[index], y: 0)
             case .trailing:
-                return CGPoint(x: size.width - handleWidth - (size.width - handleWidth) * progresses[index], y: 0)
+                return CGPoint(x: size.width - handleWidth - (size.width - handleWidth) * progress.progresses[index], y: 0)
             }
         case .vertical(let alignment):
             switch alignment {
             case .top, .center:
-                return CGPoint(x: 0, y: (size.height - handleWidth) * progresses[index])
+                return CGPoint(x: 0, y: (size.height - handleWidth) * progress.progresses[index])
             case .bottom:
-                return CGPoint(x: 0, y: size.height - handleWidth - (size.height - handleWidth) * progresses[index])
+                return CGPoint(x: 0, y: size.height - handleWidth - (size.height - handleWidth) * progress.progresses[index])
             }
         default:
             return .zero
         }
+    }
+}
+
+// MARK: - Environment
+
+struct CompactSliderStyleConfigurationKey: EnvironmentKey {
+    static var defaultValue: CompactSliderStyleConfiguration = CompactSliderStyleConfiguration(
+        type: .horizontal(.leading),
+        size: .zero,
+        focusState: .init(isHovering: false, isDragging: false),
+        progress: Progress(),
+        steps: 0
+    )
+}
+
+extension EnvironmentValues {
+    var compactSliderStyleConfiguration: CompactSliderStyleConfiguration {
+        get { self[CompactSliderStyleConfigurationKey.self] }
+        set { self[CompactSliderStyleConfigurationKey.self] = newValue }
     }
 }
