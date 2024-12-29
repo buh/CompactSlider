@@ -26,14 +26,20 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     
     public func makeBody(configuration: Configuration) -> some View {
         ZStack(alignment: .center) {
-            CompactSliderStyleProgressView()
+            if !configuration.progress.isMultipleValues {
+                CompactSliderStyleProgressView()
+            }
             
             if let scaleStyle, configuration.isScaleVisible(scaleStyle: scaleStyle) {
                 CompactSliderStyleScaleView()
             }
             
             if configuration.isHandleVisible(handleStyle: handleStyle) {
-                CompactSliderStyleHandleView()
+                if configuration.progress.isMultipleValues, configuration.progress.progresses.count == 0 {
+                    Rectangle().fill(Color.clear)
+                } else {
+                    CompactSliderStyleHandleView()
+                }
             }
         }
         .background(CompactSliderStyleBackgroundView())

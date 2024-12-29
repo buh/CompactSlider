@@ -133,6 +133,39 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         }
     }
     
+    public init(
+        values: Binding<[Value]>,
+        in bounds: ClosedRange<Value> = 0...1,
+        step: Value = 0,
+        gestureOptions: Set<GestureOption> = .default
+    ) {
+        _lowerValue = .constant(0)
+        _upperValue = .constant(0)
+        _values = values
+        
+        self.bounds = bounds
+        self.step = step
+        self.gestureOptions = gestureOptions
+        let rangeDistance = Double(bounds.distance)
+        
+        guard rangeDistance > 0 else {
+            _progress = .init(initialValue: Progress())
+            assertionFailure("Bounds distance must be greater than zero")
+            return
+        }
+        
+        let progresses = values.wrappedValue.map {
+            Double($0 - bounds.lowerBound) / rangeDistance
+        }
+        
+        _progress = .init(initialValue: Progress(progresses, isMultipleValues: true))
+        
+        if step > 0 {
+            progressStep = Double(step) / rangeDistance
+            steps = Int((rangeDistance / Double(step)).rounded(.towardZero) - 1)
+        }
+    }
+    
     /// Creates a slider to select a range of values from a given bounds.
     ///
     /// Values of the created instance is equal to the position of the given value
@@ -261,6 +294,7 @@ struct CompactSliderPreview: View {
     @State private var centerProgress: Double = 0
     @State private var fromProgress: Double = 0.3
     @State private var toProgress: Double = 0.7
+    @State private var progresses: [Double] = [0.2, 0.5, 0.8]
     
     var body: some View {
         VStack(spacing: 16) {
@@ -314,6 +348,37 @@ struct CompactSliderPreview: View {
                             .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
                             .frame(maxHeight: 10)
                     }
+                
+                CompactSlider(values: $progresses)
+                    .compactSliderHandleView { style, progress, _ in
+                        HandleView(
+                            style: .init(
+                                visibility: .always,
+                                color: Color(hue: progress, saturation: 0.8, brightness: 0.8),
+                                width: style.width,
+                                cornerRadius: 0
+                            )
+                        )
+                        .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
+                    }
+                    .compactSliderBackgroundView { _ in
+                        RoundedRectangle(cornerRadius: Defaults.cornerRadius)
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color(hue: 0, saturation: 0.8, brightness: 0.8),
+                                        Color(hue: 0.2, saturation: 0.8, brightness: 0.8),
+                                        Color(hue: 0.4, saturation: 0.8, brightness: 0.8),
+                                        Color(hue: 0.6, saturation: 0.8, brightness: 0.8),
+                                        Color(hue: 0.8, saturation: 0.8, brightness: 0.8),
+                                        Color(hue: 1, saturation: 0.8, brightness: 0.8),
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .opacity(0.1)
+                    }
             }
             .frame(maxHeight: 30)
             
@@ -324,11 +389,14 @@ struct CompactSliderPreview: View {
                             .bottom,
                             scaleStyle: .init(
                                 line: .init(length: nil),
-                                secondaryLine: .init(color: Defaults.label.opacity(0.2), length: nil),
+                                secondaryLine: .init(
+                                    color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
+                                    length: nil
+                                ),
                                 padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
                             )
                         ))
-
+                    
                     CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
                         .compactSliderStyle(default: .vertical(
                             .center,
@@ -377,10 +445,50 @@ struct CompactSliderPreview: View {
                                 .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
                                 .frame(maxWidth: 10)
                         }
+                    
+                    CompactSlider(values: $progresses)
+                        .compactSliderStyle(default: .vertical(
+                            scaleStyle: .init(
+                                line: .init(
+                                    color: Defaults.label.opacity(0.2),
+                                    length: nil
+                                ),
+                                secondaryLine: nil,
+                                padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                            )
+                        ))
+                        .compactSliderHandleView { style, progress, _ in
+                            HandleView(
+                                style: .init(
+                                    visibility: .always,
+                                    color: Color(hue: progress, saturation: 0.8, brightness: 0.8),
+                                    width: style.width,
+                                    cornerRadius: 0
+                                )
+                            )
+                            .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
+                        }
+                        .compactSliderBackgroundView { _ in
+                            RoundedRectangle(cornerRadius: Defaults.cornerRadius)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            Color(hue: 0, saturation: 0.8, brightness: 0.8),
+                                            Color(hue: 0.2, saturation: 0.8, brightness: 0.8),
+                                            Color(hue: 0.4, saturation: 0.8, brightness: 0.8),
+                                            Color(hue: 0.6, saturation: 0.8, brightness: 0.8),
+                                            Color(hue: 0.8, saturation: 0.8, brightness: 0.8),
+                                            Color(hue: 1, saturation: 0.8, brightness: 0.8),
+                                        ],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .opacity(0.1)
+                        }
                 }
                 .frame(maxWidth: 30)
             }
-            .frame(height: 300)
         }
         .padding()
         .accentColor(.purple)

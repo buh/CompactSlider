@@ -7,16 +7,19 @@ import SwiftUI
 
 /// A handle style.
 public struct HandleStyle: Equatable {
+    let visibility: Visibility
+    let color: Color
     let width: CGFloat
     let cornerRadius: CGFloat
-    let visibility: Visibility
     
     public init(
         visibility: Visibility = .handleDefault,
+        color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
         cornerRadius: CGFloat = Defaults.handleCornerRadius
     ) {
         self.visibility = visibility
+        self.color = color
         self.width = width
         self.cornerRadius = cornerRadius
     }

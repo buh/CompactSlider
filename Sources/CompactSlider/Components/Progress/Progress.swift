@@ -22,10 +22,11 @@ public struct Progress: Equatable {
     /// True if the slider uses a range of values.
     public var isRangeValues: Bool { progresses.count == 2 }
     /// True if the slider uses multiple values.
-    public var isMultipleValues: Bool { progresses.count > 2 }
+    public let isMultipleValues: Bool
     
-    init(_ progresses: [Double] = []) {
+    init(_ progresses: [Double] = [], isMultipleValues: Bool = false) {
         self.progresses = progresses
+        self.isMultipleValues = isMultipleValues
     }
     
     mutating func update(_ progress: Double, at index: Int) {

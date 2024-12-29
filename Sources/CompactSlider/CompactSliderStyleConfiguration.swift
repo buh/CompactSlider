@@ -160,6 +160,10 @@ public extension CompactSliderStyleConfiguration {
 
 public extension CompactSliderStyleConfiguration {
     func isHandleVisible(handleStyle: HandleStyle) -> Bool {
+        if progress.isMultipleValues {
+            return true
+        }
+        
         guard handleStyle.visibility == .hoveringOrDragging else {
             return handleStyle.visibility == .always
         }
