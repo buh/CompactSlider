@@ -133,6 +133,8 @@ public extension CompactSliderStyleConfiguration {
     func offset(at index: Int, handleWidth: CGFloat = 0) -> CGPoint {
         guard index < progress.progresses.count else { return .zero }
         
+        let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
+        
         switch type {
         case .horizontal(let alignment):
             switch alignment {

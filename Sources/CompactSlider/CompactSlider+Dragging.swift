@@ -36,6 +36,7 @@ extension CompactSlider {
     
     func updateProgress(_ newValue: Double, type: CompactSliderType) {
         var newValue = newValue
+        let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
         
         if case .horizontal(.trailing) = type {
             newValue = 1 - newValue
@@ -82,6 +83,7 @@ extension CompactSlider {
     ) {
         guard !bounds.isEmpty, size.width > 0 else { return }
         
+        let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
         let newProgress: Double
         
         if type.isHorizontal {

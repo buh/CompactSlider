@@ -59,4 +59,16 @@ public enum CompactSliderType: Equatable {
         default: return false
         }
     }
+    
+    var normalizedRangeValuesType: CompactSliderType {
+        if case .horizontal = self {
+            return .horizontal(.leading)
+        }
+        
+        if case .vertical = self {
+            return .vertical(.top)
+        }
+        
+        return self
+    }
 }
