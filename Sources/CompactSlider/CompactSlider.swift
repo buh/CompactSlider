@@ -197,8 +197,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                         isDragging = true
                         dragLocation = $0.location
                     }, onEnded: {
-                        isDragging = false
                         dragLocation = $0.location
+                        isDragging = false
                     }
                 )
                 .onChange(of: dragLocation) {
