@@ -13,7 +13,7 @@ public struct ScaleStyle: Equatable {
     let padding: EdgeInsets
     
     public init(
-        visibility: Visibility = .hovering,
+        visibility: Visibility = .hoveringOrDragging,
         line: Line = .primary,
         secondaryLine: Line? = .secondary,
         padding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
@@ -26,11 +26,6 @@ public struct ScaleStyle: Equatable {
 }
 
 public extension ScaleStyle {
-    /// A scale visibility determines the rules for showing the scale.
-    enum Visibility {
-        case hovering, always, hidden
-    }
-    
     struct Line: Equatable {
         let color: Color
         let length: CGFloat?

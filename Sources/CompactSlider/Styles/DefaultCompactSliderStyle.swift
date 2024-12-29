@@ -28,7 +28,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         ZStack(alignment: .center) {
             CompactSliderStyleProgressView()
             
-            if let scaleStyle, isScaleVisible(configuration: configuration) {
+            if let scaleStyle, configuration.isScaleVisible(scaleStyle: scaleStyle) {
                 ScaleView(
                     alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
                     steps: configuration.steps,
@@ -45,15 +45,6 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         .environment(\.compactSliderStyleConfiguration, configuration)
         .environment(\.handleStyle, handleStyle)
     }
-    
-    private func isScaleVisible(configuration: Configuration) -> Bool {
-        guard let scaleStyle else { return false }
-        
-        return scaleStyle.visibility != .hidden
-            && (configuration.type.isHorizontal || configuration.type.isVertical)
-            && (scaleStyle.visibility == .always || configuration.focusState.isFocused)
-    }
-    
 }
 
 public extension DefaultCompactSliderStyle {

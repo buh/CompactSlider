@@ -283,7 +283,7 @@ struct CompactSliderPreview: View {
                     .compactSliderStyle(default: .vertical(
                         cornerRadius: 0,
                         handleStyle: .init(visibility: .always, width: 30),
-                        scaleStyle: .init(visibility: .hidden)
+                        scaleStyle: nil
                     ))
                     .compactSliderProgressView { _, _ in
                         Capsule()

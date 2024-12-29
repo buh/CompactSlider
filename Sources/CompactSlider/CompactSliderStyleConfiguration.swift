@@ -158,7 +158,7 @@ public extension CompactSliderStyleConfiguration {
 
 public extension CompactSliderStyleConfiguration {
     func isHandleVisible(handleStyle: HandleStyle) -> Bool {
-        guard handleStyle.visibility == .hovering else {
+        guard handleStyle.visibility == .hoveringOrDragging else {
             return handleStyle.visibility == .always
         }
         
@@ -187,6 +187,12 @@ public extension CompactSliderStyleConfiguration {
         }
         
         return false
+    }
+    
+    func isScaleVisible(scaleStyle: ScaleStyle) -> Bool {
+        scaleStyle.visibility != .hidden
+            && (type.isHorizontal || type.isVertical)
+            && (scaleStyle.visibility == .always || focusState.isFocused)
     }
 }
 

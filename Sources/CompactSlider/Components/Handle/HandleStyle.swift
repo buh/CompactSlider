@@ -12,34 +12,13 @@ public struct HandleStyle: Equatable {
     let visibility: Visibility
     
     public init(
-        visibility: Visibility = .default,
+        visibility: Visibility = .handleDefault,
         width: CGFloat = Defaults.handleWidth,
         cornerRadius: CGFloat = Defaults.handleCornerRadius
     ) {
         self.visibility = visibility
         self.width = width
         self.cornerRadius = cornerRadius
-    }
-}
-
-public extension HandleStyle {
-    /// A handle visibility determines the rules for showing the handle.
-    enum Visibility {
-        /// Shows the handle when hovering.
-        case hovering
-        /// Always shows the handle.
-        case always
-        /// Never shows the handle.
-        case hidden
-        
-        /// Default value.
-        public static var `default`: Visibility {
-            #if os(macOS)
-            .hovering
-            #else
-            .always
-            #endif
-        }
     }
 }
 
