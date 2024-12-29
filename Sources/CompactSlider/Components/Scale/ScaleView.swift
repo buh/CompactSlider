@@ -18,21 +18,21 @@ import SwiftUI
 struct ScaleView: View {
     let alignment: Axis
     let steps: Int
-    let configuration: ScaleStyle
+    let style: ScaleStyle
     
     init(
         alignment: Axis = .horizontal,
         steps: Int = 0,
-        configuration: ScaleStyle = ScaleStyle()
+        style: ScaleStyle = ScaleStyle()
     ) {
         self.alignment = alignment
         self.steps = steps
-        self.configuration = configuration
+        self.style = style
     }
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            if steps == 0, let secondaryLine = configuration.secondaryLine {
+            if steps == 0, let secondaryLine = style.secondaryLine {
                 Scale(alignment: alignment, count: 49)
                     .stroke(secondaryLine.color, lineWidth: secondaryLine.thickness)
                     .frame(
@@ -42,14 +42,14 @@ struct ScaleView: View {
             }
             
             Scale(alignment: alignment, count: steps > 0 ? steps : 9)
-                .stroke(configuration.line.color, lineWidth: configuration.line.thickness)
+                .stroke(style.line.color, lineWidth: style.line.thickness)
                 .frame(
-                    width: (alignment == .vertical ? configuration.line.length : nil),
-                    height: (alignment == .horizontal ? configuration.line.length : nil)
+                    width: (alignment == .vertical ? style.line.length : nil),
+                    height: (alignment == .horizontal ? style.line.length : nil)
                 )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(configuration.padding)
+        .padding(style.padding)
     }
 }
 
@@ -63,18 +63,16 @@ struct ScaleView: View {
             .background(Defaults.label.opacity(0.1))
             
             ZStack {
-                ScaleView(
-                    configuration: .init(
-                        line: .init(length: 25, thickness: 2),
-                        secondaryLine: .init(length: 15, thickness: 2)
-                    )
-                )
-                    .frame(height: 50, alignment: .top)
+                ScaleView(style: .init(
+                    line: .init(length: 25, thickness: 2),
+                    secondaryLine: .init(length: 15, thickness: 2)
+                ))
+                .frame(height: 50, alignment: .top)
             }
             .background(Defaults.label.opacity(0.1))
             
             ZStack {
-                ScaleView(configuration: .init(line: .init(length: 10), secondaryLine: nil))
+                ScaleView(style: .init(line: .init(length: 10), secondaryLine: nil))
                     .frame(height: 50, alignment: .top)
             }
             .background(Defaults.label.opacity(0.1))
@@ -83,7 +81,7 @@ struct ScaleView: View {
                 .frame(height: 50, alignment: .top)
                 .background(Defaults.label.opacity(0.1))
             
-            ScaleView(steps: 10, configuration: .init(line: .init(length: 25, thickness: 5)))
+            ScaleView(steps: 10, style: .init(line: .init(length: 25, thickness: 5)))
                 .frame(height: 50, alignment: .top)
                 .background(Defaults.label.opacity(0.1))
         }

@@ -32,7 +32,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                 ScaleView(
                     alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
                     steps: configuration.steps,
-                    configuration: scaleStyle
+                    style: scaleStyle
                 )
             }
             
