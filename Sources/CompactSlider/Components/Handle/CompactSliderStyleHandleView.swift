@@ -10,6 +10,7 @@ public struct CompactSliderStyleHandleView: View {
     
     public var body: some View {
         handleView
+            .allowsTightening(false)
     }
 }
 

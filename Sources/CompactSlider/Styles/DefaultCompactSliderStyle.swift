@@ -29,11 +29,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
             CompactSliderStyleProgressView()
             
             if let scaleStyle, configuration.isScaleVisible(scaleStyle: scaleStyle) {
-                ScaleView(
-                    alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
-                    steps: configuration.steps,
-                    style: scaleStyle
-                )
+                CompactSliderStyleScaleView()
             }
             
             if configuration.isHandleVisible(handleStyle: handleStyle) {
@@ -44,6 +40,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         .clipRoundedShapeIf(cornerRadius: cornerRadius)
         .environment(\.compactSliderStyleConfiguration, configuration)
         .environment(\.handleStyle, handleStyle)
+        .environment(\.scaleStyle, scaleStyle)
     }
 }
 

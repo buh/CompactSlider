@@ -15,22 +15,22 @@ import SwiftUI
 ///         .frame(height: 50, alignment: .top)
 /// }
 /// ```
-struct ScaleView: View {
+public struct ScaleView: View {
+    let style: ScaleStyle
     let alignment: Axis
     let steps: Int
-    let style: ScaleStyle
     
-    init(
+    public init(
+        style: ScaleStyle = ScaleStyle(),
         alignment: Axis = .horizontal,
-        steps: Int = 0,
-        style: ScaleStyle = ScaleStyle()
+        steps: Int = 0
     ) {
+        self.style = style
         self.alignment = alignment
         self.steps = steps
-        self.style = style
     }
     
-    var body: some View {
+    public var body: some View {
         ZStack(alignment: .topLeading) {
             if steps == 0, let secondaryLine = style.secondaryLine {
                 Scale(alignment: alignment, count: 49)
@@ -81,7 +81,7 @@ struct ScaleView: View {
                 .frame(height: 50, alignment: .top)
                 .background(Defaults.label.opacity(0.1))
             
-            ScaleView(steps: 10, style: .init(line: .init(length: 25, thickness: 5)))
+            ScaleView(style: .init(line: .init(length: 25, thickness: 5)), steps: 10)
                 .frame(height: 50, alignment: .top)
                 .background(Defaults.label.opacity(0.1))
         }

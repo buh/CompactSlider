@@ -85,12 +85,13 @@ extension CompactSlider {
         
         let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
         let newProgress: Double
+        let sensetivity = gestureOptions.scrollWheelSensetivity ?? 0.5
         
         if type.isHorizontal {
             let xProgress = (event.location.x - location.x) / size.width
             let currentProgress = nearestProgress(for: xProgress).progress
             
-            let deltaProgressStep = progressStep * (event.delta.x.sign == .minus ? -0.5 : 0.5)
+            let deltaProgressStep = progressStep * (event.delta.x.sign == .minus ? -sensetivity : sensetivity)
             
             if case .horizontal(.trailing) = type {
                 newProgress = 1 - max(0, min(1, currentProgress + event.delta.x / -size.width + deltaProgressStep))
@@ -101,7 +102,7 @@ extension CompactSlider {
             let yProgress = (event.location.y - location.y) / size.height
             let currentProgress = nearestProgress(for: yProgress).progress
             
-            let deltaProgressStep = progressStep * (event.delta.y.sign == .minus ? -0.5 : 0.5)
+            let deltaProgressStep = progressStep * (event.delta.y.sign == .minus ? -sensetivity : sensetivity)
             
             if case .vertical(.bottom) = type {
                 newProgress = max(0, min(1, currentProgress + event.delta.y / -size.height + deltaProgressStep))

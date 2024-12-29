@@ -54,3 +54,16 @@ public extension ScaleStyle.Line {
         length: Defaults.secondaryScaleLineLength
     )
 }
+
+// MARK: - Environment
+
+struct ScaleStyleKey: EnvironmentKey {
+    static var defaultValue: ScaleStyle? = ScaleStyle()
+}
+
+extension EnvironmentValues {
+    var scaleStyle: ScaleStyle? {
+        get { self[ScaleStyleKey.self] }
+        set { self[ScaleStyleKey.self] = newValue }
+    }
+}

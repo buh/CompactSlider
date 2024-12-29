@@ -102,7 +102,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     ///   - value: the selected value within bounds.
     ///   - bounds: the range of the valid values. Defaults to 0...1.
     ///   - step: the distance between each valid value.
-    ///   - type: the slider type in which the slider will indicate the selected value.
     ///   - gestureOptions: a set of drag gesture options: minimum drag distance, delayed touch, and high priority.
     public init(
         value: Binding<Value>,
@@ -157,7 +156,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         _values = .constant([])
         self.bounds = bounds
         self.step = step
-//        self.type = alignment == .horizontal ? .horizontal(.leading) : .vertical(.top)
         self.gestureOptions = gestureOptions
         
         let rangeDistance = Double(bounds.distance)
@@ -221,7 +219,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         }
         #endif
         #if os(macOS)
-        .onScrollWheel(isEnabled: gestureOptions.contains(.scrollWheel)) { event in
+        .onScrollWheel(isEnabled: gestureOptions.scrollWheelSensetivity != nil) { event in
             guard isHovering else { return }
             
             if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
@@ -278,9 +276,18 @@ struct CompactSliderPreview: View {
             }
             
             Group {
-                // 1. The default case.
+                CompactSlider(value: $progress)
+                
+                CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
+                    .compactSliderStyle(default: .horizontal(.center))
+                
+                CompactSlider(value: $progress)
+                    .compactSliderStyle(default: .horizontal(.trailing))
+                
                 CompactSlider(from: $fromProgress, to: $toProgress)
-                    .compactSliderStyle(default: .vertical(
+                
+                CompactSlider(from: $fromProgress, to: $toProgress)
+                    .compactSliderStyle(default: .horizontal(
                         cornerRadius: 0,
                         handleStyle: .init(visibility: .always, width: 30),
                         scaleStyle: nil
@@ -297,7 +304,6 @@ struct CompactSliderPreview: View {
                                     endPoint: .bottom
                                 )
                             )
-//                            .frame(maxWidth: 10)
                     }
                     .compactSliderHandleView { _, _, index in
                         Circle()
@@ -306,139 +312,78 @@ struct CompactSliderPreview: View {
                     .compactSliderBackgroundView { _ in
                         Capsule()
                             .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
-                            .frame(maxWidth: 10)
+                            .frame(maxHeight: 10)
                     }
-                
-//                    .overlay(
-//                        HStack {
-//                            Text("Default (leading)")
-//                            Spacer()
-//                            Text("\(Int(progress * 100))%")
-//                        }
-//                        .padding(.horizontal, 6)
-//                        .allowsHitTesting(false)
-//                    )
-//                    .compactSliderStyle(
-//                        .init(scaleConfiguration: .init(visibility: .always)) { configuration in
-//                            LinearGradient(
-//                                stops: [
-//                                    .init(color: .blue.opacity(0.1), location: configuration.progress),
-//                                    .init(color: .purple.opacity(0.5), location: 1),
-//                                ],
-//                                startPoint: .leading,
-//                                endPoint: .trailing
-//                            )
-//                        }
-//                    )
-                
-                // type: .horizontal(.center)
-//                CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
-//                    .overlay(
-//                        Text("\(Int(centerProgress))")
-//                            .allowsHitTesting(false)
-//                    )
-//                
-//                // .horizontal(.trailing)
-//                CompactSlider(value: $progress)
-//                
-//                CompactSlider(from: $fromProgress, to: $toProgress)
-//                    .overlay(
-//                        HStack {
-//                            Text("\(Int(fromProgress * 100))%")
-//                            Spacer()
-//                            Text("\(Int(toProgress * 100))%")
-//                        }
-//                        .padding(.horizontal, 6)
-//                        .allowsHitTesting(false)
-//                    )
             }
-            .frame(maxWidth: 30)
+            .frame(maxHeight: 30)
             
-            HStack {
-//                Group {
-//                    CompactSlider(value: $progress)
-//                        .compactSliderStyle(.init(
-//                            type: .vertical(.bottom),
-//                            scaleConfiguration: .init(
-//                                visibility: .always,
-//                                line: .init(length: nil),
-//                                secondaryLine: .init(length: nil),
-//                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
-//                            )
-//                        ))
+            HStack(spacing: 16) {
+                Group {
+                    CompactSlider(value: $progress)
+                        .compactSliderStyle(default: .vertical(
+                            .bottom,
+                            scaleStyle: .init(
+                                line: .init(length: nil),
+                                secondaryLine: .init(color: Defaults.label.opacity(0.2), length: nil),
+                                padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                            )
+                        ))
 
-//                    CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
-//                        .compactSliderStyle(.init(
-//                            type: .vertical(.center),
-//                            scaleConfiguration: .init(
-//                                visibility: .always,
-//                                line: .init(length: nil),
-//                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
-//                            )
-//                        ))
+                    CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
+                        .compactSliderStyle(default: .vertical(
+                            .center,
+                            scaleStyle: .init(
+                                line: .init(length: nil),
+                                padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                            )
+                        ))
                     
-//                    CompactSlider(value: $progress, type: .vertical(.top))
+                    CompactSlider(value: $progress)
+                        .compactSliderStyle(default: .vertical(.top))
+                        .compactSliderScaleView { style, alignment, steps in
+                            Rectangle()
+                                .fill(Color.accentColor)
+                                .frame(maxWidth: 3)
+                        }
                     
-                    // alignment: .vertical
-//                    CompactSlider(from: $fromProgress, to: $toProgress)
-//                }
-//                .frame(maxWidth: 44)
+                    CompactSlider(from: $fromProgress, to: $toProgress)
+                        .compactSliderStyle(default: .vertical())
+                    
+                    CompactSlider(from: $fromProgress, to: $toProgress)
+                        .compactSliderStyle(default: .vertical(
+                            cornerRadius: 0,
+                            handleStyle: .init(visibility: .always, width: 30),
+                            scaleStyle: nil
+                        ))
+                        .compactSliderProgressView { _, _ in
+                            Capsule()
+                                .fill(
+                                    LinearGradient(
+                                        stops: [
+                                            .init(color: .blue.opacity(0.5), location: 0),
+                                            .init(color: .purple.opacity(0.5), location: 1),
+                                        ],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                        }
+                        .compactSliderHandleView { _, _, index in
+                            Circle()
+                                .fill(index == 1 ? Color.purple : .blue)
+                        }
+                        .compactSliderBackgroundView { _ in
+                            Capsule()
+                                .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
+                                .frame(maxWidth: 10)
+                        }
+                }
+                .frame(maxWidth: 30)
             }
             .frame(height: 300)
-
-            // Prominent style.
-            //        Group {
-            //            CompactSlider(value: .constant(0.5))
-            //                .overlay(
-            //                    HStack {
-            //                        Text("Default")
-            //                        Spacer()
-            //                        Text("0.5")
-            //                    }
-            //                    .padding(.horizontal, 6)
-            //                )
-            //                .compactSliderStyle(
-            //                    .prominent(
-            //                        lowerColor: .purple,
-            //                        upperColor: .pink,
-            //                        useGradientBackground: true
-            //                    )
-            //                )
-            //
-            //            // Get the range of values.
-            //            VStack(spacing: 16) {
-            //                CompactSlider(from: .constant(0.4), to: .constant(0.7))
-            //                    .overlay(
-            //                        HStack {
-            //                            Text("Range")
-            //                            Spacer()
-            //                            Text("0.2 - 0.7")
-            //                        }
-            //                        .padding(.horizontal, 6)
-            //                    )
-            //
-            //                // Switch back to the `.default` style.
-            //                CompactSlider(from: .constant(0.4), to: .constant(0.7))
-            //                    .overlay(
-            //                        HStack {
-            //                            Text("Range")
-            //                            Spacer()
-            //                            Text("0.2 - 0.7")
-            //                        }
-            //                        .padding(.horizontal, 6)
-            //                    )
-            //                    .compactSliderStyle(.default)
-            //            }
-            //            .compactSliderStyle(
-            //                .prominent(
-            //                    lowerColor: .green,
-            //                    upperColor: .yellow,
-            //                    useGradientBackground: true
-            //                )
-            //            )
-            //        }
         }
         .padding()
+        .accentColor(.purple)
     }
 }
 #endif
