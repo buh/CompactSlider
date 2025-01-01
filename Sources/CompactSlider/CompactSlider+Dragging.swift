@@ -6,13 +6,22 @@
 import Foundation
 
 extension CompactSlider {
-    func onDragLocationChange(translation: CGSize, size: CGSize, type: CompactSliderType) {
+    func onDragLocationChange(
+        translation: CGSize,
+        size: CGSize,
+        type: CompactSliderType,
+        isRightToLeft: Bool
+    ) {
         guard let startDragLocation, !bounds.isEmpty, size.width > 0 else { return }
         
         let location: CGPoint
         
         if type.isHorizontal {
             var translationX = translation.width
+            
+            if isRightToLeft {
+                translationX = -translationX
+            }
             
             if case .horizontal(.trailing) = type {
                 translationX = -translationX
@@ -35,12 +44,10 @@ extension CompactSlider {
             return
         }
         
-        return updateProgress(progress(at: location, size: size, type: type), type: type)
+        return updateProgress(progress(at: location, size: size, type: type))
     }
         
-    func updateProgress(_ newValue: Double, type: CompactSliderType) {
-        var newValue = newValue
-        let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
+    func updateProgress(_ newValue: Double) {
         let progressAndIndex = nearestProgress(for: newValue)
         
         guard progressStep > 0 else {
@@ -70,41 +77,68 @@ extension CompactSlider {
         _ event: ScrollWheelEvent,
         size: CGSize,
         location: CGPoint,
-        type: CompactSliderType
+        type: CompactSliderType,
+        isRightToLeft: Bool
     ) {
         guard !bounds.isEmpty, size.width > 0 else { return }
         
         let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
         let newProgress: Double
-        let sensitivity = gestureOptions.scrollWheelSensitivity ?? 0.5
         
         if type.isHorizontal {
-            let xProgress = (event.location.x - location.x) / size.width
+            var xProgress = (event.location.x - location.x) / size.width
+            
+            if isRightToLeft {
+                xProgress = 1 - xProgress
+            }
+            
             let currentProgress = nearestProgress(for: xProgress).progress
             
-            let deltaProgressStep = progressStep * (event.delta.x.sign == .minus ? -sensitivity : sensitivity)
-            
-            if case .horizontal(.trailing) = type {
-                newProgress = currentProgress + event.delta.x / -size.width + deltaProgressStep
+            if steps > 0 {
+                var deltaProgressStep = (event.delta.x.sign == .minus ? -1 : 1) * progressStep
+                
+                if isRightToLeft {
+                    deltaProgressStep = -deltaProgressStep
+                }
+                
+                if case .horizontal(.trailing) = type {
+                    newProgress = currentProgress - deltaProgressStep
+                } else {
+                    newProgress = currentProgress + deltaProgressStep
+                }
             } else {
-                newProgress = currentProgress + event.delta.x / size.width + deltaProgressStep
+                let deltaX = (isRightToLeft ? -1 : 1) * event.delta.x
+
+                if case .horizontal(.trailing) = type {
+                    newProgress = currentProgress + deltaX / -size.width
+                } else {
+                    newProgress = currentProgress + deltaX / size.width
+                }
             }
         } else if type.isVertical {
             let yProgress = (event.location.y - location.y) / size.height
             let currentProgress = nearestProgress(for: yProgress).progress
             
-            let deltaProgressStep = progressStep * (event.delta.y.sign == .minus ? -sensitivity : sensitivity)
-            
-            if case .vertical(.bottom) = type {
-                newProgress = currentProgress + event.delta.y / -size.height + deltaProgressStep
+            if steps > 0 {
+                let deltaProgressStep = (event.delta.y.sign == .minus ? -1 : 1) * progressStep
+                
+                if case .vertical(.bottom) = type {
+                    newProgress = currentProgress - deltaProgressStep
+                } else {
+                    newProgress = currentProgress + deltaProgressStep
+                }
             } else {
-                newProgress = currentProgress + event.delta.y / size.height + deltaProgressStep
+                if case .vertical(.bottom) = type {
+                    newProgress = currentProgress + event.delta.y / -size.height
+                } else {
+                    newProgress = currentProgress + event.delta.y / size.height
+                }
             }
         } else {
             return
         }
         
-        updateProgress(newProgress.clamped(), type: type)
+        updateProgress(newProgress.clamped())
     }
 }
 #endif
@@ -137,13 +171,18 @@ extension CompactSlider {
         return .zero
     }
     
-    func nearestProgressLocation(at location: CGPoint, size: CGSize, type: CompactSliderType) -> CGPoint {
+    func nearestProgressLocation(
+        at location: CGPoint,
+        size: CGSize,
+        type: CompactSliderType,
+        isRightToLeft: Bool
+    ) -> CGPoint {
         let p: Double
         
         if progress.progresses.count > 1 {
             var progressAtLocation = progress(at: location, size: size, type: type)
             
-            if type.isVertical, !progress.isSingularValue {
+            if isRightToLeft || (type.isVertical && !progress.isSingularValue) {
                 progressAtLocation = 1 - progressAtLocation
             }
             

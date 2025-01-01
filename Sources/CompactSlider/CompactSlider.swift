@@ -72,6 +72,7 @@ import SwiftUI
 /// ```
 public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     @Environment(\.isEnabled) var isEnabled
+    @Environment(\.layoutDirection) var layoutDirection
     @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.compactSliderDisabledHapticFeedback) var disabledHapticFeedback
 
@@ -231,7 +232,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                             startDragLocation = nearestProgressLocation(
                                 at: $0.startLocation,
                                 size: proxy.size,
-                                type: compactSliderStyle.type
+                                type: compactSliderStyle.type,
+                                isRightToLeft: layoutDirection == .rightToLeft
                             )
                         }
                         
@@ -246,7 +248,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                     onDragLocationChange(
                         translation: dragTranslation,
                         size: proxy.size,
-                        type: compactSliderStyle.type
+                        type: compactSliderStyle.type,
+                        isRightToLeft: layoutDirection == .rightToLeft
                     )
                 }
                 #if os(macOS)
@@ -255,7 +258,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                         $0,
                         size: proxy.size,
                         location: proxy.frame(in: .global).origin,
-                        type: compactSliderStyle.type
+                        type: compactSliderStyle.type,
+                        isRightToLeft: layoutDirection == .rightToLeft
                     )
                 }
                 #endif
@@ -266,7 +270,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         }
         #endif
         #if os(macOS)
-        .onScrollWheel(isEnabled: gestureOptions.scrollWheelSensitivity != nil) { event in
+        .onScrollWheel(isEnabled: gestureOptions.contains(.scrollWheel)) { event in
             guard isHovering else { return }
             
             if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
@@ -304,6 +308,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
 }
 
 struct CompactSliderPreview: View {
+    @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var progress: Double = 0.3
     @State private var centerProgress: Double = 0
     @State private var fromProgress: Double = 0.3
@@ -322,6 +327,13 @@ struct CompactSliderPreview: View {
                 Button("50%") { progress = 0.5 }
                 Button("100%") { progress = 1 }
             }
+            
+            Picker(selection: $layoutDirection) {
+                Text("Left-to-Right").tag(LayoutDirection.leftToRight)
+                Text("Right-to-Left").tag(LayoutDirection.rightToLeft)
+            } label: { EmptyView() }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 20)
             
             Group {
                 CompactSlider(value: $progress)
@@ -506,6 +518,7 @@ struct CompactSliderPreview: View {
         }
         .padding()
         .accentColor(.purple)
+        .environment(\.layoutDirection, layoutDirection)
     }
 }
 #endif

@@ -14,7 +14,7 @@ public enum GestureOption: Hashable {
     /// Enables delay when sliders inside ``ScrollView`` or ``Form``. Enabled by default for iOS.
     case delayedGesture
     /// Enables the scroll wheel.
-    case scrollWheel(sensitivity: CGFloat)
+    case scrollWheel
 }
 
 /// A set of drag gesture options: minimum drag distance, delayed touch, and high priority.
@@ -24,7 +24,7 @@ extension Set<GestureOption> {
     /// For macOS: minimum drag distance 0.
     public static var `default`: Self {
         #if os(macOS)
-        [.dragGestureMinimumDistance(0), .scrollWheel(sensitivity: 0.4)]
+        [.dragGestureMinimumDistance(0), .scrollWheel]
         #else
         [.dragGestureMinimumDistance(1), .delayedGesture]
         #endif
@@ -38,16 +38,6 @@ extension Set<GestureOption> {
         }
         
         return 1
-    }
-    
-    var scrollWheelSensitivity: CGFloat? {
-        for option in self {
-            if case .scrollWheel(let value) = option {
-                return value
-            }
-        }
-        
-        return nil
     }
 }
 
