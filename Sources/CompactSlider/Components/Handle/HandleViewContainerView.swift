@@ -34,5 +34,6 @@ struct HandleViewContainerView<V: View>: View {
                 .offset(x: offset.x, y: offset.y)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
+        .allowsHitTesting(false)
     }
 }

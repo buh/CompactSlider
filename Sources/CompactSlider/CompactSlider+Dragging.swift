@@ -6,50 +6,41 @@
 import Foundation
 
 extension CompactSlider {
-    func onDragLocationChange(_ newValue: CGPoint, size: CGSize, type: CompactSliderType) {
-        guard !bounds.isEmpty, size.width > 0 else { return }
+    func onDragLocationChange(translation: CGSize, size: CGSize, type: CompactSliderType) {
+        guard let startDragLocation, !bounds.isEmpty, size.width > 0 else { return }
+        
+        let location: CGPoint
         
         if type.isHorizontal {
-            updateProgress(max(0, min(1, newValue.x / size.width)), type: type)
+            var translationX = translation.width
+            
+            if case .horizontal(.trailing) = type {
+                translationX = -translationX
+            }
+            
+            location = CGPoint(x: startDragLocation.x + translationX, y: 0)
         } else if type.isVertical {
-            updateProgress(1 - Double(max(0, min(1, newValue.y / size.height))), type: type)
+            var translationY = translation.height
+            
+            if case .vertical(.center) = type {
+                translationY = -translationY
+            }
+            
+            if case .vertical(.top) = type {
+                translationY = -translationY
+            }
+            
+            location = CGPoint(x: 0, y: startDragLocation.y + translationY)
+        } else {
+            return
         }
+        
+        return updateProgress(progress(at: location, size: size, type: type), type: type)
     }
-    
-    private func nearestProgress(for value: Double) -> (progress: Double, index: Int) {
-        guard progress.progresses.count > 1 else {
-            return (progress.lowerProgress, 0)
-        }
         
-        var resultProgress = progress.progresses[0]
-        var deltaProgress = abs(progress.progresses[0] - value)
-        var index = 0
-        
-        for (i, p) in progress.progresses.enumerated() where abs(p - value) < deltaProgress {
-            resultProgress = p
-            deltaProgress = abs(p - value)
-            index = i
-        }
-        
-        return (resultProgress, index)
-    }
-    
     func updateProgress(_ newValue: Double, type: CompactSliderType) {
         var newValue = newValue
         let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
-        
-        if case .horizontal(.trailing) = type {
-            newValue = 1 - newValue
-        }
-        
-        if case .vertical(.center) = type {
-            newValue = 1 - newValue
-        }
-        
-        if case .vertical(.top) = type {
-            newValue = 1 - newValue
-        }
-        
         let progressAndIndex = nearestProgress(for: newValue)
         
         guard progressStep > 0 else {
@@ -85,35 +76,101 @@ extension CompactSlider {
         
         let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
         let newProgress: Double
-        let sensetivity = gestureOptions.scrollWheelSensetivity ?? 0.5
+        let sensitivity = gestureOptions.scrollWheelSensitivity ?? 0.5
         
         if type.isHorizontal {
             let xProgress = (event.location.x - location.x) / size.width
             let currentProgress = nearestProgress(for: xProgress).progress
             
-            let deltaProgressStep = progressStep * (event.delta.x.sign == .minus ? -sensetivity : sensetivity)
+            let deltaProgressStep = progressStep * (event.delta.x.sign == .minus ? -sensitivity : sensitivity)
             
             if case .horizontal(.trailing) = type {
-                newProgress = 1 - max(0, min(1, currentProgress + event.delta.x / -size.width + deltaProgressStep))
+                newProgress = currentProgress + event.delta.x / -size.width + deltaProgressStep
             } else {
-                newProgress = max(0, min(1, currentProgress + event.delta.x / size.width + deltaProgressStep))
+                newProgress = currentProgress + event.delta.x / size.width + deltaProgressStep
             }
         } else if type.isVertical {
             let yProgress = (event.location.y - location.y) / size.height
             let currentProgress = nearestProgress(for: yProgress).progress
             
-            let deltaProgressStep = progressStep * (event.delta.y.sign == .minus ? -sensetivity : sensetivity)
+            let deltaProgressStep = progressStep * (event.delta.y.sign == .minus ? -sensitivity : sensitivity)
             
             if case .vertical(.bottom) = type {
-                newProgress = max(0, min(1, currentProgress + event.delta.y / -size.height + deltaProgressStep))
+                newProgress = currentProgress + event.delta.y / -size.height + deltaProgressStep
             } else {
-                newProgress = 1 - max(0, min(1, currentProgress + event.delta.y / size.height + deltaProgressStep))
+                newProgress = currentProgress + event.delta.y / size.height + deltaProgressStep
             }
         } else {
             return
         }
         
-        updateProgress(newProgress, type: type)
+        updateProgress(newProgress.clamped(), type: type)
     }
 }
 #endif
+
+// MARK: - Calculations
+
+extension CompactSlider {
+    func progress(at location: CGPoint, size: CGSize, type: CompactSliderType) -> Double {
+        if type.isHorizontal {
+            return (location.x / size.width).clamped()
+        }
+        
+        if type.isVertical {
+            return 1.0 - (location.y / size.height).clamped()
+        }
+        
+        return 0
+    }
+    
+    func progressLocation(_ progress: Double, size: CGSize, type: CompactSliderType) -> CGPoint {
+        if type.isHorizontal {
+            return CGPoint(x: progress * size.width, y: 0)
+            
+        }
+        
+        if type.isVertical {
+            return CGPoint(x: 0, y: (1 - progress) * size.height)
+        }
+        
+        return .zero
+    }
+    
+    func nearestProgressLocation(at location: CGPoint, size: CGSize, type: CompactSliderType) -> CGPoint {
+        let p: Double
+        
+        if progress.progresses.count > 1 {
+            var progressAtLocation = progress(at: location, size: size, type: type)
+            
+            if type.isVertical, !progress.isSingularValue {
+                progressAtLocation = 1 - progressAtLocation
+            }
+            
+            p = nearestProgress(for: progressAtLocation).progress
+        } else {
+            p = progress.progress
+        }
+        
+        return progressLocation(p, size: size, type: type)
+    }
+    
+    func nearestProgress(for value: Double) -> (progress: Double, index: Int) {
+        guard progress.progresses.count > 1 else {
+            return (progress.progress, 0)
+        }
+        
+        var resultProgress = progress.progresses[0]
+        var deltaProgress = abs(progress.progresses[0] - value)
+        var index = 0
+        
+        for (i, p) in progress.progresses.enumerated() where abs(p - value) < deltaProgress {
+            resultProgress = p
+            deltaProgress = abs(p - value)
+            index = i
+        }
+        
+        return (resultProgress, index)
+    }
+}
+

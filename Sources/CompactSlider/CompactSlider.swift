@@ -89,8 +89,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     
     @State var isHovering = false
     @State var isDragging = false
-    @State var location: CGPoint = .zero
-    @State var dragLocation: CGPoint = .zero
+    @State var startDragLocation: CGPoint?
+    @State var dragTranslation: CGSize = .zero
     @State var scrollWheelEvent = ScrollWheelEvent.zero
     
     /// Creates a slider to select a value from a given bounds.
@@ -226,14 +226,28 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                     options: gestureOptions,
                     onChanged: {
                         isDragging = true
-                        dragLocation = $0.location
+                        
+                        if startDragLocation == nil {
+                            startDragLocation = nearestProgressLocation(
+                                at: $0.startLocation,
+                                size: proxy.size,
+                                type: compactSliderStyle.type
+                            )
+                        }
+                        
+                        dragTranslation = $0.translation
                     }, onEnded: {
-                        dragLocation = $0.location
+                        dragTranslation = $0.translation
+                        startDragLocation = nil
                         isDragging = false
                     }
                 )
-                .onChange(of: dragLocation) {
-                    onDragLocationChange($0, size: proxy.size, type: compactSliderStyle.type)
+                .onChange(of: dragTranslation) { dragTranslation in
+                    onDragLocationChange(
+                        translation: dragTranslation,
+                        size: proxy.size,
+                        type: compactSliderStyle.type
+                    )
                 }
                 #if os(macOS)
                 .onChange(of: scrollWheelEvent) {
@@ -252,7 +266,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         }
         #endif
         #if os(macOS)
-        .onScrollWheel(isEnabled: gestureOptions.scrollWheelSensetivity != nil) { event in
+        .onScrollWheel(isEnabled: gestureOptions.scrollWheelSensitivity != nil) { event in
             guard isHovering else { return }
             
             if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
