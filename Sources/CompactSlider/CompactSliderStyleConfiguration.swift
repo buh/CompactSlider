@@ -48,7 +48,7 @@ public extension CompactSliderStyleConfiguration {
     }
     
     func progressSize() -> OptionalCGSize {
-        if progress.isMultipleValues {
+        if progress.isMultipleValues || type.isScrollable {
             return OptionalCGSize()
         }
         
@@ -79,7 +79,7 @@ public extension CompactSliderStyleConfiguration {
     }
     
     func progressOffset() -> CGPoint {
-        if progress.isMultipleValues {
+        if progress.isMultipleValues || type.isScrollable {
             return .zero
         }
         
@@ -130,7 +130,7 @@ public extension CompactSliderStyleConfiguration {
         }
     }
     
-    func offset(at index: Int, handleWidth: CGFloat = 0) -> CGPoint {
+    func handleOffset(at index: Int, handleWidth: CGFloat = 0) -> CGPoint {
         guard index < progress.progresses.count else { return .zero }
         
         let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
@@ -150,6 +150,23 @@ public extension CompactSliderStyleConfiguration {
             case .bottom:
                 return CGPoint(x: 0, y: size.height - handleWidth - (size.height - handleWidth) * progress.progresses[index])
             }
+        case .scrollableHorizontal:
+            return CGPoint(x: (size.width - handleWidth) / 2, y: 0)
+        case .scrollableVertical:
+            return CGPoint(x: 0, y: (size.height - handleWidth) / 2)
+        default:
+            return .zero
+        }
+    }
+    
+    func scaleOffset() -> CGPoint {
+        guard type.isScrollable, progress.isSingularValue else { return .zero }
+        
+        switch type {
+        case .scrollableHorizontal:
+            return CGPoint(x: size.width * (0.5 - progress.progress), y: 0)
+        case .scrollableVertical:
+            return CGPoint(x: 0, y: size.height * (progress.progress - 0.5))
         default:
             return .zero
         }
@@ -160,7 +177,7 @@ public extension CompactSliderStyleConfiguration {
 
 public extension CompactSliderStyleConfiguration {
     func isHandleVisible(handleStyle: HandleStyle) -> Bool {
-        if progress.isMultipleValues {
+        if progress.isMultipleValues || type.isScrollable {
             return true
         }
         
@@ -196,7 +213,11 @@ public extension CompactSliderStyleConfiguration {
     }
     
     func isScaleVisible(scaleStyle: ScaleStyle) -> Bool {
-        scaleStyle.visibility != .hidden
+        if type.isScrollable {
+            return true
+        }
+        
+        return scaleStyle.visibility != .hidden
             && (type.isHorizontal || type.isVertical)
             && (scaleStyle.visibility == .always || focusState.isFocused)
     }

@@ -303,7 +303,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
 #Preview {
     CompactSliderPreview()
         #if os(macOS)
-        .frame(width: 400, height: 600, alignment: .top)
+        .frame(width: 400, height: 800, alignment: .top)
         #endif
 }
 
@@ -336,6 +336,9 @@ struct CompactSliderPreview: View {
                 .padding(.horizontal, 20)
             
             Group {
+                CompactSlider(value: $progress)
+                    .compactSliderStyle(default: .scrollable(handleStyle: .init(width: 1)))
+                
                 CompactSlider(value: $progress)
                 
                 CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
@@ -411,15 +414,52 @@ struct CompactSliderPreview: View {
             HStack(spacing: 16) {
                 Group {
                     CompactSlider(value: $progress)
+                        .compactSliderStyle(default: .scrollable(
+                            .vertical,
+                            handleStyle: .init(width: 2),
+                            scaleStyle: .init(
+                                line: .init(
+                                    length: nil,
+                                    padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                ),
+                                secondaryLine: .init(
+                                    color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
+                                    length: nil,
+                                    padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                                )
+                            )
+                        ))
+                    
+                    CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
+                        .compactSliderStyle(default: .scrollable(
+                            .vertical,
+                            handleStyle: .init(width: 2),
+                            scaleStyle: .init(
+                                line: .init(
+                                    length: nil,
+                                    padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                                ),
+                                secondaryLine: .init(
+                                    color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
+                                    length: nil,
+                                    padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                                )
+                            )
+                        ))
+                    
+                    CompactSlider(value: $progress)
                         .compactSliderStyle(default: .vertical(
                             .bottom,
                             scaleStyle: .init(
-                                line: .init(length: nil),
+                                line: .init(
+                                    length: nil,
+                                    padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                ),
                                 secondaryLine: .init(
                                     color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
-                                    length: nil
-                                ),
-                                padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                    length: nil,
+                                    padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                )
                             )
                         ))
                     
@@ -427,8 +467,7 @@ struct CompactSliderPreview: View {
                         .compactSliderStyle(default: .vertical(
                             .center,
                             scaleStyle: .init(
-                                line: .init(length: nil),
-                                padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                line: .init(length: nil, padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4))
                             )
                         ))
                     
@@ -477,10 +516,10 @@ struct CompactSliderPreview: View {
                             scaleStyle: .init(
                                 line: .init(
                                     color: Defaults.label.opacity(0.2),
-                                    length: nil
+                                    length: nil,
+                                    padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
                                 ),
-                                secondaryLine: nil,
-                                padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                secondaryLine: nil
                             )
                         ))
                         .compactSliderHandleView { style, progress, _ in

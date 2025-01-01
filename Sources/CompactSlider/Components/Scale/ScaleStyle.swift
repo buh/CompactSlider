@@ -10,18 +10,15 @@ public struct ScaleStyle: Equatable {
     let visibility: Visibility
     let line: Line
     let secondaryLine: Line?
-    let padding: EdgeInsets
     
     public init(
         visibility: Visibility = .hoveringOrDragging,
         line: Line = .primary,
-        secondaryLine: Line? = .secondary,
-        padding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        secondaryLine: Line? = .secondary
     ) {
         self.visibility = visibility
         self.line = line
         self.secondaryLine = secondaryLine
-        self.padding = padding
     }
 }
 
@@ -30,15 +27,18 @@ public extension ScaleStyle {
         let color: Color
         let length: CGFloat?
         let thickness: CGFloat
+        let padding: EdgeInsets
         
         public init(
             color: Color = Defaults.label.opacity(Defaults.scaleLineOpacity),
             length: CGFloat?,
-            thickness: CGFloat = Defaults.scaleLineThickness
+            thickness: CGFloat = Defaults.scaleLineThickness,
+            padding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
         ) {
             self.color = color
             self.length = length
             self.thickness = thickness
+            self.padding = padding
         }
     }
 }

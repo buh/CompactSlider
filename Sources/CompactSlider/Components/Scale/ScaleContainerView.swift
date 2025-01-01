@@ -16,7 +16,10 @@ struct ScaleContainerView<V: View>: View {
     
     var body: some View {
         if let scaleStyle {
+            let offset = configuration.scaleOffset()
+            
             scaleView(scaleStyle, configuration.type.isHorizontal ? .horizontal : .vertical, configuration.steps)
+                .offset(x: offset.x, y: offset.y)
                 .allowsTightening(false)
         }
     }

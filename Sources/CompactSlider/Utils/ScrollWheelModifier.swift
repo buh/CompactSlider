@@ -36,7 +36,7 @@ struct ScrollWheelModifier: ViewModifier {
         NSApp.publisher(for: \.currentEvent)
             .filter { $0?.type == .scrollWheel }
             .compactMap {
-                if let event = $0, let window = event.window {
+                if let event = $0, let window = event.window, event.phase == .changed {
                     return ScrollWheelEvent(
                         location: CGPoint(
                             x: event.locationInWindow.x,

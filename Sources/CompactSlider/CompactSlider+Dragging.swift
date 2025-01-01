@@ -27,6 +27,10 @@ extension CompactSlider {
                 translationX = -translationX
             }
             
+            if type.isScrollable {
+                translationX = -translationX
+            }
+            
             location = CGPoint(x: startDragLocation.x + translationX, y: 0)
         } else if type.isVertical {
             var translationY = translation.height
@@ -36,6 +40,10 @@ extension CompactSlider {
             }
             
             if case .vertical(.top) = type {
+                translationY = -translationY
+            }
+            
+            if type.isScrollable {
                 translationY = -translationY
             }
             
@@ -101,13 +109,21 @@ extension CompactSlider {
                     deltaProgressStep = -deltaProgressStep
                 }
                 
+                if type.isScrollable {
+                    deltaProgressStep = 1 - deltaProgressStep
+                }
+                
                 if case .horizontal(.trailing) = type {
                     newProgress = currentProgress - deltaProgressStep
                 } else {
                     newProgress = currentProgress + deltaProgressStep
                 }
             } else {
-                let deltaX = (isRightToLeft ? -1 : 1) * event.delta.x
+                var deltaX = (isRightToLeft ? -1 : 1) * event.delta.x
+                
+                if type.isScrollable {
+                    deltaX = -deltaX
+                }
 
                 if case .horizontal(.trailing) = type {
                     newProgress = currentProgress + deltaX / -size.width

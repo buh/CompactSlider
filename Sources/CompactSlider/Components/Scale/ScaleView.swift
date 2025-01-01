@@ -39,6 +39,7 @@ public struct ScaleView: View {
                         width: (alignment == .vertical ? secondaryLine.length : nil),
                         height: (alignment == .horizontal ? secondaryLine.length : nil)
                     )
+                    .padding(secondaryLine.padding)
             }
             
             Scale(alignment: alignment, count: steps > 0 ? steps : 9)
@@ -47,9 +48,9 @@ public struct ScaleView: View {
                     width: (alignment == .vertical ? style.line.length : nil),
                     height: (alignment == .horizontal ? style.line.length : nil)
                 )
+                .padding(style.line.padding)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(style.padding)
     }
 }
 

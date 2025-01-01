@@ -24,7 +24,7 @@ struct HandleViewContainerView<V: View>: View {
     
     var body: some View {
         ForEach(indices, id: \.self) { index in
-            let offset = configuration.offset(at: index, handleWidth: handleStyle.width)
+            let offset = configuration.handleOffset(at: index, handleWidth: handleStyle.width)
             
             handleView(handleStyle, configuration.progress.progresses[index], index)
                 .frame(

@@ -26,7 +26,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     
     public func makeBody(configuration: Configuration) -> some View {
         ZStack(alignment: .center) {
-            if !configuration.progress.isMultipleValues {
+            if !configuration.progress.isMultipleValues && !configuration.type.isScrollable {
                 CompactSliderStyleProgressView()
             }
             
@@ -49,6 +49,8 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         .environment(\.scaleStyle, scaleStyle)
     }
 }
+
+// MARK: - Constructors
 
 public extension DefaultCompactSliderStyle {
     static func horizontal(
@@ -79,6 +81,19 @@ public extension DefaultCompactSliderStyle {
         )
     }
     
+    static func scrollable(
+        _ axis: Axis = .horizontal,
+        cornerRadius: CGFloat = Defaults.cornerRadius,
+        handleStyle: HandleStyle = HandleStyle(),
+        scaleStyle: ScaleStyle? = ScaleStyle()
+    ) -> DefaultCompactSliderStyle {
+        .init(
+            type: axis == .horizontal ? .scrollableHorizontal : .scrollableVertical,
+            cornerRadius: cornerRadius,
+            handleStyle: handleStyle,
+            scaleStyle: scaleStyle
+        )
+    }
     // TODO: Scrollable
 }
 
