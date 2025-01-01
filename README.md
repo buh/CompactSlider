@@ -17,6 +17,9 @@ The slider is a replacement for the build-in slider and is designed specifically
 > Version 2.x.x is in active development on the `main` branch.
 > Please specify explicitly the version `1.2.1` for the previous major version ([README for v1](https://github.com/buh/CompactSlider/blob/main/README_v1.md)).
 
+## Version 2.0
+<img width="442" alt="image" src="https://github.com/user-attachments/assets/83c84076-2e22-4822-a610-58ec43cdb11f" />
+
 # Requirements
 
 - Swift 5.5+
