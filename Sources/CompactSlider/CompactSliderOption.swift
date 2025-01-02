@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public enum GestureOption: Hashable {
+public enum CompactSliderOption: Hashable {
     /// Creates a dragging gesture with the minimum dragging distance before the gesture succeeds.
     /// Default values 1 and 0 for iOS and macOS respectively.
     case dragGestureMinimumDistance(CGFloat)
@@ -15,10 +15,12 @@ public enum GestureOption: Hashable {
     case delayedGesture
     /// Enables the scroll wheel.
     case scrollWheel
+    /// Enables the snapping on steps.
+    case snapToSteps
 }
 
 /// A set of drag gesture options: minimum drag distance, delayed touch, and high priority.
-extension Set<GestureOption> {
+extension Set<CompactSliderOption> {
     /// Default values for the drag gesture.
     /// For iOS: minimum drag distance 1 with touch delay.
     /// For macOS: minimum drag distance 0.
@@ -46,7 +48,7 @@ extension Set<GestureOption> {
 extension View {
     @ViewBuilder
     func dragGesture(
-        options: Set<GestureOption>,
+        options: Set<CompactSliderOption>,
         onChanged: @escaping (DragGesture.Value) -> Void,
         onEnded: @escaping (DragGesture.Value) -> Void
     ) -> some View {
@@ -60,7 +62,7 @@ extension View {
     }
     
     @ViewBuilder
-    private func delayedGesture(options: Set<GestureOption>) -> some View {
+    private func delayedGesture(options: Set<CompactSliderOption>) -> some View {
         if options.contains(.delayedGesture) {
             onTapGesture {}
         } else {
@@ -69,7 +71,7 @@ extension View {
     }
     
     @ViewBuilder
-    private func prioritizedGesture<T: Gesture>(_ gesture: T, options: Set<GestureOption>) -> some View {
+    private func prioritizedGesture<T: Gesture>(_ gesture: T, options: Set<CompactSliderOption>) -> some View {
         if options.contains(.highPriorityGesture) {
             highPriorityGesture(gesture)
         } else {

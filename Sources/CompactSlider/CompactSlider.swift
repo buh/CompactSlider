@@ -76,7 +76,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.compactSliderDisabledHapticFeedback) var disabledHapticFeedback
 
-    let gestureOptions: Set<GestureOption>
+    let options: Set<CompactSliderOption>
     let bounds: ClosedRange<Value>
     let step: Value
     var progressStep: Double = 0
@@ -91,7 +91,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     @State var isHovering = false
     @State var isDragging = false
     @State var startDragLocation: CGPoint?
-    @State var dragTranslation: CGSize = .zero
     @State var scrollWheelEvent = ScrollWheelEvent.zero
     
     /// Creates a slider to select a value from a given bounds.
@@ -108,7 +107,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
-        gestureOptions: Set<GestureOption> = .default
+        options: Set<CompactSliderOption> = .default
     ) {
         _lowerValue = value
         _upperValue = .constant(0)
@@ -116,7 +115,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         
         self.bounds = bounds
         self.step = step
-        self.gestureOptions = gestureOptions
+        self.options = options
         let rangeDistance = Double(bounds.distance)
         
         guard rangeDistance > 0 else {
@@ -138,7 +137,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         values: Binding<[Value]>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
-        gestureOptions: Set<GestureOption> = .default
+        gestureOptions: Set<CompactSliderOption> = .default
     ) {
         _lowerValue = .constant(0)
         _upperValue = .constant(0)
@@ -146,7 +145,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         
         self.bounds = bounds
         self.step = step
-        self.gestureOptions = gestureOptions
+        self.options = gestureOptions
         let rangeDistance = Double(bounds.distance)
         
         guard rangeDistance > 0 else {
@@ -183,14 +182,14 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         to upperValue: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
-        gestureOptions: Set<GestureOption> = .default
+        gestureOptions: Set<CompactSliderOption> = .default
     ) {
         _lowerValue = lowerValue
         _upperValue = upperValue
         _values = .constant([])
         self.bounds = bounds
         self.step = step
-        self.gestureOptions = gestureOptions
+        self.options = gestureOptions
         
         let rangeDistance = Double(bounds.distance)
         
@@ -224,7 +223,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                     )
                 )
                 .dragGesture(
-                    options: gestureOptions,
+                    options: options,
                     onChanged: {
                         isDragging = true
                         
@@ -237,25 +236,42 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                             )
                         }
                         
-                        dragTranslation = $0.translation
+                        onDragLocationChange(
+                            translation: $0.translation,
+                            size: proxy.size,
+                            type: compactSliderStyle.type,
+                            isEnded: false,
+                            isRightToLeft: layoutDirection == .rightToLeft
+                        )
                     }, onEnded: {
-                        dragTranslation = $0.translation
+                        if steps > 0, !options.contains(.snapToSteps) {
+                            onDragLocationChange(
+                                translation: $0.translation,
+                                size: proxy.size,
+                                type: compactSliderStyle.type,
+                                isEnded: true,
+                                isRightToLeft: layoutDirection == .rightToLeft
+                            )
+                        }
+                        
                         startDragLocation = nil
                         isDragging = false
                     }
                 )
-                .onChange(of: dragTranslation) { dragTranslation in
-                    onDragLocationChange(
-                        translation: dragTranslation,
-                        size: proxy.size,
-                        type: compactSliderStyle.type,
-                        isRightToLeft: layoutDirection == .rightToLeft
-                    )
-                }
                 #if os(macOS)
-                .onChange(of: scrollWheelEvent) {
+                .onScrollWheel(isEnabled: options.contains(.scrollWheel)) { event in
+                    guard isHovering else { return }
+                    
+                    if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
+                        return
+                    }
+                    
+                    if compactSliderStyle.type.isVertical, event.isHorizontalDelta {
+                        return
+                    }
+                    
                     onScrollWheelChange(
-                        $0,
+                        event,
                         size: proxy.size,
                         location: proxy.frame(in: .global).origin,
                         type: compactSliderStyle.type,
@@ -267,23 +283,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         #if os(macOS) || os(iOS)
         .onHover {
             isHovering = isEnabled && $0
-        }
-        #endif
-        #if os(macOS)
-        .onScrollWheel(isEnabled: gestureOptions.contains(.scrollWheel)) { event in
-            guard isHovering else { return }
-            
-            if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
-                return
-            }
-            
-            if compactSliderStyle.type.isVertical, event.isHorizontalDelta {
-                return
-            }
-            
-            Task {
-                scrollWheelEvent = event
-            }
         }
         #endif
         .onChange(of: progress, perform: onProgressesChange)
@@ -341,7 +340,7 @@ struct CompactSliderPreview: View {
                 
                 CompactSlider(value: $progress)
                 
-                CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
+                CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, options: [.snapToSteps, .scrollWheel])
                     .compactSliderStyle(default: .horizontal(.center))
                 
                 CompactSlider(value: $progress)

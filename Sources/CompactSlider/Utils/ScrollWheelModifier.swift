@@ -9,10 +9,11 @@ import AppKit
 import Combine
 
 struct ScrollWheelEvent: Equatable {
-    static let zero = ScrollWheelEvent(location: .zero, delta: .zero)
+    static let zero = ScrollWheelEvent(location: .zero, delta: .zero, isEnded: true)
     
     let location: CGPoint
     let delta: CGPoint
+    let isEnded: Bool
     
     var isHorizontalDelta: Bool {
         abs(delta.x) > abs(delta.y)
@@ -36,13 +37,16 @@ struct ScrollWheelModifier: ViewModifier {
         NSApp.publisher(for: \.currentEvent)
             .filter { $0?.type == .scrollWheel }
             .compactMap {
-                if let event = $0, let window = event.window, event.phase == .changed {
+                if let event = $0,
+                   let window = event.window,
+                   (event.phase == .changed || event.phase == .ended) {
                     return ScrollWheelEvent(
                         location: CGPoint(
                             x: event.locationInWindow.x,
                             y: window.frame.size.height - event.locationInWindow.y
                         ),
-                        delta: CGPoint(x: event.scrollingDeltaX, y: event.scrollingDeltaY)
+                        delta: CGPoint(x: event.scrollingDeltaX, y: event.scrollingDeltaY),
+                        isEnded: event.phase == .ended
                     )
                 }
                 

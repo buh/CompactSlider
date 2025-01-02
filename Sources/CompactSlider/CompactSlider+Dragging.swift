@@ -10,6 +10,7 @@ extension CompactSlider {
         translation: CGSize,
         size: CGSize,
         type: CompactSliderType,
+        isEnded: Bool,
         isRightToLeft: Bool
     ) {
         guard let startDragLocation, !bounds.isEmpty, size.width > 0 else { return }
@@ -52,10 +53,10 @@ extension CompactSlider {
             return
         }
         
-        return updateProgress(progress(at: location, size: size, type: type))
+        return updateProgress(progress(at: location, size: size, type: type), isEnded: isEnded)
     }
         
-    func updateProgress(_ newValue: Double) {
+    func updateProgress(_ newValue: Double, isEnded: Bool) {
         let progressAndIndex = nearestProgress(for: newValue)
         
         guard progressStep > 0 else {
@@ -65,6 +66,14 @@ extension CompactSlider {
                 if newValue == 1 || newValue == 0 {
                     HapticFeedback.vibrate(disabledHapticFeedback)
                 }
+            }
+            
+            return
+        }
+        
+        guard isEnded || options.contains(.snapToSteps) else {
+            if progressAndIndex.progress != newValue {
+                progress.update(newValue, at: progressAndIndex.index)
             }
             
             return
@@ -102,7 +111,15 @@ extension CompactSlider {
             
             let currentProgress = nearestProgress(for: xProgress).progress
             
-            if steps > 0 {
+            if event.isEnded {
+                if !options.contains(.snapToSteps) {
+                    updateProgress(currentProgress.clamped(), isEnded: true)
+                }
+                
+                return
+            }
+            
+            if steps > 0, options.contains(.snapToSteps) {
                 var deltaProgressStep = (event.delta.x.sign == .minus ? -1 : 1) * progressStep
                 
                 if isRightToLeft {
@@ -135,7 +152,15 @@ extension CompactSlider {
             let yProgress = (event.location.y - location.y) / size.height
             let currentProgress = nearestProgress(for: yProgress).progress
             
-            if steps > 0 {
+            if event.isEnded {
+                if !options.contains(.snapToSteps) {
+                    updateProgress(currentProgress.clamped(), isEnded: true)
+                }
+                
+                return
+            }
+            
+            if steps > 0, options.contains(.snapToSteps) {
                 let deltaProgressStep = (event.delta.y.sign == .minus ? -1 : 1) * progressStep
                 
                 if case .vertical(.bottom) = type {
@@ -154,7 +179,7 @@ extension CompactSlider {
             return
         }
         
-        updateProgress(newProgress.clamped())
+        updateProgress(newProgress.clamped(), isEnded: false)
     }
 }
 #endif
