@@ -9,6 +9,8 @@ import SwiftUI
 struct Scale: Shape {
     var alignment: Axis = .horizontal
     let count: Int
+    var lineWidth: CGFloat = 0
+    var skipEdges: Bool = true
     var minSpacing: CGFloat = 3
     
     func path(in rect: CGRect) -> Path {
@@ -17,10 +19,10 @@ struct Scale: Shape {
             
             let isHorizontal = alignment == .horizontal
             let length = isHorizontal ? rect.width : rect.height
-            let spacing = max(minSpacing, length / CGFloat(count + 1))
-            var i = spacing
+            let spacing = max(minSpacing, (length - max(0, lineWidth)) / CGFloat(count + 1))
+            var i = skipEdges ? spacing : 0.0
             
-            for _ in 0..<count {
+            for _ in 0 ..< (count + (skipEdges ? 0 : 2)) {
                 if isHorizontal {
                     path.move(to: .init(x: i, y: 0))
                     path.addLine(to: .init(x: i, y: rect.maxY))

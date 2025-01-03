@@ -339,13 +339,13 @@ struct CompactSliderPreview: View {
             Group {
                 CompactSlider(value: $centerProgress, in: 0 ... 360, step: 5)
                     .compactSliderStyle(default: .scrollable(
-                        handleStyle: .init(width: 2),
+                        handleStyle: .init(width: 1, cornerRadius: 0),
                         scaleStyle: .init(
                             alignment: .bottom,
-                            line: .init(length: 20),
+                            line: .init(length: 16, skipEdges: false),
                             secondaryLine: .init(
                                 color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
-                                length: 10
+                                length: 8
                             )
                         )
                     ))
@@ -361,8 +361,10 @@ struct CompactSliderPreview: View {
                     )
                     .overlay(
                         Text("\(Int(centerProgress))º")
-                            .offset(y: -24)
+                            .offset(x: 2, y: -24)
                     )
+                    .padding(.top, 12)
+                    .frame(height: 40)
                 
                 CompactSlider(value: $progress)
                 

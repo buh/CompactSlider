@@ -30,17 +30,20 @@ public extension ScaleStyle {
         let color: Color
         let length: CGFloat?
         let thickness: CGFloat
+        let skipEdges: Bool
         let padding: EdgeInsets
         
         public init(
-            color: Color = Defaults.label.opacity(Defaults.scaleLineOpacity),
+            color: Color = Defaults.scaleLineColor,
             length: CGFloat?,
             thickness: CGFloat = Defaults.scaleLineThickness,
+            skipEdges: Bool = true,
             padding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
         ) {
             self.color = color
             self.length = length
             self.thickness = thickness
+            self.skipEdges = skipEdges
             self.padding = padding
         }
     }
@@ -48,12 +51,12 @@ public extension ScaleStyle {
 
 public extension ScaleStyle.Line {
     static let primary = ScaleStyle.Line(
-        color: Defaults.label.opacity(Defaults.scaleLineOpacity),
+        color: Defaults.scaleLineColor,
         length: Defaults.scaleLineLength
     )
     
     static let secondary = ScaleStyle.Line(
-        color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
+        color: Defaults.secondaryScaleLineColor,
         length: Defaults.secondaryScaleLineLength
     )
 }

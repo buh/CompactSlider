@@ -79,4 +79,7 @@ public extension Defaults {
     static let handleOpacity: Double = 0.2
     static let scaleLineOpacity: Double = 0.8
     static let secondaryScaleLineOpacity: Double = 0.3
+    
+    static let scaleLineColor: Color = label.opacity(Self.scaleLineOpacity)
+    static let secondaryScaleLineColor: Color = label.opacity(Self.secondaryScaleLineOpacity)
 }

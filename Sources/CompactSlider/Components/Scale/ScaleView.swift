@@ -33,7 +33,7 @@ public struct ScaleView: View {
     var count: Int {
         guard steps > 0 else { return 9 }
         
-        return steps > 39 && style.secondaryLine != nil ? steps / 5 : steps
+        return steps > 39 && style.secondaryLine != nil ? steps / (steps % 2 == 0 ? 5 : 4) : steps
     }
     
     var secondaryCount: Int {
@@ -45,22 +45,32 @@ public struct ScaleView: View {
     public var body: some View {
         ZStack(alignment: style.alignment) {
             if let secondaryLine = style.secondaryLine, secondaryCount > 0 {
-                Scale(alignment: alignment, count: secondaryCount)
-                    .stroke(secondaryLine.color, lineWidth: secondaryLine.thickness)
-                    .frame(
-                        width: (alignment == .vertical ? secondaryLine.length : nil),
-                        height: (alignment == .horizontal ? secondaryLine.length : nil)
-                    )
-                    .padding(secondaryLine.padding)
+                Scale(
+                    alignment: alignment,
+                    count: secondaryCount,
+                    lineWidth: secondaryLine.thickness,
+                    skipEdges: secondaryLine.skipEdges
+                )
+                .stroke(secondaryLine.color, lineWidth: secondaryLine.thickness)
+                .frame(
+                    width: (alignment == .vertical ? secondaryLine.length : nil),
+                    height: (alignment == .horizontal ? secondaryLine.length : nil)
+                )
+                .padding(secondaryLine.padding)
             }
             
-            Scale(alignment: alignment, count: count)
-                .stroke(style.line.color, lineWidth: style.line.thickness)
-                .frame(
-                    width: (alignment == .vertical ? style.line.length : nil),
-                    height: (alignment == .horizontal ? style.line.length : nil)
-                )
-                .padding(style.line.padding)
+            Scale(
+                alignment: alignment,
+                count: count,
+                lineWidth: style.line.thickness,
+                skipEdges: style.line.skipEdges
+            )
+            .stroke(style.line.color, lineWidth: style.line.thickness)
+            .frame(
+                width: (alignment == .vertical ? style.line.length : nil),
+                height: (alignment == .horizontal ? style.line.length : nil)
+            )
+            .padding(style.line.padding)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: style.alignment)
     }
@@ -75,6 +85,15 @@ public struct ScaleView: View {
             }
             .background(Defaults.label.opacity(0.1))
             
+            ZStack {
+                ScaleView(style: .init(
+                    line: .init(length: 20, skipEdges: false),
+                    secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 10, skipEdges: false)
+                ))
+                .frame(height: 50, alignment: .top)
+            }
+            .background(Defaults.label.opacity(0.1))
+
             ZStack {
                 ScaleView(style: .init(
                     line: .init(length: 25, thickness: 2),
