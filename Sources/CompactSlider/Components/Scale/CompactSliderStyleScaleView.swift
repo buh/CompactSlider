@@ -33,7 +33,7 @@ extension EnvironmentValues {
 // MARK: - View
 
 public extension View {
-    func compactSliderScaleView<V: View>(
+    func compactSliderScale<V: View>(
         @ViewBuilder scaleView: @escaping (_ style: ScaleStyle, _ alignment: Axis, _ steps: Int) -> V
     ) -> some View {
         environment(

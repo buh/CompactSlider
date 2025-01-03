@@ -34,7 +34,7 @@ extension EnvironmentValues {
 // MARK: - View
 
 public extension View {
-    func compactSliderHandleView<V: View>(
+    func compactSliderHandle<V: View>(
         @ViewBuilder handleView: @escaping (_ handleStyle: HandleStyle, _ progress: Double, _ index: Int) -> V
     ) -> some View {
         environment(

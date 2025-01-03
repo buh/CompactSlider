@@ -33,7 +33,7 @@ extension EnvironmentValues {
 // MARK: - View
 
 public extension View {
-    func compactSliderBackgroundView<V: View>(
+    func compactSliderBackground<V: View>(
         @ViewBuilder backgroundView: @escaping (_ progress: Progress) -> V
     ) -> some View {
         environment(

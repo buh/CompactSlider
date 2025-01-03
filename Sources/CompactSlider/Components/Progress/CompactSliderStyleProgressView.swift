@@ -37,7 +37,7 @@ extension EnvironmentValues {
 // MARK: - View
 
 public extension View {
-    func compactSliderProgressView<V: View>(
+    func compactSliderProgress<V: View>(
         @ViewBuilder progressView: @escaping (_ progress: Progress, _ focusState: CompactSliderStyleConfiguration.FocusState) -> V
     ) -> some View {
         environment(

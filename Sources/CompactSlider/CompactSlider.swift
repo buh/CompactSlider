@@ -349,7 +349,7 @@ struct CompactSliderPreview: View {
                             )
                         )
                     ))
-                    .compactSliderBackgroundView { _ in
+                    .compactSliderBackground { _ in
                         EmptyView()
                     }
                     .mask(
@@ -382,7 +382,7 @@ struct CompactSliderPreview: View {
                         handleStyle: .init(visibility: .always, width: 30),
                         scaleStyle: nil
                     ))
-                    .compactSliderProgressView { _, _ in
+                    .compactSliderProgress { _, _ in
                         Capsule()
                             .fill(
                                 LinearGradient(
@@ -395,18 +395,18 @@ struct CompactSliderPreview: View {
                                 )
                             )
                     }
-                    .compactSliderHandleView { _, _, index in
+                    .compactSliderHandle { _, _, index in
                         Circle()
                             .fill(index == 1 ? Color.purple : .blue)
                     }
-                    .compactSliderBackgroundView { _ in
+                    .compactSliderBackground { _ in
                         Capsule()
                             .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
                             .frame(maxHeight: 10)
                     }
                 
                 CompactSlider(values: $progresses)
-                    .compactSliderHandleView { style, progress, _ in
+                    .compactSliderHandle { style, progress, _ in
                         HandleView(
                             style: .init(
                                 visibility: .always,
@@ -417,7 +417,7 @@ struct CompactSliderPreview: View {
                         )
                         .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
                     }
-                    .compactSliderBackgroundView { _ in
+                    .compactSliderBackground { _ in
                         RoundedRectangle(cornerRadius: Defaults.cornerRadius)
                             .fill(
                                 LinearGradient(
@@ -500,7 +500,7 @@ struct CompactSliderPreview: View {
                     
                     CompactSlider(value: $progress)
                         .compactSliderStyle(default: .vertical(.top))
-                        .compactSliderScaleView { style, alignment, steps in
+                        .compactSliderScale { style, alignment, steps in
                             Rectangle()
                                 .fill(Color.accentColor)
                                 .frame(maxWidth: 3)
@@ -515,7 +515,7 @@ struct CompactSliderPreview: View {
                             handleStyle: .init(visibility: .always, width: 30),
                             scaleStyle: nil
                         ))
-                        .compactSliderProgressView { _, _ in
+                        .compactSliderProgress { _, _ in
                             Capsule()
                                 .fill(
                                     LinearGradient(
@@ -528,11 +528,11 @@ struct CompactSliderPreview: View {
                                     )
                                 )
                         }
-                        .compactSliderHandleView { _, _, index in
+                        .compactSliderHandle { _, _, index in
                             Circle()
                                 .fill(index == 1 ? Color.purple : .blue)
                         }
-                        .compactSliderBackgroundView { _ in
+                        .compactSliderBackground { _ in
                             Capsule()
                                 .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
                                 .frame(maxWidth: 10)
@@ -549,7 +549,7 @@ struct CompactSliderPreview: View {
                                 secondaryLine: nil
                             )
                         ))
-                        .compactSliderHandleView { style, progress, _ in
+                        .compactSliderHandle { style, progress, _ in
                             HandleView(
                                 style: .init(
                                     visibility: .always,
@@ -560,7 +560,7 @@ struct CompactSliderPreview: View {
                             )
                             .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
                         }
-                        .compactSliderBackgroundView { _ in
+                        .compactSliderBackground { _ in
                             RoundedRectangle(cornerRadius: Defaults.cornerRadius)
                                 .fill(
                                     LinearGradient(
