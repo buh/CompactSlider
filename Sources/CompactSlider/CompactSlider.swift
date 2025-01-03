@@ -262,12 +262,14 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                 .onScrollWheel(isEnabled: options.contains(.scrollWheel)) { event in
                     guard isHovering else { return }
                     
-                    if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
-                        return
-                    }
-                    
-                    if compactSliderStyle.type.isVertical, event.isHorizontalDelta {
-                        return
+                    if !event.isEnded {
+                        if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
+                            return
+                        }
+                        
+                        if compactSliderStyle.type.isVertical, event.isHorizontalDelta {
+                            return
+                        }
                     }
                     
                     onScrollWheelChange(
@@ -335,8 +337,32 @@ struct CompactSliderPreview: View {
                 .padding(.horizontal, 20)
             
             Group {
-                CompactSlider(value: $progress)
-                    .compactSliderStyle(default: .scrollable(handleStyle: .init(width: 1)))
+                CompactSlider(value: $centerProgress, in: 0 ... 360, step: 5)
+                    .compactSliderStyle(default: .scrollable(
+                        handleStyle: .init(width: 2),
+                        scaleStyle: .init(
+                            alignment: .bottom,
+                            line: .init(length: 20),
+                            secondaryLine: .init(
+                                color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
+                                length: 10
+                            )
+                        )
+                    ))
+                    .compactSliderBackgroundView { _ in
+                        EmptyView()
+                    }
+                    .mask(
+                        LinearGradient(
+                            colors: [.clear, .white, .white, .white, .clear],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .overlay(
+                        Text("\(Int(centerProgress))º")
+                            .offset(y: -24)
+                    )
                 
                 CompactSlider(value: $progress)
                 

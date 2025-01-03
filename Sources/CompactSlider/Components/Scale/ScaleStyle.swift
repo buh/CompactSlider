@@ -8,15 +8,18 @@ import SwiftUI
 /// A scale style.
 public struct ScaleStyle: Equatable {
     let visibility: Visibility
+    let alignment: Alignment
     let line: Line
     let secondaryLine: Line?
     
     public init(
         visibility: Visibility = .hoveringOrDragging,
+        alignment: Alignment = .topLeading,
         line: Line = .primary,
         secondaryLine: Line? = .secondary
     ) {
         self.visibility = visibility
+        self.alignment = alignment
         self.line = line
         self.secondaryLine = secondaryLine
     }

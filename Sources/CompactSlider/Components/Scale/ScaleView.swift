@@ -30,10 +30,22 @@ public struct ScaleView: View {
         self.steps = steps
     }
     
+    var count: Int {
+        guard steps > 0 else { return 9 }
+        
+        return steps > 39 && style.secondaryLine != nil ? steps / 5 : steps
+    }
+    
+    var secondaryCount: Int {
+        guard steps > 0 else { return 49 }
+        
+        return steps > 39 ? steps : 0
+    }
+    
     public var body: some View {
-        ZStack(alignment: .topLeading) {
-            if steps == 0, let secondaryLine = style.secondaryLine {
-                Scale(alignment: alignment, count: 49)
+        ZStack(alignment: style.alignment) {
+            if let secondaryLine = style.secondaryLine, secondaryCount > 0 {
+                Scale(alignment: alignment, count: secondaryCount)
                     .stroke(secondaryLine.color, lineWidth: secondaryLine.thickness)
                     .frame(
                         width: (alignment == .vertical ? secondaryLine.length : nil),
@@ -42,7 +54,7 @@ public struct ScaleView: View {
                     .padding(secondaryLine.padding)
             }
             
-            Scale(alignment: alignment, count: steps > 0 ? steps : 9)
+            Scale(alignment: alignment, count: count)
                 .stroke(style.line.color, lineWidth: style.line.thickness)
                 .frame(
                     width: (alignment == .vertical ? style.line.length : nil),
@@ -50,7 +62,7 @@ public struct ScaleView: View {
                 )
                 .padding(style.line.padding)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: style.alignment)
     }
 }
 

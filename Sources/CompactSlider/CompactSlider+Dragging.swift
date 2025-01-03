@@ -120,14 +120,14 @@ extension CompactSlider {
             }
             
             if steps > 0, options.contains(.snapToSteps) {
-                var deltaProgressStep = (event.delta.x.sign == .minus ? -1 : 1) * progressStep
+                var deltaProgressStep = (event.delta.x.sign == .minus ? -progressStep : progressStep)
                 
                 if isRightToLeft {
                     deltaProgressStep = -deltaProgressStep
                 }
                 
                 if type.isScrollable {
-                    deltaProgressStep = 1 - deltaProgressStep
+                    deltaProgressStep = -deltaProgressStep
                 }
                 
                 if case .horizontal(.trailing) = type {

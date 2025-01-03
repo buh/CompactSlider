@@ -43,6 +43,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
             }
         }
         .background(CompactSliderStyleBackgroundView())
+        .contentShape(Rectangle())
         .clipRoundedShapeIf(cornerRadius: cornerRadius)
         .environment(\.compactSliderStyleConfiguration, configuration)
         .environment(\.handleStyle, handleStyle)
