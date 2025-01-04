@@ -310,9 +310,10 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
 }
 
 struct CompactSliderPreview: View {
+    @Environment(\.colorScheme) var colorScheme
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var progress: Double = 0.3
-    @State private var centerProgress: Double = 0
+    @State private var centerProgress: Double = 5
     @State private var fromProgress: Double = 0.3
     @State private var toProgress: Double = 0.7
     @State private var progresses: [Double] = [0.2, 0.5, 0.8]
@@ -349,7 +350,7 @@ struct CompactSliderPreview: View {
             Group {
                 CompactSlider(
                     value: $centerProgress,
-                    in: 0 ... 360,
+                    in: 0 ... 355,
                     step: 5,
                     options: [.dragGestureMinimumDistance(0), .scrollWheel, .moveBackgroundToScale]
                 )
@@ -357,10 +358,16 @@ struct CompactSliderPreview: View {
                     handleStyle: .init(width: 1, cornerRadius: 0),
                     scaleStyle: .init(
                         alignment: .bottom,
-                        line: .init(length: 16, skipEdges: true),
-                        secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8)
+                        line: .init(length: 16, skipEdges: false),
+                        secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
                     )
                 ))
+                .compactSliderBackground { _ in
+                    RoundedRectangle(cornerRadius: Defaults.cornerRadius)
+                        .fill(Defaults.backgroundColor)
+                        .padding(.horizontal, -12)
+                }
+                .horizontalGradientMask()
                 .overlay(
                     Text("\(Int(centerProgress))º")
                         .offset(x: 2, y: -24)
@@ -370,7 +377,7 @@ struct CompactSliderPreview: View {
                 
                 CompactSlider(value: $progress)
                 
-                CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1, options: [.snapToSteps, .scrollWheel])
+                CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1, options: [.scrollWheel])
                     .compactSliderStyle(default: .horizontal(.center))
                 
                 CompactSlider(value: $progress)
@@ -435,7 +442,7 @@ struct CompactSliderPreview: View {
                                     endPoint: .trailing
                                 )
                             )
-                            .opacity(0.1)
+                            .opacity(colorScheme == .dark ? 0.1 : 0.2)
                     }
             }
             .frame(maxHeight: 30)
@@ -496,7 +503,7 @@ struct CompactSliderPreview: View {
                             )
                         ))
                     
-                    CompactSlider(value: $centerProgress, in: -10 ... 10, step: 1)
+                    CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
                         .compactSliderStyle(default: .vertical(
                             .center,
                             scaleStyle: .init(
@@ -582,7 +589,7 @@ struct CompactSliderPreview: View {
                                         endPoint: .bottom
                                     )
                                 )
-                                .opacity(0.1)
+                                .opacity(colorScheme == .dark ? 0.1 : 0.2)
                         }
                 }
                 .frame(maxWidth: 30)

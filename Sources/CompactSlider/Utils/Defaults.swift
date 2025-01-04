@@ -43,7 +43,7 @@ public extension Defaults {
     
     // MARK: - Scale
     
-    static let scaleLineThickness: CGFloat = 0.5
+    static let scaleLineThickness: CGFloat = 1
     
     static let scaleLineLength: CGFloat = {
         #if os(macOS)
@@ -76,8 +76,8 @@ public extension Defaults {
     static let backgroundOpacity: Double = 0.075
     static let progressOpacity: Double = 0.1
     static let focusedProgressOpacity: Double = 0.125
-    static let scaleLineOpacity: Double = 0.8
-    static let secondaryScaleLineOpacity: Double = 0.3
+    static let scaleLineOpacity: Double = 0.5
+    static let secondaryScaleLineOpacity: Double = 0.25
     
     static let backgroundColor: Color = label.opacity(Self.backgroundOpacity)
     static let progressColor: Color = label.opacity(Self.progressOpacity)
