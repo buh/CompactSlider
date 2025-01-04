@@ -55,8 +55,9 @@ extension CompactSlider {
         
         return updateProgress(progress(at: location, size: size, type: type), isEnded: isEnded)
     }
-        
+    
     func updateProgress(_ newValue: Double, isEnded: Bool) {
+        let newValue = newValue.clampedOrRotated(withRotaion: options.contains(.loopValues))
         let progressAndIndex = nearestProgress(for: newValue)
         
         guard progressStep > 0 else {
@@ -113,7 +114,7 @@ extension CompactSlider {
             
             if event.isEnded {
                 if !options.contains(.snapToSteps) {
-                    updateProgress(currentProgress.clamped(), isEnded: true)
+                    updateProgress(currentProgress, isEnded: true)
                 }
                 
                 return
@@ -154,7 +155,7 @@ extension CompactSlider {
             
             if event.isEnded {
                 if !options.contains(.snapToSteps) {
-                    updateProgress(currentProgress.clamped(), isEnded: true)
+                    updateProgress(currentProgress, isEnded: true)
                 }
                 
                 return
@@ -179,7 +180,7 @@ extension CompactSlider {
             return
         }
         
-        updateProgress(newProgress.clamped(), isEnded: false)
+        updateProgress(newProgress, isEnded: false)
     }
 }
 #endif
@@ -189,11 +190,11 @@ extension CompactSlider {
 extension CompactSlider {
     func progress(at location: CGPoint, size: CGSize, type: CompactSliderType) -> Double {
         if type.isHorizontal {
-            return (location.x / size.width).clamped()
+            return (location.x / size.width)
         }
         
         if type.isVertical {
-            return 1.0 - (location.y / size.height).clamped()
+            return 1.0 - (location.y / size.height)
         }
         
         return 0

@@ -48,6 +48,6 @@ extension CompactSlider {
     }
     
     func convertValueToProgress(_ value: Value) -> Double {
-        value.convertValueToPercentage(in: bounds).clamped()
+        value.convertValueToPercentage(in: bounds).clampedOrRotated(withRotaion: options.contains(.loopValues))
     }
 }

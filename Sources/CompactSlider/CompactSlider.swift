@@ -353,9 +353,10 @@ struct CompactSliderPreview: View {
                     value: $degree,
                     in: 0 ... 355,
                     step: 5,
-                    options: [.dragGestureMinimumDistance(0), .scrollWheel, .moveBackgroundToScale]
+                    options: [.dragGestureMinimumDistance(0), .scrollWheel, .withoutBackground, .loopValues]
                 )
                 .compactSliderStyle(default: .scrollable(
+                    cornerRadius: 0,
                     handleStyle: .init(width: 1, cornerRadius: 0),
                     scaleStyle: .init(
                         alignment: .bottom,
@@ -363,11 +364,6 @@ struct CompactSliderPreview: View {
                         secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
                     )
                 ))
-                .compactSliderBackground { _ in
-                    RoundedRectangle(cornerRadius: Defaults.cornerRadius)
-                        .fill(Defaults.backgroundColor)
-                        .padding(.horizontal, -12)
-                }
                 .horizontalGradientMask()
                 .overlay(
                     Text("\(Int(degree))º")
@@ -452,23 +448,29 @@ struct CompactSliderPreview: View {
             
             HStack(spacing: 16) {
                 Group {
-                    CompactSlider(value: $progress)
-                        .compactSliderStyle(default: .scrollable(
-                            .vertical,
-                            handleStyle: .init(width: 2),
-                            scaleStyle: .init(
-                                line: .init(
-                                    length: nil,
-                                    padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
-                                ),
-                                secondaryLine: .init(
-                                    color: Defaults.secondaryScaleLineColor,
-                                    length: nil,
-                                    padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
-                                )
+                    CompactSlider(
+                        value: $progress,
+                        options: [.dragGestureMinimumDistance(0), .scrollWheel, .loopValues]
+                    )
+                    .compactSliderStyle(default: .scrollable(
+                        .vertical,
+                        cornerRadius: 0,
+                        handleStyle: .init(width: 2),
+                        scaleStyle: .init(
+                            line: .init(
+                                length: nil,
+                                skipEdges: false,
+                                padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                            ),
+                            secondaryLine: .init(
+                                color: Defaults.secondaryScaleLineColor,
+                                length: nil,
+                                skipEdges: false,
+                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
                             )
-                        ))
-                        .verticalGradientMask()
+                        )
+                    ))
+                    .verticalGradientMask()
                     
                     CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
                         .compactSliderStyle(default: .scrollable(

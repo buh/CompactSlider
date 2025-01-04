@@ -18,10 +18,37 @@ struct ScaleContainerView<V: View>: View {
         if let scaleStyle {
             let offset = configuration.scaleOffset()
             
-            scaleView(configuration, scaleStyle)
-                .backgroundIf(configuration.options.contains(.moveBackgroundToScale))
+            if configuration.type.isScrollable,
+               configuration.options.contains(.loopValues),
+               configuration.type.isHorizontal {
+                HStack(spacing: 0) {
+                    scaleView(configuration, scaleStyle)
+                    scaleView(configuration, scaleStyle)
+                    scaleView(configuration, scaleStyle)
+                }
                 .offset(x: offset.x, y: offset.y)
+                .frame(width: configuration.size.width * 3)
+                .backgroundIf(configuration.options.contains(.moveBackgroundToScale))
+                .frame(width: configuration.size.width)
                 .allowsTightening(false)
+            } else if configuration.type.isScrollable,
+                      configuration.options.contains(.loopValues),
+                      configuration.type.isVertical {
+                VStack(spacing: 0) {
+                    scaleView(configuration, scaleStyle)
+                    scaleView(configuration, scaleStyle)
+                    scaleView(configuration, scaleStyle)
+                }
+                .offset(x: offset.x, y: offset.y)
+                .frame(height: configuration.size.height * 3)
+                .backgroundIf(configuration.options.contains(.moveBackgroundToScale))
+                .frame(height: configuration.size.height)
+                .allowsTightening(false)
+            } else {
+                scaleView(configuration, scaleStyle)
+                    .offset(x: offset.x, y: offset.y)
+                    .allowsTightening(false)
+            }
         }
     }
 }

@@ -21,6 +21,8 @@ public enum CompactSliderOption: Hashable {
     case moveBackgroundToScale
     /// Remove background view.
     case withoutBackground
+    /// Rotate values in loop.
+    case loopValues
 }
 
 /// A set of drag gesture options: minimum drag distance, delayed touch, and high priority.
