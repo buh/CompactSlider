@@ -42,7 +42,10 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                 }
             }
         }
-        .backgroundIf(!configuration.options.contains(.moveBackgroundToScale))
+        .backgroundIf(
+            !configuration.options.contains(.moveBackgroundToScale)
+            && !configuration.options.contains(.withoutBackground)
+        )
         .contentShape(Rectangle())
         .clipRoundedShapeIf(cornerRadius: cornerRadius)
         .environment(\.compactSliderStyleConfiguration, configuration)
