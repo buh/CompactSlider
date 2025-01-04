@@ -76,10 +76,12 @@ public extension Defaults {
     static let backgroundOpacity: Double = 0.075
     static let progressOpacity: Double = 0.1
     static let focusedProgressOpacity: Double = 0.125
-    static let handleOpacity: Double = 0.2
     static let scaleLineOpacity: Double = 0.8
     static let secondaryScaleLineOpacity: Double = 0.3
     
+    static let backgroundColor: Color = label.opacity(Self.backgroundOpacity)
+    static let progressColor: Color = label.opacity(Self.progressOpacity)
+    static let focusedProgressColor: Color = label.opacity(Self.focusedProgressOpacity)
     static let scaleLineColor: Color = label.opacity(Self.scaleLineOpacity)
     static let secondaryScaleLineColor: Color = label.opacity(Self.secondaryScaleLineOpacity)
 }

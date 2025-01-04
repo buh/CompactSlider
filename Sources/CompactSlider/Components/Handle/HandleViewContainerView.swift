@@ -8,7 +8,7 @@ import SwiftUI
 struct HandleViewContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
     @Environment(\.handleStyle) var handleStyle
-    let handleView: (HandleStyle, Double, Int) -> V
+    let handleView: (HandleStyle, Double, Int, CompactSliderStyleConfiguration.FocusState) -> V
     
     var indices: [Int] {
         Array(stride(
@@ -18,7 +18,7 @@ struct HandleViewContainerView<V: View>: View {
         ))
     }
     
-    init(handleView: @escaping (HandleStyle, Double, Int) -> V) {
+    init(handleView: @escaping (HandleStyle, Double, Int, CompactSliderStyleConfiguration.FocusState) -> V) {
         self.handleView = handleView
     }
     
@@ -26,7 +26,7 @@ struct HandleViewContainerView<V: View>: View {
         ForEach(indices, id: \.self) { index in
             let offset = configuration.handleOffset(at: index, handleWidth: handleStyle.width)
             
-            handleView(handleStyle, configuration.progress.progresses[index], index)
+            handleView(handleStyle, configuration.progress.progresses[index], index, configuration.focusState)
                 .frame(
                     width: configuration.type.isHorizontal ? handleStyle.width : nil,
                     height: configuration.type.isVertical ? handleStyle.width : nil

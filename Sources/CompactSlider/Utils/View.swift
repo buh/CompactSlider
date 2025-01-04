@@ -10,3 +10,25 @@ extension View {
         AnyView(self)
     }
 }
+
+public extension View {
+    func horizontalGradientMask() -> some View {
+        mask(
+            LinearGradient(
+                colors: [.clear, .white, .white, .white, .clear],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+        )
+    }
+    
+    func verticalGradientMask() -> some View {
+        mask(
+            LinearGradient(
+                colors: [.clear, .white, .white, .white, .clear],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+    }
+}

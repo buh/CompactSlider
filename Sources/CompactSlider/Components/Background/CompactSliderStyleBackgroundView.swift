@@ -17,10 +17,8 @@ public struct CompactSliderStyleBackgroundView: View {
 
 struct BackgroundViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
-        BackgroundContainerView { _ in
-            Defaults.label.opacity(Defaults.backgroundOpacity)
-        }
-        .anyView()
+        BackgroundContainerView { _ in Defaults.backgroundColor }
+            .anyView()
 }
 
 extension EnvironmentValues {

@@ -18,7 +18,7 @@ public struct CompactSliderStyleHandleView: View {
 
 struct HandleViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
-        HandleViewContainerView { style, _, _ in
+        HandleViewContainerView { style, _, _, _ in
             HandleView(style: style)
         }
         .anyView()
@@ -35,12 +35,12 @@ extension EnvironmentValues {
 
 public extension View {
     func compactSliderHandle<V: View>(
-        @ViewBuilder handleView: @escaping (_ handleStyle: HandleStyle, _ progress: Double, _ index: Int) -> V
+        @ViewBuilder handleView: @escaping (_ handleStyle: HandleStyle, _ progress: Double, _ index: Int, _ focusState: CompactSliderStyleConfiguration.FocusState) -> V
     ) -> some View {
         environment(
             \.compactSliderHandleView,
              HandleViewContainerView {
-                 handleView($0, $1, $2)
+                 handleView($0, $1, $2, $3)
              }
              .anyView()
         )

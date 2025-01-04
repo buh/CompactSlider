@@ -343,22 +343,13 @@ struct CompactSliderPreview: View {
                         scaleStyle: .init(
                             alignment: .bottom,
                             line: .init(length: 16, skipEdges: false),
-                            secondaryLine: .init(
-                                color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
-                                length: 8
-                            )
+                            secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8)
                         )
                     ))
                     .compactSliderBackground { _ in
                         EmptyView()
                     }
-                    .mask(
-                        LinearGradient(
-                            colors: [.clear, .white, .white, .white, .clear],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .horizontalGradientMask()
                     .overlay(
                         Text("\(Int(centerProgress))º")
                             .offset(x: 2, y: -24)
@@ -395,18 +386,18 @@ struct CompactSliderPreview: View {
                                 )
                             )
                     }
-                    .compactSliderHandle { _, _, index in
+                    .compactSliderHandle { _, _, index, _ in
                         Circle()
                             .fill(index == 1 ? Color.purple : .blue)
                     }
                     .compactSliderBackground { _ in
                         Capsule()
-                            .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
+                            .fill(Defaults.backgroundColor)
                             .frame(maxHeight: 10)
                     }
                 
                 CompactSlider(values: $progresses)
-                    .compactSliderHandle { style, progress, _ in
+                    .compactSliderHandle { style, progress, _, _ in
                         HandleView(
                             style: .init(
                                 visibility: .always,
@@ -438,6 +429,8 @@ struct CompactSliderPreview: View {
             }
             .frame(maxHeight: 30)
             
+            // MARK: - Vertical
+            
             HStack(spacing: 16) {
                 Group {
                     CompactSlider(value: $progress)
@@ -450,12 +443,13 @@ struct CompactSliderPreview: View {
                                     padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
                                 ),
                                 secondaryLine: .init(
-                                    color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
+                                    color: Defaults.secondaryScaleLineColor,
                                     length: nil,
                                     padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
                                 )
                             )
                         ))
+                        .verticalGradientMask()
                     
                     CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
                         .compactSliderStyle(default: .scrollable(
@@ -467,12 +461,13 @@ struct CompactSliderPreview: View {
                                     padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
                                 ),
                                 secondaryLine: .init(
-                                    color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
+                                    color: Defaults.secondaryScaleLineColor,
                                     length: nil,
                                     padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
                                 )
                             )
                         ))
+                        .verticalGradientMask()
                     
                     CompactSlider(value: $progress)
                         .compactSliderStyle(default: .vertical(
@@ -483,7 +478,7 @@ struct CompactSliderPreview: View {
                                     padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
                                 ),
                                 secondaryLine: .init(
-                                    color: Defaults.label.opacity(Defaults.secondaryScaleLineOpacity),
+                                    color: Defaults.secondaryScaleLineColor,
                                     length: nil,
                                     padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
                                 )
@@ -528,13 +523,13 @@ struct CompactSliderPreview: View {
                                     )
                                 )
                         }
-                        .compactSliderHandle { _, _, index in
+                        .compactSliderHandle { _, _, index, _ in
                             Circle()
                                 .fill(index == 1 ? Color.purple : .blue)
                         }
                         .compactSliderBackground { _ in
                             Capsule()
-                                .fill(Defaults.label.opacity(Defaults.backgroundOpacity))
+                                .fill(Defaults.backgroundColor)
                                 .frame(maxWidth: 10)
                         }
                     
@@ -549,7 +544,7 @@ struct CompactSliderPreview: View {
                                 secondaryLine: nil
                             )
                         ))
-                        .compactSliderHandle { style, progress, _ in
+                        .compactSliderHandle { style, progress, _, _ in
                             HandleView(
                                 style: .init(
                                     visibility: .always,

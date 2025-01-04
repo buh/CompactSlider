@@ -9,17 +9,20 @@ import SwiftUI
 public struct ScaleStyle: Equatable {
     let visibility: Visibility
     let alignment: Alignment
+    let minSpace: CGFloat
     let line: Line
     let secondaryLine: Line?
     
     public init(
         visibility: Visibility = .hoveringOrDragging,
         alignment: Alignment = .topLeading,
+        minSpace: CGFloat = 3,
         line: Line = .primary,
         secondaryLine: Line? = .secondary
     ) {
         self.visibility = visibility
         self.alignment = alignment
+        self.minSpace = max(3, minSpace)
         self.line = line
         self.secondaryLine = secondaryLine
     }

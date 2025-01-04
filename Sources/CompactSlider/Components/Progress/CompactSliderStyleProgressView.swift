@@ -20,8 +20,8 @@ struct ProgressViewKey: EnvironmentKey {
         ProgressContainerView { _, focusState in
             ProgressView(
                 focusState: focusState,
-                fillStyle: Defaults.label.opacity(Defaults.progressOpacity),
-                focusedFillStyle: Defaults.label.opacity(Defaults.focusedProgressOpacity)
+                fillStyle: Defaults.progressColor,
+                focusedFillStyle: Defaults.focusedProgressColor
             )
         }
         .anyView()
