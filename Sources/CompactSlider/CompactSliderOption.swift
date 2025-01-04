@@ -17,6 +17,8 @@ public enum CompactSliderOption: Hashable {
     case scrollWheel
     /// Enables the snapping on steps.
     case snapToSteps
+    /// Move background view to Scale.
+    case moveBackgroundToScale
 }
 
 /// A set of drag gesture options: minimum drag distance, delayed touch, and high priority.

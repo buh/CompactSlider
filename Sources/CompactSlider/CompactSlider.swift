@@ -219,7 +219,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
                         size: proxy.size,
                         focusState: .init(isHovering: isHovering, isDragging: isDragging),
                         progress: progress,
-                        steps: steps
+                        steps: steps,
+                        options: options
                     )
                 )
                 .dragGesture(
@@ -319,14 +320,23 @@ struct CompactSliderPreview: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Button("0%") { progress = 0 }
-                Button("25%") { progress = 0.25 }
+                Spacer()
                 
-                Text("CompactSlider")
-                    .font(.title.bold())
+                if #available(macOS 12.0, *) {
+                    Group {
+                        Text("\(progress, format: .percent.precision(.fractionLength(0)))")
+                        Text("\(Int(centerProgress))")
+                        Text("\(fromProgress, format: .percent.precision(.fractionLength(0)))-\(toProgress, format: .percent.precision(.fractionLength(0)))")
+                    }
+                    .monospacedDigit()
+                }
                 
-                Button("50%") { progress = 0.5 }
-                Button("100%") { progress = 1 }
+                Spacer()
+                Text("Multi:")
+                ForEach(progresses, id: \.self) { p in
+                    Text("\(Int(p * 100))%")
+                }
+                Spacer()
             }
             
             Picker(selection: $layoutDirection) {
@@ -337,25 +347,26 @@ struct CompactSliderPreview: View {
                 .padding(.horizontal, 20)
             
             Group {
-                CompactSlider(value: $centerProgress, in: 0 ... 360, step: 5)
-                    .compactSliderStyle(default: .scrollable(
-                        handleStyle: .init(width: 1, cornerRadius: 0),
-                        scaleStyle: .init(
-                            alignment: .bottom,
-                            line: .init(length: 16, skipEdges: false),
-                            secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8)
-                        )
-                    ))
-                    .compactSliderBackground { _ in
-                        EmptyView()
-                    }
-                    .horizontalGradientMask()
-                    .overlay(
-                        Text("\(Int(centerProgress))º")
-                            .offset(x: 2, y: -24)
+                CompactSlider(
+                    value: $centerProgress,
+                    in: 0 ... 360,
+                    step: 5,
+                    options: [.dragGestureMinimumDistance(0), .scrollWheel, .moveBackgroundToScale]
+                )
+                .compactSliderStyle(default: .scrollable(
+                    handleStyle: .init(width: 1, cornerRadius: 0),
+                    scaleStyle: .init(
+                        alignment: .bottom,
+                        line: .init(length: 16, skipEdges: true),
+                        secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8)
                     )
-                    .padding(.top, 12)
-                    .frame(height: 40)
+                ))
+                .overlay(
+                    Text("\(Int(centerProgress))º")
+                        .offset(x: 2, y: -24)
+                )
+                .padding(.top, 12)
+                .frame(height: 40)
                 
                 CompactSlider(value: $progress)
                 
@@ -373,7 +384,7 @@ struct CompactSliderPreview: View {
                         handleStyle: .init(visibility: .always, width: 30),
                         scaleStyle: nil
                     ))
-                    .compactSliderProgress { _, _ in
+                    .compactSliderProgress { _ in
                         Capsule()
                             .fill(
                                 LinearGradient(
@@ -386,7 +397,7 @@ struct CompactSliderPreview: View {
                                 )
                             )
                     }
-                    .compactSliderHandle { _, _, index, _ in
+                    .compactSliderHandle { _, _, _, index in
                         Circle()
                             .fill(index == 1 ? Color.purple : .blue)
                     }
@@ -397,7 +408,7 @@ struct CompactSliderPreview: View {
                     }
                 
                 CompactSlider(values: $progresses)
-                    .compactSliderHandle { style, progress, _, _ in
+                    .compactSliderHandle { _, style, progress, _ in
                         HandleView(
                             style: .init(
                                 visibility: .always,
@@ -495,7 +506,7 @@ struct CompactSliderPreview: View {
                     
                     CompactSlider(value: $progress)
                         .compactSliderStyle(default: .vertical(.top))
-                        .compactSliderScale { style, alignment, steps in
+                        .compactSliderScale { _, _ in
                             Rectangle()
                                 .fill(Color.accentColor)
                                 .frame(maxWidth: 3)
@@ -510,7 +521,7 @@ struct CompactSliderPreview: View {
                             handleStyle: .init(visibility: .always, width: 30),
                             scaleStyle: nil
                         ))
-                        .compactSliderProgress { _, _ in
+                        .compactSliderProgress { _ in
                             Capsule()
                                 .fill(
                                     LinearGradient(
@@ -523,7 +534,7 @@ struct CompactSliderPreview: View {
                                     )
                                 )
                         }
-                        .compactSliderHandle { _, _, index, _ in
+                        .compactSliderHandle { _, _, _, index in
                             Circle()
                                 .fill(index == 1 ? Color.purple : .blue)
                         }
@@ -544,7 +555,7 @@ struct CompactSliderPreview: View {
                                 secondaryLine: nil
                             )
                         ))
-                        .compactSliderHandle { style, progress, _, _ in
+                        .compactSliderHandle { _, style, progress, _ in
                             HandleView(
                                 style: .init(
                                     visibility: .always,

@@ -42,4 +42,17 @@ public struct Progress: Equatable {
     mutating func updateUpperProgress(_ progress: Double) {
         update(progress, at: 1)
     }
+    
+    public func value<Value: BinaryFloatingPoint>(
+        in bounds: ClosedRange<Value>,
+        step: Value = 0,
+        at index: Int = 0
+    ) -> Value {
+        guard index < progresses.count else {
+            assertionFailure("Index \(index) is out of bounds.")
+            return bounds.lowerBound
+        }
+        
+        return progresses[index].convertPercentageToValue(in: bounds, step: step)
+    }
 }

@@ -7,14 +7,14 @@ import SwiftUI
 
 struct BackgroundContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
-    let backgroundView: (Progress) -> V
+    let backgroundView: (CompactSliderStyleConfiguration) -> V
     
-    init(backgroundView: @escaping (Progress) -> V) {
+    init(backgroundView: @escaping (CompactSliderStyleConfiguration) -> V) {
         self.backgroundView = backgroundView
     }
     
     var body: some View {
-        backgroundView(configuration.progress)
+        backgroundView(configuration)
             .allowsTightening(false)
     }
 }

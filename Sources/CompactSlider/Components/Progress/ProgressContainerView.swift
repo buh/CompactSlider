@@ -7,7 +7,7 @@ import SwiftUI
 
 struct ProgressContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
-    let progressView: (Progress, CompactSliderStyleConfiguration.FocusState) -> V
+    let progressView: (CompactSliderStyleConfiguration) -> V
     
     var alignment: Alignment {
         if configuration.type.isHorizontal {
@@ -17,7 +17,7 @@ struct ProgressContainerView<V: View>: View {
         return .top
     }
     
-    init(progressView: @escaping (Progress, CompactSliderStyleConfiguration.FocusState) -> V) {
+    init(progressView: @escaping (CompactSliderStyleConfiguration) -> V) {
         self.progressView = progressView
     }
     
@@ -25,7 +25,7 @@ struct ProgressContainerView<V: View>: View {
         let size = configuration.progressSize()
         let offset = configuration.progressOffset()
         
-        progressView(configuration.progress, configuration.focusState)
+        progressView(configuration)
             .frame(width: size.width, height: size.height)
             .offset(x: offset.x, y: offset.y)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)

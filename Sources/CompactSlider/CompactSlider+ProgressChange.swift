@@ -16,20 +16,20 @@ extension CompactSlider {
             }
         }
         
+        if progress.isMultipleValues {
+            values = newValue.progresses.map(convertProgressToValue)
+            return
+        }
+        
         lowerValue = convertProgressToValue(newValue.progresses[0])
         
         guard progress.isRangeValues else { return }
         
         upperValue = convertProgressToValue(newValue.progresses[1])
-        
-        guard progress.isMultipleValues else { return }
-        
-        values = newValue.progresses.map(convertProgressToValue)
     }
     
     func convertProgressToValue(_ newValue: Double) -> Value {
-        let value = bounds.lowerBound + Value(newValue) * bounds.distance
-        return step > 0 ? (value / step).rounded() * step : value
+        newValue.convertPercentageToValue(in: bounds, step: step)
     }
     
     func onLowerValueChange(_ newValue: Value) {
@@ -46,9 +46,8 @@ extension CompactSlider {
         if isValueChangingInternally { return }
         progress.progresses = newValues.map(convertValueToProgress)
     }
-
-    func convertValueToProgress(_ newValue: Value) -> Double {
-        let length = Double(bounds.distance)
-        return length != 0 ? Double(newValue - bounds.lowerBound) / length : 0
+    
+    func convertValueToProgress(_ value: Value) -> Double {
+        value.convertValueToPercentage(in: bounds).clamped()
     }
 }

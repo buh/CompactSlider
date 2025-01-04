@@ -42,7 +42,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                 }
             }
         }
-        .background(CompactSliderStyleBackgroundView())
+        .backgroundIf(!configuration.options.contains(.moveBackgroundToScale))
         .contentShape(Rectangle())
         .clipRoundedShapeIf(cornerRadius: cornerRadius)
         .environment(\.compactSliderStyleConfiguration, configuration)
@@ -104,7 +104,7 @@ private extension View {
         if cornerRadius > 0 {
             clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         } else {
-            self
+            clipShape(Rectangle())
         }
     }
 }

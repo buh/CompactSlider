@@ -16,9 +16,10 @@ public struct CompactSliderStyleBackgroundView: View {
 // MARK: - Environment
 
 struct BackgroundViewKey: EnvironmentKey {
-    static var defaultValue: AnyView =
-        BackgroundContainerView { _ in Defaults.backgroundColor }
-            .anyView()
+    static var defaultValue: AnyView = BackgroundContainerView { _ in
+        Defaults.backgroundColor
+    }
+    .anyView()
 }
 
 extension EnvironmentValues {
@@ -32,7 +33,7 @@ extension EnvironmentValues {
 
 public extension View {
     func compactSliderBackground<V: View>(
-        @ViewBuilder backgroundView: @escaping (_ progress: Progress) -> V
+        @ViewBuilder backgroundView: @escaping (_ configuration: CompactSliderStyleConfiguration) -> V
     ) -> some View {
         environment(
             \.compactSliderBackgroundView,

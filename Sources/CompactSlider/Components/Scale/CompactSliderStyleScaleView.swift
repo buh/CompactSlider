@@ -17,8 +17,12 @@ public struct CompactSliderStyleScaleView: View {
 
 struct ScaleViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
-        ScaleContainerView {
-            ScaleView(style: $0, alignment: $1, steps: $2)
+        ScaleContainerView { configuration, style in
+            ScaleView(
+                style: style,
+                alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
+                steps: configuration.steps
+            )
         }
         .anyView()
 }
@@ -34,12 +38,15 @@ extension EnvironmentValues {
 
 public extension View {
     func compactSliderScale<V: View>(
-        @ViewBuilder scaleView: @escaping (_ style: ScaleStyle, _ alignment: Axis, _ steps: Int) -> V
+        @ViewBuilder scaleView: @escaping (
+            _ configuration: CompactSliderStyleConfiguration,
+            _ style: ScaleStyle
+        ) -> V
     ) -> some View {
         environment(
             \.compactSliderScaleView,
              ScaleContainerView {
-                 scaleView($0, $1, $2)
+                 scaleView($0, $1)
              }
              .anyView()
         )

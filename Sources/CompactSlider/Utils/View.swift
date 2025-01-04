@@ -5,12 +5,6 @@
 
 import SwiftUI
 
-extension View {
-    func anyView() -> AnyView {
-        AnyView(self)
-    }
-}
-
 public extension View {
     func horizontalGradientMask() -> some View {
         mask(
@@ -30,5 +24,22 @@ public extension View {
                 endPoint: .bottom
             )
         )
+    }
+}
+
+// MARK: - Internal
+
+extension View {
+    func anyView() -> AnyView {
+        AnyView(self)
+    }
+    
+    @ViewBuilder
+    func backgroundIf(_ condition: Bool) -> some View {
+        if condition {
+            background(CompactSliderStyleBackgroundView())
+        } else {
+            self
+        }
     }
 }

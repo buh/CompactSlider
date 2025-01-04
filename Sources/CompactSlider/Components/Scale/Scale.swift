@@ -10,8 +10,8 @@ struct Scale: Shape {
     var alignment: Axis = .horizontal
     let count: Int
     var lineWidth: CGFloat = 0
-    var skipEdges: Bool = true
     var minSpacing: CGFloat = 3
+    var skipEdges: Bool = true
     
     func path(in rect: CGRect) -> Path {
         Path { path in

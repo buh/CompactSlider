@@ -17,9 +17,9 @@ public struct CompactSliderStyleProgressView: View {
 
 struct ProgressViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
-        ProgressContainerView { _, focusState in
+        ProgressContainerView { configuration in
             ProgressView(
-                focusState: focusState,
+                focusState: configuration.focusState,
                 fillStyle: Defaults.progressColor,
                 focusedFillStyle: Defaults.focusedProgressColor
             )
@@ -38,12 +38,12 @@ extension EnvironmentValues {
 
 public extension View {
     func compactSliderProgress<V: View>(
-        @ViewBuilder progressView: @escaping (_ progress: Progress, _ focusState: CompactSliderStyleConfiguration.FocusState) -> V
+        @ViewBuilder progressView: @escaping (_ configuration: CompactSliderStyleConfiguration) -> V
     ) -> some View {
         environment(
             \.compactSliderProgressView,
-             ProgressContainerView { progress, focusState in
-                 progressView(progress, focusState)
+             ProgressContainerView {
+                 progressView($0)
              }
             .anyView()
         )

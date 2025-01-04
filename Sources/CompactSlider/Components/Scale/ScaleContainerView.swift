@@ -8,9 +8,9 @@ import SwiftUI
 struct ScaleContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
     @Environment(\.scaleStyle) var scaleStyle
-    let scaleView: (ScaleStyle, Axis, Int) -> V
+    let scaleView: (CompactSliderStyleConfiguration, ScaleStyle) -> V
     
-    init(scaleView: @escaping (ScaleStyle, Axis, Int) -> V) {
+    init(scaleView: @escaping (CompactSliderStyleConfiguration, ScaleStyle) -> V) {
         self.scaleView = scaleView
     }
     
@@ -18,7 +18,8 @@ struct ScaleContainerView<V: View>: View {
         if let scaleStyle {
             let offset = configuration.scaleOffset()
             
-            scaleView(scaleStyle, configuration.type.isHorizontal ? .horizontal : .vertical, configuration.steps)
+            scaleView(configuration, scaleStyle)
+                .backgroundIf(configuration.options.contains(.moveBackgroundToScale))
                 .offset(x: offset.x, y: offset.y)
                 .allowsTightening(false)
         }

@@ -49,6 +49,7 @@ public struct ScaleView: View {
                     alignment: alignment,
                     count: secondaryCount,
                     lineWidth: secondaryLine.thickness,
+                    minSpacing: style.minSpace,
                     skipEdges: secondaryLine.skipEdges
                 )
                 .stroke(secondaryLine.color, lineWidth: secondaryLine.thickness)
@@ -63,6 +64,7 @@ public struct ScaleView: View {
                 alignment: alignment,
                 count: count,
                 lineWidth: style.line.thickness,
+                minSpacing: style.minSpace,
                 skipEdges: style.line.skipEdges
             )
             .stroke(style.line.color, lineWidth: style.line.thickness)
