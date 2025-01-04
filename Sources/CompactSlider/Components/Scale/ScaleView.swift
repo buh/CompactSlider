@@ -18,28 +18,32 @@ import SwiftUI
 public struct ScaleView: View {
     let style: ScaleStyle
     let alignment: Axis
+    let startFromCenter: Bool
     let steps: Int
     
     public init(
         style: ScaleStyle = ScaleStyle(),
         alignment: Axis = .horizontal,
+        startFromCenter: Bool = false,
         steps: Int = 0
     ) {
         self.style = style
         self.alignment = alignment
+        self.startFromCenter = startFromCenter
         self.steps = steps == 0 ? 49 : steps
     }
     
     public var body: some View {
         ZStack(alignment: style.alignment) {
-            if let secondaryLine = style.secondaryLine, steps > 30 {
+            if let secondaryLine = style.secondaryLine, steps >= 22 {
                 Scale(
                     alignment: alignment,
                     count: steps,
                     lineWidth: secondaryLine.thickness,
                     minSpacing: style.minSpace,
                     skip: .each(5),
-                    skipEdges: secondaryLine.skipEdges
+                    skipEdges: secondaryLine.skipEdges,
+                    startFromCenter: startFromCenter
                 )
                 .stroke(secondaryLine.color, lineWidth: secondaryLine.thickness)
                 .frame(
@@ -54,8 +58,9 @@ public struct ScaleView: View {
                 count: steps,
                 lineWidth: style.line.thickness,
                 minSpacing: style.minSpace,
-                skip: steps > 30 ? .except(5) : nil,
-                skipEdges: style.line.skipEdges
+                skip: steps >= 22 ? .except(5) : nil,
+                skipEdges: style.line.skipEdges,
+                startFromCenter: startFromCenter
             )
             .stroke(style.line.color, lineWidth: style.line.thickness)
             .frame(

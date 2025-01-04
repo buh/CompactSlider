@@ -24,6 +24,33 @@ public struct ScaleStyle: Equatable {
         self.line = line
         self.secondaryLine = secondaryLine
     }
+    
+    func skipedEdges(_ value: Bool) -> Self {
+        var secondaryLine: Line?
+        
+        if let line = self.secondaryLine {
+            secondaryLine = .init(
+                color: line.color,
+                length: line.length,
+                thickness: line.thickness,
+                skipEdges: value,
+                padding: line.padding
+            )
+        }
+        
+        return ScaleStyle(
+            visibility: visibility,
+            alignment: alignment,
+            line: .init(
+                color: line.color,
+                length: line.length,
+                thickness: line.thickness,
+                skipEdges: value,
+                padding: line.padding
+            ),
+            secondaryLine: secondaryLine
+        )
+    }
 }
 
 public extension ScaleStyle {

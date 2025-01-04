@@ -21,6 +21,7 @@ struct ScaleViewKey: EnvironmentKey {
             ScaleView(
                 style: style,
                 alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
+                startFromCenter: configuration.type.isCenter,
                 steps: configuration.steps
             )
         }

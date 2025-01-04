@@ -13,6 +13,7 @@ struct Scale: Shape {
     var minSpacing: CGFloat = 3
     var skip: Skip? = nil
     var skipEdges: Bool = false
+    var startFromCenter: Bool = false
     
     func path(in rect: CGRect) -> Path {
         Path { path in
@@ -24,7 +25,9 @@ struct Scale: Shape {
             
             guard spacing > minSpacing else { return }
             
-            var offset: CGFloat = 0
+            let startFromCenter = startFromCenter && count % 2 == 0
+            let centerOffset: CGFloat = startFromCenter ? ((spacing + lineWidth) / 2).roundedByPixel() : 0
+            var offset: CGFloat = centerOffset
             var i = 1
             
             while offset <= (isHorizontal ? rect.maxX : rect.maxY) {
@@ -38,8 +41,7 @@ struct Scale: Shape {
                     }
                 }
                 
-                offset = CGFloat(i) * (spacing + lineWidth)
-                offset = (offset * ScreenInfo.scale).rounded(.towardZero) / ScreenInfo.scale
+                offset = centerOffset + (CGFloat(i) * (spacing + lineWidth)).roundedByPixel()
                 i += 1
             }
         }
@@ -79,8 +81,13 @@ extension Scale {
 #Preview {
     VStack {
         Group {
-            Scale(count: 2, lineWidth: 1).stroke(lineWidth: 1)
+            Scale(count: 11, lineWidth: 1, startFromCenter: true).stroke(lineWidth: 1)
+            Scale(count: 12, lineWidth: 1, startFromCenter: true).stroke(lineWidth: 1)
+            Scale(count: 12, lineWidth: 1).stroke(lineWidth: 1)
             Scale(count: 3, lineWidth: 1).stroke(lineWidth: 1)
+            Scale(count: 12, lineWidth: 1, skip: .each(2), startFromCenter: true).stroke(lineWidth: 1)
+            Scale(count: 12, lineWidth: 1, skip: .except(2), startFromCenter: true).stroke(lineWidth: 1)
+            Scale(count: 2, lineWidth: 1).stroke(lineWidth: 1)
             Scale(count: 4, lineWidth: 1).stroke(lineWidth: 1)
             Scale(count: 5, lineWidth: 1).stroke(lineWidth: 1)
             Scale(count: 6, lineWidth: 1).stroke(lineWidth: 1)

@@ -17,3 +17,9 @@ enum ScreenInfo {
     static let scale: Double = 2
     #endif
 }
+
+extension CGFloat {
+    func roundedByPixel() -> Self {
+        (self * ScreenInfo.scale).rounded(.towardZero) / ScreenInfo.scale
+    }
+}

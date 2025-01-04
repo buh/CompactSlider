@@ -23,7 +23,7 @@ struct ScaleContainerView<V: View>: View {
                configuration.type.isHorizontal {
                 HStack(spacing: 0) {
                     scaleView(configuration, scaleStyle)
-                    scaleView(configuration, scaleStyle)
+                    scaleView(configuration, scaleStyle.skipedEdges(true))
                     scaleView(configuration, scaleStyle)
                 }
                 .offset(x: offset.x, y: offset.y)
@@ -36,7 +36,7 @@ struct ScaleContainerView<V: View>: View {
                       configuration.type.isVertical {
                 VStack(spacing: 0) {
                     scaleView(configuration, scaleStyle)
-                    scaleView(configuration, scaleStyle)
+                    scaleView(configuration, scaleStyle.skipedEdges(true))
                     scaleView(configuration, scaleStyle)
                 }
                 .offset(x: offset.x, y: offset.y)

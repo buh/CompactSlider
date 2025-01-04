@@ -116,21 +116,17 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         self.bounds = bounds
         self.step = step
         self.options = options
-        let rangeDistance = Double(bounds.distance)
+        let distance = Double(bounds.distance)
         
-        guard rangeDistance > 0 else {
+        guard distance > 0 else {
             _progress = .init(initialValue: Progress())
             assertionFailure("Bounds distance must be greater than zero")
             return
         }
         
-        let progress = Double(value.wrappedValue - bounds.lowerBound) / rangeDistance
+        let progress = Double(value.wrappedValue - bounds.lowerBound) / distance
         _progress = .init(initialValue: Progress([progress]))
-        
-        if step > 0 {
-            progressStep = Double(step) / rangeDistance
-            steps = Int((rangeDistance / Double(step)).rounded(.towardZero) - 1)
-        }
+        setupSteps()
     }
     
     public init(
@@ -146,24 +142,20 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         self.bounds = bounds
         self.step = step
         self.options = gestureOptions
-        let rangeDistance = Double(bounds.distance)
+        let distance = Double(bounds.distance)
         
-        guard rangeDistance > 0 else {
+        guard distance > 0 else {
             _progress = .init(initialValue: Progress())
             assertionFailure("Bounds distance must be greater than zero")
             return
         }
         
         let progresses = values.wrappedValue.map {
-            Double($0 - bounds.lowerBound) / rangeDistance
+            Double($0 - bounds.lowerBound) / distance
         }
         
         _progress = .init(initialValue: Progress(progresses, isMultipleValues: true))
-        
-        if step > 0 {
-            progressStep = Double(step) / rangeDistance
-            steps = Int((rangeDistance / Double(step)).rounded(.towardZero) - 1)
-        }
+        setupSteps()
     }
     
     /// Creates a slider to select a range of values from a given bounds.
@@ -191,23 +183,25 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         self.step = step
         self.options = gestureOptions
         
-        let rangeDistance = Double(bounds.distance)
+        let distance = Double(bounds.distance)
         
-        guard rangeDistance > 0 else {
+        guard distance > 0 else {
             _progress = .init(initialValue: Progress())
             assertionFailure("Bounds distance must be greater than zero")
             return
         }
         
-        let lowerProgress = Double(lowerValue.wrappedValue - bounds.lowerBound) / rangeDistance
-        let upperProgress = Double(upperValue.wrappedValue - bounds.lowerBound) / rangeDistance
-        
+        let lowerProgress = Double(lowerValue.wrappedValue - bounds.lowerBound) / distance
+        let upperProgress = Double(upperValue.wrappedValue - bounds.lowerBound) / distance
         _progress = .init(initialValue: Progress([lowerProgress, upperProgress]))
+        setupSteps()
+    }
+    
+    private mutating func setupSteps() {
+        guard step > 0 else { return }
         
-        if step > 0 {
-            progressStep = Double(step) / rangeDistance
-            steps = Int((rangeDistance / Double(step)).rounded(.towardZero) - 1)
-        }
+        progressStep = bounds.progressStep(step: step)
+        steps = bounds.steps(step: step)
     }
     
     public var body: some View {
@@ -313,7 +307,7 @@ struct CompactSliderPreview: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var progress: Double = 0.3
-    @State private var degree: Double = 0
+    @State private var degree: Double = 90
     @State private var centerProgress: Double = 5
     @State private var fromProgress: Double = 0.3
     @State private var toProgress: Double = 0.7
@@ -351,7 +345,7 @@ struct CompactSliderPreview: View {
             Group {
                 CompactSlider(
                     value: $degree,
-                    in: 0 ... 355,
+                    in: 0 ... 360,
                     step: 5,
                     options: [.dragGestureMinimumDistance(0), .scrollWheel, .withoutBackground, .loopValues]
                 )
@@ -374,7 +368,7 @@ struct CompactSliderPreview: View {
                 
                 CompactSlider(value: $progress)
                 
-                CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1, options: [.dragGestureMinimumDistance(0), .snapToSteps, .scrollWheel])
+                CompactSlider(value: $centerProgress, in: -19 ... 19, step: 1, options: [.dragGestureMinimumDistance(0), .snapToSteps, .scrollWheel])
                     .compactSliderStyle(default: .horizontal(.center))
                 
                 CompactSlider(value: $progress)
@@ -506,6 +500,9 @@ struct CompactSliderPreview: View {
                             )
                         ))
                     
+                    CompactSlider(value: $progress)
+                        .compactSliderStyle(default: .vertical(.center))
+
                     CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
                         .compactSliderStyle(default: .vertical(
                             .center,

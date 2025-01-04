@@ -37,6 +37,14 @@ public enum CompactSliderType: Equatable {
         }
     }
     
+    public var isCenter: Bool {
+        switch self {
+        case .horizontal(let alignment): return alignment == .center
+        case .vertical(let alignment): return alignment == .center
+        default: return false
+        }
+    }
+    
     public var horizontalAlignment: HorizontalAlignment? {
         if case .horizontal(let alignment) = self {
             return alignment
