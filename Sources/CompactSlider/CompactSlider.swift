@@ -313,6 +313,7 @@ struct CompactSliderPreview: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var progress: Double = 0.3
+    @State private var degree: Double = 0
     @State private var centerProgress: Double = 5
     @State private var fromProgress: Double = 0.3
     @State private var toProgress: Double = 0.7
@@ -349,7 +350,7 @@ struct CompactSliderPreview: View {
             
             Group {
                 CompactSlider(
-                    value: $centerProgress,
+                    value: $degree,
                     in: 0 ... 355,
                     step: 5,
                     options: [.dragGestureMinimumDistance(0), .scrollWheel, .moveBackgroundToScale]
@@ -369,7 +370,7 @@ struct CompactSliderPreview: View {
                 }
                 .horizontalGradientMask()
                 .overlay(
-                    Text("\(Int(centerProgress))º")
+                    Text("\(Int(degree))º")
                         .offset(x: 2, y: -24)
                 )
                 .padding(.top, 12)
@@ -377,7 +378,7 @@ struct CompactSliderPreview: View {
                 
                 CompactSlider(value: $progress)
                 
-                CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1, options: [.scrollWheel])
+                CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1, options: [.dragGestureMinimumDistance(0), .snapToSteps, .scrollWheel])
                     .compactSliderStyle(default: .horizontal(.center))
                 
                 CompactSlider(value: $progress)
@@ -507,7 +508,12 @@ struct CompactSliderPreview: View {
                         .compactSliderStyle(default: .vertical(
                             .center,
                             scaleStyle: .init(
-                                line: .init(length: nil, padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4))
+                                line: .init(length: nil, padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)),
+                                secondaryLine: .init(
+                                    color: Defaults.secondaryScaleLineColor,
+                                    length: nil,
+                                    padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                                )
                             )
                         ))
                     
