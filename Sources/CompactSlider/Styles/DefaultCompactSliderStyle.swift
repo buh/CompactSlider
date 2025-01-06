@@ -26,11 +26,15 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     
     public func makeBody(configuration: Configuration) -> some View {
         ZStack(alignment: .center) {
-            if !configuration.progress.isMultipleValues && !configuration.type.isScrollable {
+            if !configuration.progress.isMultipleValues,
+               !configuration.progress.is2DValue,
+               !configuration.type.isScrollable {
                 CompactSliderStyleProgressView()
             }
             
-            if let scaleStyle, configuration.isScaleVisible(scaleStyle: scaleStyle) {
+            if !configuration.progress.is2DValue,
+               let scaleStyle,
+               configuration.isScaleVisible(scaleStyle: scaleStyle) {
                 CompactSliderStyleScaleView()
             }
             

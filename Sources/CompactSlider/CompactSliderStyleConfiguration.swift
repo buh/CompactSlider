@@ -51,7 +51,7 @@ public extension CompactSliderStyleConfiguration {
             OptionalCGSize(width: size.width)
         case .vertical, .scrollableVertical:
             OptionalCGSize(height: size.height)
-        case .panel:
+        case .grid, .circularGrid:
             OptionalCGSize(width: size.width, height: size.height)
         }
     }
@@ -163,8 +163,17 @@ public extension CompactSliderStyleConfiguration {
             return CGPoint(x: (size.width - handleWidth) / 2, y: 0)
         case .scrollableVertical:
             return CGPoint(x: 0, y: (size.height - handleWidth) / 2)
-        default:
-            return .zero
+        case .grid:
+            return CGPoint(
+                x: (size.width - handleWidth) * progress.progresses[0],
+                y: (size.height - handleWidth) * progress.progresses[1]
+            )
+        case .circularGrid:
+            return CompactSliderPolarPoint(
+                angle: .radians(progress.progresses[0]),
+                radius: progress.progresses[1]
+            )
+            .toCartesian(center: .init(x: size.width / 2, y: size.height / 2))
         }
     }
     
@@ -186,7 +195,7 @@ public extension CompactSliderStyleConfiguration {
 
 public extension CompactSliderStyleConfiguration {
     func isHandleVisible(handleStyle: HandleStyle) -> Bool {
-        if progress.isMultipleValues || type.isScrollable {
+        if progress.isMultipleValues || progress.is2DValue || type.isScrollable {
             return true
         }
         

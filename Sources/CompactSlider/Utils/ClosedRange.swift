@@ -20,3 +20,17 @@ extension ClosedRange where Bound: BinaryFloatingPoint {
         step > 0 ? Int((self.distance / step).rounded()) + 1 : 0
     }
 }
+
+extension ClosedRange where Bound: CompactSliderPoint, Bound.Value: BinaryFloatingPoint {
+    @inlinable
+    var rangeX: ClosedRange<Bound.Value> { lowerBound.x ... upperBound.x }
+    
+    @inlinable
+    var rangeY: ClosedRange<Bound.Value> { lowerBound.y ... upperBound.y }
+    
+    @inlinable
+    var distanceX: Bound.Value { upperBound.x - lowerBound.x }
+    
+    @inlinable
+    var distanceY: Bound.Value { upperBound.y - lowerBound.y }
+}

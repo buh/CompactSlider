@@ -10,17 +10,20 @@ public struct HandleStyle: Equatable {
     let visibility: Visibility
     let color: Color
     let width: CGFloat
+    let lineWidth: CGFloat
     let cornerRadius: CGFloat
     
     public init(
         visibility: Visibility = .handleDefault,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
+        lineWidth: CGFloat = Defaults.handleLineWidth,
         cornerRadius: CGFloat = Defaults.handleCornerRadius
     ) {
         self.visibility = visibility
         self.color = color
         self.width = width
+        self.lineWidth = lineWidth
         self.cornerRadius = cornerRadius
     }
 }

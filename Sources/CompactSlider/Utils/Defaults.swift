@@ -33,6 +33,8 @@ public extension Defaults {
         #endif
     }()
     
+    static let handleLineWidth: CGFloat = 2
+    
     static let handleCornerRadius: CGFloat = {
         #if os(macOS)
         0

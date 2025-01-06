@@ -70,7 +70,7 @@ import SwiftUI
 ///     )
 /// }
 /// ```
-public struct CompactSlider<Value: BinaryFloatingPoint>: View {
+public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoint>: View {
     @Environment(\.isEnabled) var isEnabled
     @Environment(\.layoutDirection) var layoutDirection
     @Environment(\.compactSliderStyle) var compactSliderStyle
@@ -81,10 +81,16 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     let step: Value
     var progressStep: Double = 0
     var steps: Int = 0
+    var pointProgressStep: (x: Double, y: Double) = (0, 0)
+    var pointSteps: (x: Int, y: Int) = (0, 0)
+    
+    let pointBounds: ClosedRange<Point>
+    let pointStep: Point
     
     @Binding var lowerValue: Value
     @Binding var upperValue: Value
     @Binding var values: [Value]
+    @Binding var point: Point
     @State var isValueChangingInternally = false
     @State var progress: Progress
     
@@ -103,18 +109,21 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     ///   - bounds: the range of the valid values. Defaults to 0...1.
     ///   - step: the distance between each valid value.
     ///   - gestureOptions: a set of drag gesture options: minimum drag distance, delayed touch, and high priority.
-    public init(
+    init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
         options: Set<CompactSliderOption> = .default
-    ) {
+    ) where Point == CompactSliderPointValue<Value> {
         _lowerValue = value
         _upperValue = .constant(0)
         _values = .constant([])
+        _point = .constant(.zero)
         
         self.bounds = bounds
         self.step = step
+        self.pointBounds = .zero ... .one
+        self.pointStep = .zero
         self.options = options
         let distance = Double(bounds.distance)
         
@@ -129,18 +138,21 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         setupSteps()
     }
     
-    public init(
+    init(
         values: Binding<[Value]>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
         gestureOptions: Set<CompactSliderOption> = .default
-    ) {
+    ) where Point == CompactSliderPointValue<Value> {
         _lowerValue = .constant(0)
         _upperValue = .constant(0)
         _values = values
+        _point = .constant(.zero)
         
         self.bounds = bounds
         self.step = step
+        self.pointBounds = .zero ... .one
+        self.pointStep = .zero
         self.options = gestureOptions
         let distance = Double(bounds.distance)
         
@@ -169,18 +181,22 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
     ///   - bounds: the range of the valid values. Defaults to 0...1.
     ///   - step: the distance between each valid value.
     ///   - gestureOptions: a set of drag gesture options: minimum drag distance, delayed touch, and high priority.
-    public init(
+    init(
         from lowerValue: Binding<Value>,
         to upperValue: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value = 0,
         gestureOptions: Set<CompactSliderOption> = .default
-    ) {
+    ) where Point == CompactSliderPointValue<Value> {
         _lowerValue = lowerValue
         _upperValue = upperValue
         _values = .constant([])
+        _point = .constant(.zero)
+        
         self.bounds = bounds
         self.step = step
+        self.pointBounds = .zero ... .one
+        self.pointStep = .zero
         self.options = gestureOptions
         
         let distance = Double(bounds.distance)
@@ -197,11 +213,58 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         setupSteps()
     }
     
-    private mutating func setupSteps() {
-        guard step > 0 else { return }
+    init(
+        point: Binding<Point>,
+        in bounds: ClosedRange<Point> = .zero ... .one,
+        step: Point = .zero,
+        gestureOptions: Set<CompactSliderOption> = .default
+    ) where Value == Point.Value {
+        _lowerValue = .constant(0)
+        _upperValue = .constant(0)
+        _values = .constant([])
+        _point = point
         
-        progressStep = bounds.progressStep(step: step)
-        steps = bounds.steps(step: step)
+        self.bounds = 0 ... 1
+        self.step = 0
+        self.pointBounds = bounds
+        self.pointStep = step
+        self.options = gestureOptions
+        
+        let distanceX = Double(bounds.distanceX)
+        let distanceY = Double(bounds.distanceY)
+
+        guard distanceX > 0, distanceY > 0 else {
+            _progress = .init(initialValue: Progress())
+            assertionFailure("Bounds distance must be greater than zero")
+            return
+        }
+        
+        let progresses: [Double] = [
+            Double(point.wrappedValue.x - bounds.lowerBound.x) / distanceX,
+            Double(point.wrappedValue.y - bounds.lowerBound.y) / distanceY,
+        ]
+        
+        _progress = .init(initialValue: Progress(progresses, is2DValue: true))
+        setupSteps(is2DValue: true)
+    }
+    
+    private mutating func setupSteps(is2DValue: Bool = false) {
+        guard is2DValue else {
+            guard step > 0 else { return }
+            
+            progressStep = bounds.progressStep(step: step)
+            steps = bounds.steps(step: step)
+            return
+        }
+        
+        guard pointStep.x > 0, pointStep.y > 0 else { return }
+        
+        pointProgressStep = (
+            x: pointBounds.rangeX.progressStep(step: pointStep.x),
+            y: pointBounds.rangeY.progressStep(step: pointStep.y)
+        )
+        
+        pointSteps = (x: pointBounds.rangeX.steps(step: pointStep.x), y: pointBounds.rangeY.steps(step: pointStep.y))
     }
     
     public var body: some View {
@@ -286,6 +349,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint>: View {
         .onChange(of: lowerValue, perform: onLowerValueChange)
         .onChange(of: upperValue, perform: onUpperValueChange)
         .onChange(of: values, perform: onValuesChange)
+        .onChange(of: point, perform: onValue2DChange)
         .animation(nil, value: lowerValue)
         .animation(nil, value: upperValue)
         .animation(nil, value: values)
@@ -312,13 +376,14 @@ struct CompactSliderPreview: View {
     @State private var fromProgress: Double = 0.3
     @State private var toProgress: Double = 0.7
     @State private var progresses: [Double] = [0.2, 0.5, 0.8]
+    @State private var point = CGPoint(x: 50, y: 50)
     
     var body: some View {
         VStack(spacing: 16) {
             HStack {
                 Spacer()
                 
-                if #available(macOS 12.0, *) {
+                if #available(macOS 12.0, iOS 15, *) {
                     Group {
                         Text("\(progress, format: .percent.precision(.fractionLength(0)))")
                         Text("\(Int(centerProgress))")
@@ -341,6 +406,28 @@ struct CompactSliderPreview: View {
             } label: { EmptyView() }
                 .pickerStyle(.segmented)
                 .padding(.horizontal, 20)
+            
+            ZStack {
+                Group {
+                    CompactSlider(
+                        point: $point,
+                        in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
+                        step: CGPoint(x: 5, y: 5)
+                    )
+                    .compactSliderStyle(default: .init(
+                        type: .grid,
+                        cornerRadius: 16,
+                        handleStyle: .init(width: 6)
+                    ))
+                }
+                .frame(width: 100, height: 100)
+                
+                if #available(macOS 12.0, iOS 15, *) {
+                    Text("\(Int(point.x)) x \(Int(point.y))")
+                        .offset(x: 100)
+                        .monospacedDigit()
+                }
+            }
             
             Group {
                 CompactSlider(

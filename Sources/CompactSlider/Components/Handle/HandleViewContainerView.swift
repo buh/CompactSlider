@@ -23,16 +23,27 @@ struct HandleViewContainerView<V: View>: View {
     }
     
     var body: some View {
-        ForEach(indices, id: \.self) { index in
-            let offset = configuration.handleOffset(at: index, handleWidth: handleStyle.width)
-            
-            handleView(configuration, handleStyle, configuration.progress(at: index), index)
-                .frame(
-                    width: configuration.type.isHorizontal ? handleStyle.width : nil,
-                    height: configuration.type.isVertical ? handleStyle.width : nil
-                )
-                .offset(x: offset.x, y: offset.y)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        Group {
+            if configuration.type == .grid {
+                let offset = configuration.handleOffset(at: 0, handleWidth: handleStyle.width)
+                
+                CircleHandleView(style: handleStyle)
+                    .frame(width: handleStyle.width, height: handleStyle.width)
+                    .offset(x: offset.x, y: offset.y)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            } else {
+                ForEach(indices, id: \.self) { index in
+                    let offset = configuration.handleOffset(at: index, handleWidth: handleStyle.width)
+                    
+                    handleView(configuration, handleStyle, configuration.progress(at: index), index)
+                        .frame(
+                            width: configuration.type.isHorizontal || configuration.type == .grid ? handleStyle.width : nil,
+                            height: configuration.type.isVertical || configuration.type == .grid ? handleStyle.width : nil
+                        )
+                        .offset(x: offset.x, y: offset.y)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                }
+            }
         }
         .allowsHitTesting(false)
     }

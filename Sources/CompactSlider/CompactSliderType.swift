@@ -21,7 +21,8 @@ public enum CompactSliderType: Equatable {
     case vertical(VerticalAlignment)
     case scrollableHorizontal
     case scrollableVertical
-    case panel
+    case grid
+    case circularGrid
     
     public var isHorizontal: Bool {
         switch self {

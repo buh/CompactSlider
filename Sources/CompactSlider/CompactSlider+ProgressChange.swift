@@ -17,7 +17,19 @@ extension CompactSlider {
         }
         
         if progress.isMultipleValues {
-            values = newValue.progresses.map(convertProgressToValue)
+            values = newValue.progresses.map {
+                convertProgressToValue($0)
+            }
+            
+            return
+        }
+        
+        if progress.is2DValue {
+            point = .init(
+                x: newValue.progresses[0].convertPercentageToValue(in: pointBounds.rangeX, step: pointStep.x),
+                y: newValue.progresses[1].convertPercentageToValue(in: pointBounds.rangeY, step: pointStep.y)
+            )
+            
             return
         }
         
@@ -45,6 +57,16 @@ extension CompactSlider {
     func onValuesChange(_ newValues: [Value]) {
         if isValueChangingInternally { return }
         progress.progresses = newValues.map(convertValueToProgress)
+    }
+    
+    func onValue2DChange(_ newValue: Point) {
+        if isValueChangingInternally { return }
+        
+        progress.progresses[0] = newValue.x.convertValueToPercentage(in: pointBounds.rangeX)
+            .clampedOrRotated(withRotaion: options.contains(.loopValues))
+        
+        progress.progresses[1] = newValue.y.convertValueToPercentage(in: pointBounds.rangeY)
+            .clampedOrRotated(withRotaion: options.contains(.loopValues))
     }
     
     func convertValueToProgress(_ value: Value) -> Double {

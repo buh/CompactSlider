@@ -49,6 +49,37 @@ extension CompactSlider {
             }
             
             location = CGPoint(x: 0, y: startDragLocation.y + translationY)
+        } else if type == .grid {
+            print("startDragLocation", startDragLocation, progress.progresses)
+            let locationX = CGPoint(x: startDragLocation.x + translation.width, y: 0)
+            let locationY = CGPoint(x: 0, y: startDragLocation.y + translation.height)
+            
+            print("x, y", locationX, locationY)
+            
+            let progressX = progress(at: locationX, size: size, type: .scrollableHorizontal)
+                .clampedOrRotated(withRotaion: options.contains(.loopValues))
+            
+            let progressY = 1 - progress(at: locationY, size: size, type: .scrollableVertical)
+                .clampedOrRotated(withRotaion: options.contains(.loopValues))
+            
+            print("progress", progressX, progressY)
+            
+            if progressX != progress.progresses[0] || progressY != progress.progresses[1] {
+                if progressX != progress.progresses[0] {
+                    progress.update(progressX, at: 0)
+                }
+                
+                if progressY != progress.progresses[1] {
+                    progress.update(progressY, at: 1)
+                }
+                
+                if progressX == 1 || progressX == 0 || progressY == 1 || progressY == 0 {
+                    HapticFeedback.vibrate(disabledHapticFeedback)
+                }
+            }
+            
+            return
+            
         } else {
             return
         }
@@ -219,6 +250,13 @@ extension CompactSlider {
         type: CompactSliderType,
         isRightToLeft: Bool
     ) -> CGPoint {
+        guard type != .grid else {
+            return CGPoint(
+                x: progressLocation(progress.progresses[0], size: size, type: .scrollableHorizontal).x,
+                y: progressLocation(1 - progress.progresses[1], size: size, type: .scrollableVertical).y
+            )
+        }
+        
         let p: Double
         
         if progress.progresses.count > 1 {
