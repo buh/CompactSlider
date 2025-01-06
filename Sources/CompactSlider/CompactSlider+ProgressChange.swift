@@ -24,7 +24,7 @@ extension CompactSlider {
             return
         }
         
-        if progress.is2DValue {
+        if progress.isGridValues {
             point = .init(
                 x: newValue.progresses[0].convertPercentageToValue(in: pointBounds.rangeX, step: pointStep.x),
                 y: newValue.progresses[1].convertPercentageToValue(in: pointBounds.rangeY, step: pointStep.y)

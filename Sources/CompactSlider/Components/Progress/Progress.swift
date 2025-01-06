@@ -23,13 +23,21 @@ public struct Progress: Equatable {
     public var isRangeValues: Bool { progresses.count == 2 }
     /// True if the slider uses multiple values.
     public let isMultipleValues: Bool
-    /// True if the slider uses multiple values.
-    public let is2DValue: Bool
+    /// True if the slider uses grid values.
+    public let isGridValues: Bool
+    /// True if the slider uses circular grid values.
+    public let isCircularGridValues: Bool
 
-    init(_ progresses: [Double] = [], isMultipleValues: Bool = false, is2DValue: Bool = false) {
+    init(
+        _ progresses: [Double] = [],
+        isMultipleValues: Bool = false,
+        isGridValues: Bool = false,
+        isCircularGridValues: Bool = false
+    ) {
         self.progresses = progresses
         self.isMultipleValues = isMultipleValues
-        self.is2DValue = is2DValue
+        self.isGridValues = isGridValues
+        self.isCircularGridValues = isCircularGridValues
     }
     
     mutating func update(_ progress: Double, at index: Int) {

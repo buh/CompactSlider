@@ -173,7 +173,7 @@ public extension CompactSliderStyleConfiguration {
                 angle: .radians(progress.progresses[0]),
                 radius: progress.progresses[1]
             )
-            .toCartesian(center: .init(x: size.width / 2, y: size.height / 2))
+            .toCartesian(size: size)
         }
     }
     
@@ -195,7 +195,7 @@ public extension CompactSliderStyleConfiguration {
 
 public extension CompactSliderStyleConfiguration {
     func isHandleVisible(handleStyle: HandleStyle) -> Bool {
-        if progress.isMultipleValues || progress.is2DValue || type.isScrollable {
+        if progress.isMultipleValues || progress.isGridValues || type.isScrollable {
             return true
         }
         
