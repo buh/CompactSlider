@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2024 Alexey Bukhtin (github.com/buh).
+// Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
 import SwiftUI
