@@ -59,53 +59,6 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     }
 }
 
-// MARK: - Constructors
-
-public extension DefaultCompactSliderStyle {
-    static func horizontal(
-        _ alignment: HorizontalAlignment = .leading,
-        cornerRadius: CGFloat = Defaults.cornerRadius,
-        handleStyle: HandleStyle = HandleStyle(),
-        scaleStyle: ScaleStyle? = ScaleStyle()
-    ) -> DefaultCompactSliderStyle {
-        .init(
-            type: .horizontal(alignment),
-            cornerRadius: cornerRadius,
-            handleStyle: handleStyle,
-            scaleStyle: scaleStyle
-        )
-    }
-    
-    static func vertical(
-        _ alignment: VerticalAlignment = .top,
-        cornerRadius: CGFloat = Defaults.cornerRadius,
-        handleStyle: HandleStyle = HandleStyle(),
-        scaleStyle: ScaleStyle? = ScaleStyle()
-    ) -> DefaultCompactSliderStyle {
-        .init(
-            type: .vertical(alignment),
-            cornerRadius: cornerRadius,
-            handleStyle: handleStyle,
-            scaleStyle: scaleStyle
-        )
-    }
-    
-    static func scrollable(
-        _ axis: Axis = .horizontal,
-        cornerRadius: CGFloat = Defaults.cornerRadius,
-        handleStyle: HandleStyle = HandleStyle(),
-        scaleStyle: ScaleStyle? = ScaleStyle()
-    ) -> DefaultCompactSliderStyle {
-        .init(
-            type: axis == .horizontal ? .scrollableHorizontal : .scrollableVertical,
-            cornerRadius: cornerRadius,
-            handleStyle: handleStyle,
-            scaleStyle: scaleStyle
-        )
-    }
-    // TODO: Scrollable
-}
-
 private extension View {
     @ViewBuilder
     func clipRoundedShapeIf(cornerRadius: CGFloat) -> some View {
