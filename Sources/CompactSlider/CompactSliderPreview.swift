@@ -58,11 +58,36 @@ struct CompactSliderPreview: View {
                     CompactSlider(
                         point: $point,
                         in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
-                        step: CGPoint(x: 5, y: 5)
+                        step: CGPoint(x: 10, y: 10)
                     )
-                    .compactSliderStyle(default: .grid(
-                        handleStyle: .circle()
-                    ))
+                    .compactSliderStyle(default: .grid())
+                    .compactSliderBackground { configuration in
+                        ZStack {
+                            Circle()
+                                .fill(Color.purple)
+                                .offset(
+                                    x: configuration.handleOffset(at: 0, handleWidth: 0).x - 40,
+                                    y: configuration.handleOffset(at: 0, handleWidth: 0).y - 40
+                                )
+                                .frame(width: 30, height: 30)
+                                .blur(radius: 10)
+                            
+                            Rectangle()
+                                .fill(Color.purple)
+                                .offset(x: configuration.handleOffset(at: 0, handleWidth: 0).x - 40)
+                                .frame(width: 1)
+                            
+                            Rectangle()
+                                .fill(Color.purple)
+                                .offset(y: configuration.handleOffset(at: 0, handleWidth: 0).y - 40)
+                                .frame(height: 1)
+
+                            if #available(macOS 12.0, *) {
+                                Grid(countX: 11, countY: 11, holeRadius: 1, padding: .all(9))
+                                    .fill(.ultraThinMaterial, style: .init(eoFill: true))
+                            }
+                        }
+                    }
                     .frame(width: 100, height: 100)
                     
                     if #available(macOS 12.0, iOS 15, *) {

@@ -27,7 +27,7 @@ struct HandleViewContainerView<V: View>: View {
             if configuration.type == .grid {
                 let offset = configuration.handleOffset(at: 0, handleWidth: handleStyle.width)
                 
-                CircleHandleView(style: handleStyle)
+                handleView(configuration, handleStyle, configuration.progress(at: 0), 0)
                     .frame(width: handleStyle.width, height: handleStyle.width)
                     .offset(x: offset.x, y: offset.y)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)

@@ -13,12 +13,21 @@ public struct HandleView: View {
     }
     
     public var body: some View {
-        if style.cornerRadius > 0 {
-            RoundedRectangle(cornerRadius: style.cornerRadius)
-                .fill(style.color)
-        } else {
+        switch style.type {
+        case .rectangle:
             Rectangle()
                 .fill(style.color)
+        case .roundedRectangle:
+            RoundedRectangle(cornerRadius: style.cornerRadius)
+                .fill(style.color)
+        case .circle:
+            if style.lineWidth > 0 {
+                Circle()
+                    .stroke(style.color, lineWidth: style.lineWidth)
+            } else {
+                Circle()
+                    .fill(style.color)
+            }
         }
     }
 }
