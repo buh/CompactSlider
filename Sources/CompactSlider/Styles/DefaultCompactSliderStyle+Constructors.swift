@@ -8,7 +8,7 @@ import SwiftUI
 public extension DefaultCompactSliderStyle {
     static func horizontal(
         _ alignment: HorizontalAlignment = .leading,
-        handleStyle: HandleStyle = HandleStyle(),
+        handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
@@ -24,7 +24,7 @@ public extension DefaultCompactSliderStyle {
     
     static func vertical(
         _ alignment: VerticalAlignment = .top,
-        handleStyle: HandleStyle = HandleStyle(),
+        handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
@@ -40,7 +40,7 @@ public extension DefaultCompactSliderStyle {
     
     static func scrollable(
         _ axis: Axis = .horizontal,
-        handleStyle: HandleStyle = HandleStyle(),
+        handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
@@ -55,7 +55,7 @@ public extension DefaultCompactSliderStyle {
     }
     
     static func grid(
-        handleStyle: HandleStyle = HandleStyle(),
+        handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
         cornerRadius: CGFloat = Defaults.gridCornerRadius,
         padding: EdgeInsets = .all(Defaults.gridCornerRadius / 2)
@@ -70,7 +70,7 @@ public extension DefaultCompactSliderStyle {
     }
     
     static func circularGrid(
-        handleStyle: HandleStyle = HandleStyle(),
+        handleStyle: HandleStyle = .circle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {

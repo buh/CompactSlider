@@ -16,7 +16,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
 
     public init(
         type: CompactSliderType = .horizontal(.leading),
-        handleStyle: HandleStyle = HandleStyle(),
+        handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero

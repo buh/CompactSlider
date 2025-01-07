@@ -61,7 +61,7 @@ struct CompactSliderPreview: View {
                         step: CGPoint(x: 5, y: 5)
                     )
                     .compactSliderStyle(default: .grid(
-                        handleStyle: .init(width: 6)
+                        handleStyle: .circle()
                     ))
                     .frame(width: 100, height: 100)
                     
@@ -114,7 +114,7 @@ struct CompactSliderPreview: View {
                     options: [.dragGestureMinimumDistance(0), .scrollWheel, .withoutBackground, .loopValues]
                 )
                 .compactSliderStyle(default: .scrollable(
-                    handleStyle: .init(width: 1, cornerRadius: 0),
+                    handleStyle: .rectangle(),
                     scaleStyle: .init(
                         alignment: .bottom,
                         line: .init(length: 16, skipEdges: false),
@@ -142,7 +142,7 @@ struct CompactSliderPreview: View {
                 
                 CompactSlider(from: $fromProgress, to: $toProgress)
                     .compactSliderStyle(default: .horizontal(
-                        handleStyle: .init(visibility: .always, width: 30),
+                        handleStyle: HandleStyle.rectangle(visibility: .always, width: 30),
                         scaleStyle: nil,
                         cornerRadius: 0
                     ))
@@ -172,11 +172,10 @@ struct CompactSliderPreview: View {
                 CompactSlider(values: $progresses)
                     .compactSliderHandle { _, style, progress, _ in
                         HandleView(
-                            style: .init(
+                            style: .rectangle(
                                 visibility: .always,
                                 color: Color(hue: progress, saturation: 0.8, brightness: 0.8),
-                                width: style.width,
-                                cornerRadius: 0
+                                width: style.width
                             )
                         )
                         .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
@@ -212,7 +211,6 @@ struct CompactSliderPreview: View {
                     )
                     .compactSliderStyle(default: .scrollable(
                         .vertical,
-                        handleStyle: .init(width: 2),
                         scaleStyle: .init(
                             line: .init(
                                 length: nil,
@@ -233,7 +231,6 @@ struct CompactSliderPreview: View {
                     CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
                         .compactSliderStyle(default: .scrollable(
                             .vertical,
-                            handleStyle: .init(width: 2),
                             scaleStyle: .init(
                                 line: .init(
                                     length: nil,
@@ -293,7 +290,7 @@ struct CompactSliderPreview: View {
                     
                     CompactSlider(from: $fromProgress, to: $toProgress)
                         .compactSliderStyle(default: .vertical(
-                            handleStyle: .init(visibility: .always, width: 30),
+                            handleStyle: HandleStyle.rectangle(visibility: .always, width: 30),
                             scaleStyle: nil,
                             cornerRadius: 0
                         ))
@@ -333,11 +330,10 @@ struct CompactSliderPreview: View {
                         ))
                         .compactSliderHandle { _, style, progress, _ in
                             HandleView(
-                                style: .init(
+                                style: .rectangle(
                                     visibility: .always,
                                     color: Color(hue: progress, saturation: 0.8, brightness: 0.8),
-                                    width: style.width,
-                                    cornerRadius: 0
+                                    width: style.width
                                 )
                             )
                             .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)

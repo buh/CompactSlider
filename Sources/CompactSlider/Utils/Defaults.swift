@@ -35,6 +35,7 @@ public extension Defaults {
         #endif
     }()
     
+    static let circleHandleRadius: CGFloat = 4
     static let handleLineWidth: CGFloat = 2
     
     static let handleCornerRadius: CGFloat = {
