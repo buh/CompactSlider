@@ -23,6 +23,8 @@ public extension Defaults {
         #endif
     }()
     
+    static let gridCornerRadius: CGFloat = 20
+    
     // MARK: - Handle
     
     static let handleWidth: CGFloat = {

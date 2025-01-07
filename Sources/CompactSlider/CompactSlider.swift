@@ -322,11 +322,16 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     
     public var body: some View {
         GeometryReader { proxy in
+            let size = CGSize(
+                width: proxy.size.width - compactSliderStyle.padding.leading - compactSliderStyle.padding.trailing,
+                height: proxy.size.height - compactSliderStyle.padding.top - compactSliderStyle.padding.bottom
+            )
+            
             compactSliderStyle
                 .makeBody(
                     configuration: CompactSliderStyleConfiguration(
                         type: compactSliderStyle.type,
-                        size: proxy.size,
+                        size: size,
                         focusState: .init(isHovering: isHovering, isDragging: isDragging),
                         progress: progress,
                         steps: steps,
@@ -341,7 +346,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                         if startDragLocation == nil {
                             startDragLocation = nearestProgressLocation(
                                 at: $0.startLocation,
-                                size: proxy.size,
+                                size: size,
                                 type: compactSliderStyle.type,
                                 isRightToLeft: layoutDirection == .rightToLeft
                             )
@@ -349,7 +354,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                         
                         onDragLocationChange(
                             translation: $0.translation,
-                            size: proxy.size,
+                            size: size,
                             type: compactSliderStyle.type,
                             isEnded: false,
                             isRightToLeft: layoutDirection == .rightToLeft

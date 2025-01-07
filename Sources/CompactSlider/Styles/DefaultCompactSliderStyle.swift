@@ -8,20 +8,24 @@ import SwiftUI
 /// The default slider style.
 public struct DefaultCompactSliderStyle: CompactSliderStyle {
     public let type: CompactSliderType
-    let cornerRadius: CGFloat
+    public let padding: EdgeInsets
+    
     let handleStyle: HandleStyle
     let scaleStyle: ScaleStyle?
-    
+    let cornerRadius: CGFloat
+
     public init(
         type: CompactSliderType = .horizontal(.leading),
-        cornerRadius: CGFloat = Defaults.cornerRadius,
         handleStyle: HandleStyle = HandleStyle(),
-        scaleStyle: ScaleStyle? = ScaleStyle()
+        scaleStyle: ScaleStyle? = ScaleStyle(),
+        cornerRadius: CGFloat = Defaults.cornerRadius,
+        padding: EdgeInsets = .zero
     ) {
         self.type = type
-        self.cornerRadius = cornerRadius
         self.handleStyle = handleStyle
         self.scaleStyle = scaleStyle
+        self.cornerRadius = cornerRadius
+        self.padding = padding
     }
     
     public func makeBody(configuration: Configuration) -> some View {
@@ -46,13 +50,14 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                 }
             }
         }
+        .padding(padding)
         .backgroundIf(
             !configuration.options.contains(.moveBackgroundToScale)
             && !configuration.options.contains(.withoutBackground)
         )
         .compositingGroup()
         .contentShape(Rectangle())
-        .clipRoundedShapeIf(cornerRadius: cornerRadius)
+        .clipRoundedShapeIf(type: type, cornerRadius: cornerRadius)
         .environment(\.compactSliderStyleConfiguration, configuration)
         .environment(\.handleStyle, handleStyle)
         .environment(\.scaleStyle, scaleStyle)
@@ -61,8 +66,10 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
 
 private extension View {
     @ViewBuilder
-    func clipRoundedShapeIf(cornerRadius: CGFloat) -> some View {
-        if cornerRadius > 0 {
+    func clipRoundedShapeIf(type: CompactSliderType, cornerRadius: CGFloat) -> some View {
+        if type == .circularGrid {
+            clipShape(Circle())
+        } else if cornerRadius > 0 {
             clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         } else {
             clipShape(Rectangle())

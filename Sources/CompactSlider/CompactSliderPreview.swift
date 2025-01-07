@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
+#if DEBUG
 import SwiftUI
 
-#if DEBUG
 #Preview {
     CompactSliderPreview()
         #if os(macOS)
@@ -53,25 +53,57 @@ struct CompactSliderPreview: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal, 20)
             
-            ZStack {
-                Group {
+            HStack(spacing: 20) {
+                ZStack {
                     CompactSlider(
                         point: $point,
                         in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
                         step: CGPoint(x: 5, y: 5)
                     )
                     .compactSliderStyle(default: .grid(
-                        cornerRadius: 16,
                         handleStyle: .init(width: 6)
                     ))
+                    .frame(width: 100, height: 100)
+                    
+                    if #available(macOS 12.0, iOS 15, *) {
+                        Text("\(Int(point.x)) x \(Int(point.y))")
+                            .monospacedDigit()
+                            .offset(x: -90)
+                    }
                 }
-                .frame(width: 100, height: 100)
                 
-                if #available(macOS 12.0, iOS 15, *) {
-                    Text("\(Int(point.x)) x \(Int(point.y))")
-                        .offset(x: 100)
-                        .monospacedDigit()
-                }
+//                ZStack {
+//                    Circle()
+//                        .fill(
+//                            AngularGradient(
+//                                colors: [
+//                                    Color(hue: 0, saturation: 0.8, brightness: 1),
+//                                    Color(hue: 0.2, saturation: 0.8, brightness: 1),
+//                                    Color(hue: 0.4, saturation: 0.8, brightness: 1),
+//                                    Color(hue: 0.6, saturation: 0.8, brightness: 1),
+//                                    Color(hue: 0.8, saturation: 0.8, brightness: 1),
+//                                    Color(hue: 1, saturation: 0.8, brightness: 1),
+//                                ],
+//                                center: .center
+//                            )
+//                        )
+//                    
+//                    Circle()
+//                        .fill(
+//                            RadialGradient(
+//                                colors: [.black, .black.opacity(0)],
+//                                center: .center,
+//                                startRadius: 25,
+//                                endRadius: 80
+//                            )
+//                        )
+//                    
+//                    Circle()
+//                        .stroke(Color.secondary, lineWidth: 1)
+//                }
+//                .compositingGroup()
+//                .opacity(0.8)
+//                .frame(width: 100, height: 100)
             }
             
             Group {
@@ -82,13 +114,13 @@ struct CompactSliderPreview: View {
                     options: [.dragGestureMinimumDistance(0), .scrollWheel, .withoutBackground, .loopValues]
                 )
                 .compactSliderStyle(default: .scrollable(
-                    cornerRadius: 0,
                     handleStyle: .init(width: 1, cornerRadius: 0),
                     scaleStyle: .init(
                         alignment: .bottom,
                         line: .init(length: 16, skipEdges: false),
                         secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
-                    )
+                    ),
+                    cornerRadius: 0
                 ))
                 .horizontalGradientMask()
                 .overlay(
@@ -110,9 +142,9 @@ struct CompactSliderPreview: View {
                 
                 CompactSlider(from: $fromProgress, to: $toProgress)
                     .compactSliderStyle(default: .horizontal(
-                        cornerRadius: 0,
                         handleStyle: .init(visibility: .always, width: 30),
-                        scaleStyle: nil
+                        scaleStyle: nil,
+                        cornerRadius: 0
                     ))
                     .compactSliderProgress { _ in
                         Capsule()
@@ -180,21 +212,21 @@ struct CompactSliderPreview: View {
                     )
                     .compactSliderStyle(default: .scrollable(
                         .vertical,
-                        cornerRadius: 0,
                         handleStyle: .init(width: 2),
                         scaleStyle: .init(
                             line: .init(
                                 length: nil,
                                 skipEdges: false,
-                                padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                padding: .horizontal(4)
                             ),
                             secondaryLine: .init(
                                 color: Defaults.secondaryScaleLineColor,
                                 length: nil,
                                 skipEdges: false,
-                                padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                                padding: .horizontal(8)
                             )
-                        )
+                        ),
+                        cornerRadius: 0
                     ))
                     .verticalGradientMask()
                     
@@ -205,12 +237,12 @@ struct CompactSliderPreview: View {
                             scaleStyle: .init(
                                 line: .init(
                                     length: nil,
-                                    padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                                    padding: .horizontal(8)
                                 ),
                                 secondaryLine: .init(
                                     color: Defaults.secondaryScaleLineColor,
                                     length: nil,
-                                    padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                                    padding: .horizontal(8)
                                 )
                             )
                         ))
@@ -222,12 +254,12 @@ struct CompactSliderPreview: View {
                             scaleStyle: .init(
                                 line: .init(
                                     length: nil,
-                                    padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                    padding: .horizontal(4)
                                 ),
                                 secondaryLine: .init(
                                     color: Defaults.secondaryScaleLineColor,
                                     length: nil,
-                                    padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                    padding: .horizontal(4)
                                 )
                             )
                         ))
@@ -239,11 +271,11 @@ struct CompactSliderPreview: View {
                         .compactSliderStyle(default: .vertical(
                             .center,
                             scaleStyle: .init(
-                                line: .init(length: nil, padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)),
+                                line: .init(length: nil, padding: .horizontal(4)),
                                 secondaryLine: .init(
                                     color: Defaults.secondaryScaleLineColor,
                                     length: nil,
-                                    padding: .init(top: 0, leading: 8, bottom: 0, trailing: 8)
+                                    padding: .horizontal(8)
                                 )
                             )
                         ))
@@ -261,9 +293,9 @@ struct CompactSliderPreview: View {
                     
                     CompactSlider(from: $fromProgress, to: $toProgress)
                         .compactSliderStyle(default: .vertical(
-                            cornerRadius: 0,
                             handleStyle: .init(visibility: .always, width: 30),
-                            scaleStyle: nil
+                            scaleStyle: nil,
+                            cornerRadius: 0
                         ))
                         .compactSliderProgress { _ in
                             Capsule()
@@ -294,7 +326,7 @@ struct CompactSliderPreview: View {
                                 line: .init(
                                     color: Defaults.label.opacity(0.2),
                                     length: nil,
-                                    padding: .init(top: 0, leading: 4, bottom: 0, trailing: 4)
+                                    padding: .horizontal(4)
                                 ),
                                 secondaryLine: nil
                             )
