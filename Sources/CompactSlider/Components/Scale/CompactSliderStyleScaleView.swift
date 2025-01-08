@@ -22,7 +22,7 @@ struct ScaleViewKey: EnvironmentKey {
                 style: style,
                 alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
                 startFromCenter: configuration.type.isCenter,
-                steps: configuration.steps
+                steps: configuration.step?.linearSteps ?? 0
             )
         }
         .anyView()

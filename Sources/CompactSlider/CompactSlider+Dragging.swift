@@ -92,7 +92,7 @@ extension CompactSlider {
         let newValue = newValue.clampedOrRotated(withRotaion: options.contains(.loopValues))
         let progressAndIndex = nearestProgress(for: newValue)
         
-        guard progressStep > 0 else {
+        guard let step else {
             if progressAndIndex.progress != newValue {
                 progress.update(newValue, at: progressAndIndex.index)
                 
@@ -112,7 +112,7 @@ extension CompactSlider {
             return
         }
         
-        let roundedValue = newValue.rounded(toStep: progressStep)
+        let roundedValue = newValue.rounded(toStep: step.linearProgressStep)
         
         if progressAndIndex.progress != roundedValue {
             progress.update(roundedValue, at: progressAndIndex.index)
@@ -152,8 +152,9 @@ extension CompactSlider {
                 return
             }
             
-            if steps > 0, options.contains(.snapToSteps) {
-                var deltaProgressStep = (event.delta.x.sign == .minus ? -progressStep : progressStep)
+            if let step, options.contains(.snapToSteps) {
+                var deltaProgressStep = (event.delta.x.sign == .minus
+                                         ? -step.linearProgressStep : step.linearProgressStep)
                 
                 if isRightToLeft {
                     deltaProgressStep = -deltaProgressStep
@@ -193,8 +194,8 @@ extension CompactSlider {
                 return
             }
             
-            if steps > 0, options.contains(.snapToSteps) {
-                let deltaProgressStep = (event.delta.y.sign == .minus ? -1 : 1) * progressStep
+            if let step, options.contains(.snapToSteps) {
+                let deltaProgressStep = (event.delta.y.sign == .minus ? -1 : 1) * step.linearProgressStep
                 
                 if case .vertical(.bottom) = type {
                     newProgress = currentProgress - deltaProgressStep

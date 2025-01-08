@@ -61,7 +61,7 @@ public struct Grid: Shape {
                         height: size
                     )
                     
-                    if type == .square {
+                    if type == .circle {
                         path.addEllipse(in: rect)
                     } else {
                         path.addRect(rect)

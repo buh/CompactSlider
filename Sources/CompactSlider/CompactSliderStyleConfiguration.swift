@@ -15,9 +15,8 @@ public struct CompactSliderStyleConfiguration: Equatable {
     public let focusState: FocusState
     /// Progress values represents the position of the selected value within bounds, mapped into 0...1.
     public let progress: Progress
-    /// Explicit amount of steps to snap the value.
-    public let steps: Int
-    /// Options.
+    public let step: CompactSliderStep?
+    /// Slider options.
     public let options: Set<CompactSliderOption>
     
     public func progress(at index: Int) -> Double {
@@ -249,7 +248,7 @@ struct CompactSliderStyleConfigurationKey: EnvironmentKey {
         size: .zero,
         focusState: .init(isHovering: false, isDragging: false),
         progress: Progress(),
-        steps: 0,
+        step: nil,
         options: []
     )
 }

@@ -77,26 +77,16 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.compactSliderDisabledHapticFeedback) var disabledHapticFeedback
     
     let bounds: ClosedRange<Value>
-    var progressStep: Double = 0
-    let step: Value
-    
     let pointBounds: ClosedRange<Point>
-    let pointStep: Point
-    var pointProgressStep: (x: Double, y: Double) = (0, 0)
-    var pointSteps: (x: Int, y: Int) = (0, 0)
-    
-    let polarPointStep: CompactSliderPolarPoint
-    var polarPointProgressStep: (angle: Angle, radius: Double) = (Angle.zero, 0)
-    var polarPointSteps: (angle: Int, radius: Int) = (0, 0)
-    
+    let step: CompactSliderStep?
     let options: Set<CompactSliderOption>
-    var steps: Int = 0
     
     @Binding var lowerValue: Value
     @Binding var upperValue: Value
     @Binding var values: [Value]
     @Binding var point: Point
     @Binding var polarPoint: CompactSliderPolarPoint
+    
     @State var isValueChangingInternally = false
     @State var progress: Progress
     
@@ -128,11 +118,9 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         _polarPoint = .constant(.zero)
         
         self.bounds = bounds
-        self.step = step
         self.pointBounds = .zero ... .one
-        self.pointStep = .zero
+        self.step = CompactSliderStep(bounds: bounds, step: step)
         self.options = options
-        self.polarPointStep = .zero
         let distance = Double(bounds.distance)
         
         guard distance > 0 else {
@@ -143,7 +131,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         
         let progress = Double(value.wrappedValue - bounds.lowerBound) / distance
         _progress = .init(initialValue: Progress([progress]))
-        setupSteps()
     }
     
     public init(
@@ -159,10 +146,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         _polarPoint = .constant(.zero)
         
         self.bounds = bounds
-        self.step = step
         self.pointBounds = .zero ... .one
-        self.pointStep = .zero
-        self.polarPointStep = .zero
+        self.step = CompactSliderStep(bounds: bounds, step: step)
         self.options = gestureOptions
         let distance = Double(bounds.distance)
         
@@ -177,7 +162,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         }
         
         _progress = .init(initialValue: Progress(progresses, isMultipleValues: true))
-        setupSteps()
     }
     
     /// Creates a slider to select a range of values from a given bounds.
@@ -205,10 +189,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         _polarPoint = .constant(.zero)
         
         self.bounds = bounds
-        self.step = step
         self.pointBounds = .zero ... .one
-        self.pointStep = .zero
-        self.polarPointStep = .zero
+        self.step = CompactSliderStep(bounds: bounds, step: step)
         self.options = gestureOptions
         
         let distance = Double(bounds.distance)
@@ -222,7 +204,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         let lowerProgress = Double(lowerValue.wrappedValue - bounds.lowerBound) / distance
         let upperProgress = Double(upperValue.wrappedValue - bounds.lowerBound) / distance
         _progress = .init(initialValue: Progress([lowerProgress, upperProgress]))
-        setupSteps()
     }
     
     public init(
@@ -238,10 +219,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         _polarPoint = .constant(.zero)
         
         self.bounds = 0 ... 1
-        self.step = 0
         self.pointBounds = bounds
-        self.pointStep = step
-        self.polarPointStep = .zero
+        self.step = CompactSliderStep(bounds: bounds, pointStep: step)
         self.options = gestureOptions
         
         let distanceX = Double(bounds.distanceX)
@@ -259,7 +238,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         ]
         
         _progress = .init(initialValue: Progress(progresses, isGridValues: true))
-        setupSteps(isGridValues: true)
     }
     
     public init(
@@ -274,50 +252,12 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         _polarPoint = polarPoint
         
         self.bounds = 0 ... 1
-        self.step = 0
         self.pointBounds = .zero ... .one
-        self.pointStep = .zero
-        self.polarPointStep = step
+        self.step = CompactSliderStep(polarPointStep: step)
         self.options = gestureOptions
         
         let progresses: [Double] = [polarPoint.wrappedValue.angle.radians, polarPoint.wrappedValue.radius]
         _progress = .init(initialValue: Progress(progresses, isCircularGridValues: true))
-        
-        // Setup polar point steps.
-        if step != .zero {
-            polarPointProgressStep = (
-                angle: Angle(degrees: step.angle.degrees / 360.0),
-                radius: step.radius
-            )
-            
-            if polarPointProgressStep.angle.degrees > 0, polarPointProgressStep.radius > 0 {
-                polarPointSteps = (
-                    angle: Int((360.0 / polarPointProgressStep.angle.degrees).rounded()) + 1,
-                    radius: Int((1.0 / polarPointProgressStep.radius).rounded()) + 1
-                )
-            } else {
-                polarPointProgressStep = (Angle.zero, 0)
-            }
-        }
-    }
-    
-    private mutating func setupSteps(isGridValues: Bool = false) {
-        guard isGridValues else {
-            guard step > 0 else { return }
-            
-            progressStep = bounds.progressStep(step: step)
-            steps = bounds.steps(step: step)
-            return
-        }
-        
-        guard pointStep.x > 0, pointStep.y > 0 else { return }
-        
-        pointProgressStep = (
-            x: pointBounds.rangeX.progressStep(step: pointStep.x),
-            y: pointBounds.rangeY.progressStep(step: pointStep.y)
-        )
-        
-        pointSteps = (x: pointBounds.rangeX.steps(step: pointStep.x), y: pointBounds.rangeY.steps(step: pointStep.y))
     }
     
     public var body: some View {
@@ -334,7 +274,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                         size: size,
                         focusState: .init(isHovering: isHovering, isDragging: isDragging),
                         progress: progress,
-                        steps: steps,
+                        step: step,
                         options: options
                     )
                 )
@@ -361,7 +301,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                         )
                     },
                     onEnded: {
-                        if steps > 0, !options.contains(.snapToSteps) {
+                        if step != nil, !options.contains(.snapToSteps) {
                             onDragLocationChange(
                                 translation: $0.translation,
                                 size: proxy.size,

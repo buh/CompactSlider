@@ -66,7 +66,7 @@ struct CompactSliderPreview: View {
                             Defaults.backgroundColor.opacity(0.1)
                             
                             Circle()
-                                .fill(Color.purple)
+                                .fill(Color.accentColor)
                                 .offset(
                                     x: configuration.handleOffset(at: 0, handleWidth: 8).x
                                         - configuration.size.width / 2 + 4,
@@ -74,10 +74,10 @@ struct CompactSliderPreview: View {
                                         - configuration.size.height / 2 + 4
                                 )
                                 .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
-                                .blur(radius: 15)
+                                .blur(radius: 25)
                             
                             Rectangle()
-                                .fill(Color.purple.opacity(0.2))
+                                .fill(Color.accentColor.opacity(0.2))
                                 .offset(
                                     x: (
                                         configuration.handleOffset(at: 0, handleWidth: 8).x
@@ -87,7 +87,7 @@ struct CompactSliderPreview: View {
                                 .frame(width: 4)
                             
                             Rectangle()
-                                .fill(Color.purple.opacity(0.2))
+                                .fill(Color.accentColor.opacity(0.2))
                                 .offset(
                                     y: (
                                         configuration.handleOffset(at: 0, handleWidth: 8).y

@@ -26,8 +26,14 @@ extension CompactSlider {
         
         if progress.isGridValues {
             point = .init(
-                x: newValue.progresses[0].convertPercentageToValue(in: pointBounds.rangeX, step: pointStep.x),
-                y: newValue.progresses[1].convertPercentageToValue(in: pointBounds.rangeY, step: pointStep.y)
+                x: newValue.progresses[0].convertPercentageToValue(
+                    in: pointBounds.rangeX,
+                    step: step?.pointStep().x ?? 0.0
+                ),
+                y: newValue.progresses[1].convertPercentageToValue(
+                    in: pointBounds.rangeY,
+                    step: step?.pointStep().y ?? 0.0
+                )
             )
             
             return
@@ -41,7 +47,7 @@ extension CompactSlider {
     }
     
     func convertProgressToValue(_ newValue: Double) -> Value {
-        newValue.convertPercentageToValue(in: bounds, step: step)
+        newValue.convertPercentageToValue(in: bounds, step: step?.linearStep() ?? 0.0)
     }
     
     func onLowerValueChange(_ newValue: Value) {
