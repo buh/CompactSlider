@@ -5,22 +5,47 @@
 
 import SwiftUI
 
+public enum GridType: Equatable, Sendable {
+    case square
+    case circle
+}
+
 public struct Grid: Shape {
+    let type: GridType
     let countX: Int
     let countY: Int
-    let holeRadius: CGFloat
-    var padding: EdgeInsets = .zero
+    let size: CGFloat
+    let padding: EdgeInsets
+    let inverse: Bool
+    
+    public init(
+        type: GridType = .circle,
+        countX: Int,
+        countY: Int,
+        size: CGFloat,
+        padding: EdgeInsets = .zero,
+        inverse: Bool = false
+    ) {
+        self.type = type
+        self.countX = countX
+        self.countY = countY
+        self.size = size
+        self.padding = padding
+        self.inverse = inverse
+    }
     
     public func path(in rect: CGRect) -> Path {
         Path { path in
-            path.addRect(rect)
+            if inverse {
+                path.addRect(rect)
+            }
             
             let paddingX: CGFloat = (
-                rect.width - padding.leading - padding.trailing - CGFloat(countX) * 2 * holeRadius
+                rect.width - padding.leading - padding.trailing - CGFloat(countX) * size
             ) / CGFloat(countX + 1)
             
             let paddingY: CGFloat = (
-                rect.height - padding.top - padding.bottom - CGFloat(countY) * 2 * holeRadius
+                rect.height - padding.top - padding.bottom - CGFloat(countY) * size
             ) / CGFloat(countY + 1)
             
             guard paddingX > 0 && paddingY > 0 else {
@@ -30,13 +55,17 @@ public struct Grid: Shape {
             for x in 0 ..< countX {
                 for y in 0 ..< countY {
                     let rect = CGRect(
-                        x: padding.leading + paddingX + CGFloat(x) * (2 * holeRadius + paddingX),
-                        y: padding.top + paddingY + CGFloat(y) * (2 * holeRadius + paddingY),
-                        width: 2 * holeRadius,
-                        height: 2 * holeRadius
+                        x: padding.leading + paddingX + CGFloat(x) * (size + paddingX),
+                        y: padding.top + paddingY + CGFloat(y) * (size + paddingY),
+                        width: size,
+                        height: size
                     )
                     
-                    path.addEllipse(in: rect)
+                    if type == .square {
+                        path.addEllipse(in: rect)
+                    } else {
+                        path.addRect(rect)
+                    }
                 }
             }
         }
@@ -44,17 +73,23 @@ public struct Grid: Shape {
 }
 
 #Preview {
-    ZStack {
-        Grid(countX: 10, countY: 10, holeRadius: 5, padding: .all(10))
+    VStack {
+        Grid(countX: 10, countY: 10, size: 10, padding: .all(10), inverse: true)
             .fill(
                 LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing),
                 style: .init(eoFill: true)
             )
             .frame(width: 200, height: 200)
+        
+        Grid(countX: 10, countY: 10, size: 10, padding: .all(10))
+            .fill(
+                LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing)
+            )
+            .frame(width: 200, height: 200)
     }
     .background(Defaults.backgroundColor)
     .padding(20)
-#if os(macOS)
+    #if os(macOS)
     .frame(width: 400, height: 800, alignment: .top)
-#endif
+    #endif
 }

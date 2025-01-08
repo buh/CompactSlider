@@ -63,37 +63,51 @@ struct CompactSliderPreview: View {
                     .compactSliderStyle(default: .grid())
                     .compactSliderBackground { configuration in
                         ZStack {
+                            Defaults.backgroundColor.opacity(0.1)
+                            
                             Circle()
                                 .fill(Color.purple)
                                 .offset(
-                                    x: configuration.handleOffset(at: 0, handleWidth: 0).x - 40,
-                                    y: configuration.handleOffset(at: 0, handleWidth: 0).y - 40
+                                    x: configuration.handleOffset(at: 0, handleWidth: 8).x
+                                        - configuration.size.width / 2 + 4,
+                                    y: configuration.handleOffset(at: 0, handleWidth: 8).y
+                                        - configuration.size.height / 2 + 4
                                 )
-                                .frame(width: 30, height: 30)
-                                .blur(radius: 10)
+                                .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
+                                .blur(radius: 15)
                             
                             Rectangle()
-                                .fill(Color.purple)
-                                .offset(x: configuration.handleOffset(at: 0, handleWidth: 0).x - 40)
-                                .frame(width: 1)
+                                .fill(Color.purple.opacity(0.2))
+                                .offset(
+                                    x: (
+                                        configuration.handleOffset(at: 0, handleWidth: 8).x
+                                        - configuration.size.width / 2 + 4
+                                    ).rounded(toStep: 6.1)
+                                )
+                                .frame(width: 4)
                             
                             Rectangle()
-                                .fill(Color.purple)
-                                .offset(y: configuration.handleOffset(at: 0, handleWidth: 0).y - 40)
-                                .frame(height: 1)
-
-                            if #available(macOS 12.0, *) {
-                                Grid(countX: 11, countY: 11, holeRadius: 1, padding: .all(9))
+                                .fill(Color.purple.opacity(0.2))
+                                .offset(
+                                    y: (
+                                        configuration.handleOffset(at: 0, handleWidth: 8).y
+                                        - configuration.size.height / 2 + 4
+                                    ).rounded(toStep: 6.1)
+                                )
+                                .frame(height: 4)
+                            
+                            if #available(macOS 12.0, iOS 15, *) {
+                                Grid(countX: 21, countY: 21, size: 3, padding: .all(9), inverse: true)
                                     .fill(.ultraThinMaterial, style: .init(eoFill: true))
                             }
                         }
                     }
-                    .frame(width: 100, height: 100)
+                    .frame(width: 150, height: 150)
                     
                     if #available(macOS 12.0, iOS 15, *) {
                         Text("\(Int(point.x)) x \(Int(point.y))")
                             .monospacedDigit()
-                            .offset(x: -90)
+                            .offset(x: -120)
                     }
                 }
                 

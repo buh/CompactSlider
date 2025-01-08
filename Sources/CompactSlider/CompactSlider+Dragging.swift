@@ -50,19 +50,20 @@ extension CompactSlider {
             
             location = CGPoint(x: 0, y: startDragLocation.y + translationY)
         } else if type == .grid {
-            print("startDragLocation", startDragLocation, progress.progresses)
-            let locationX = CGPoint(x: startDragLocation.x + translation.width, y: 0)
-            let locationY = CGPoint(x: 0, y: startDragLocation.y + translation.height)
+            var translationX = translation.width
             
-            print("x, y", locationX, locationY)
+            if isRightToLeft {
+                translationX = -translationX
+            }
+            
+            let locationX = CGPoint(x: startDragLocation.x + translationX, y: 0)
+            let locationY = CGPoint(x: 0, y: startDragLocation.y + translation.height)
             
             let progressX = progress(at: locationX, size: size, type: .scrollableHorizontal)
                 .clampedOrRotated(withRotaion: options.contains(.loopValues))
             
             let progressY = 1 - progress(at: locationY, size: size, type: .scrollableVertical)
                 .clampedOrRotated(withRotaion: options.contains(.loopValues))
-            
-            print("progress", progressX, progressY)
             
             if progressX != progress.progresses[0] || progressY != progress.progresses[1] {
                 if progressX != progress.progresses[0] {
@@ -111,7 +112,7 @@ extension CompactSlider {
             return
         }
         
-        let roundedValue = (newValue / progressStep).rounded() * progressStep
+        let roundedValue = newValue.rounded(toStep: progressStep)
         
         if progressAndIndex.progress != roundedValue {
             progress.update(roundedValue, at: progressAndIndex.index)
