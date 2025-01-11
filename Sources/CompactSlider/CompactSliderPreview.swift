@@ -54,61 +54,112 @@ struct CompactSliderPreview: View {
                 .padding(.horizontal, 20)
             
             HStack(spacing: 20) {
-                ZStack {
-                    CompactSlider(
-                        point: $point,
-                        in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
-                        step: CGPoint(x: 10, y: 10)
-                    )
-                    .compactSliderStyle(default: .grid())
-                    .compactSliderBackground { configuration in
-                        ZStack {
-                            Defaults.backgroundColor.opacity(0.1)
-                            
-                            Circle()
-                                .fill(Color.accentColor)
-                                .offset(
-                                    x: configuration.handleOffset(at: 0, handleWidth: 8).x
-                                        - configuration.size.width / 2 + 4,
-                                    y: configuration.handleOffset(at: 0, handleWidth: 8).y
-                                        - configuration.size.height / 2 + 4
-                                )
-                                .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
-                                .blur(radius: 25)
-                            
-                            Rectangle()
-                                .fill(Color.accentColor.opacity(0.1))
-                                .offset(
-                                    x: (
-                                        configuration.handleOffset(at: 0, handleWidth: 8).x
-                                        - configuration.size.width / 2 + 4
-                                    ).rounded(toStep: 6.1)
-                                )
-                                .frame(width: 6)
-                            
-                            Rectangle()
-                                .fill(Color.accentColor.opacity(0.1))
-                                .offset(
-                                    y: (
-                                        configuration.handleOffset(at: 0, handleWidth: 8).y
-                                        - configuration.size.height / 2 + 4
-                                    ).rounded(toStep: 6.1)
-                                )
-                                .frame(height: 6)
-                            
-                            if #available(macOS 12.0, iOS 15, *) {
-                                Grid(countX: 11, countY: 11, size: 6, padding: .all(5), inverse: true)
-                                    .fill(.ultraThinMaterial, style: .init(eoFill: true))
-                            }
-                        }
-                    }
-                    .frame(width: 150, height: 150)
-                    
+                VStack {
                     if #available(macOS 12.0, iOS 15, *) {
                         Text("\(Int(point.x)) x \(Int(point.y))")
                             .monospacedDigit()
                             .offset(x: -120)
                     }
+                    
+                    HStack {
+                        CompactSlider(
+                            point: $point,
+                            in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
+                            step: CGPoint(x: 10, y: 10)
+                        )
+                        .compactSliderStyle(default: .grid())
+                        .compactSliderBackground { configuration in
+                            ZStack {
+                                Defaults.backgroundColor.opacity(0.1)
+                                
+                                Circle()
+                                    .fill(Color.accentColor)
+                                    .offset(
+                                        x: configuration.handleOffset(at: 0, handleWidth: 8).x
+                                            - configuration.size.width / 2 + 5,
+                                        y: configuration.handleOffset(at: 0, handleWidth: 8).y
+                                            - configuration.size.height / 2 + 5
+                                    )
+                                    .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
+                                    .blur(radius: 25)
+                                
+                                Rectangle()
+                                    .fill(Color.accentColor.opacity(0.1))
+                                    .offset(
+                                        x: (
+                                            configuration.handleOffset(at: 0, handleWidth: 8).x
+                                            - configuration.size.width / 2 + 5
+                                        ).rounded(toStep: 6.1)
+                                    )
+                                    .frame(width: 6)
+                                
+                                Rectangle()
+                                    .fill(Color.accentColor.opacity(0.1))
+                                    .offset(
+                                        y: (
+                                            configuration.handleOffset(at: 0, handleWidth: 8).y
+                                            - configuration.size.height / 2 + 5
+                                        ).rounded(toStep: 6.1)
+                                    )
+                                    .frame(height: 6)
+                                
+                                if #available(macOS 12.0, iOS 15, *) {
+                                    Grid(countX: 11, countY: 11, size: 6, padding: .all(6), inverse: true)
+                                        .fill(.ultraThinMaterial, style: .init(eoFill: true))
+                                }
+                            }
+                        }
+                        .frame(width: 150, height: 150)
+                        
+                        CompactSlider(
+                            point: $point,
+                            in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
+                            step: CGPoint(x: 10, y: 10),
+                            gestureOptions: [.scrollWheel, .snapToSteps]
+                        )
+                        .compactSliderStyle(default: .grid())
+                        .compactSliderBackground { configuration in
+                            ZStack {
+                                Defaults.backgroundColor.opacity(0.1)
+                                
+                                Circle()
+                                    .fill(Color.accentColor)
+                                    .offset(
+                                        x: configuration.handleOffset(at: 0, handleWidth: 8).x
+                                            - configuration.size.width / 2 + 5,
+                                        y: configuration.handleOffset(at: 0, handleWidth: 8).y
+                                            - configuration.size.height / 2 + 5
+                                    )
+                                    .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
+                                    .blur(radius: 25)
+                                
+                                Rectangle()
+                                    .fill(Color.accentColor.opacity(0.1))
+                                    .offset(
+                                        x: (
+                                            configuration.handleOffset(at: 0, handleWidth: 8).x
+                                            - configuration.size.width / 2 + 5
+                                        ).rounded(toStep: 6.1)
+                                    )
+                                    .frame(width: 6)
+                                
+                                Rectangle()
+                                    .fill(Color.accentColor.opacity(0.1))
+                                    .offset(
+                                        y: (
+                                            configuration.handleOffset(at: 0, handleWidth: 8).y
+                                            - configuration.size.height / 2 + 5
+                                        ).rounded(toStep: 6.1)
+                                    )
+                                    .frame(height: 6)
+                                
+                                if #available(macOS 12.0, iOS 15, *) {
+                                    Grid(countX: 11, countY: 11, size: 6, padding: .all(6), inverse: true)
+                                        .fill(.ultraThinMaterial, style: .init(eoFill: true))
+                                }
+                            }
+                        }
+                        .frame(width: 150, height: 150)                    }
                 }
                 
 //                ZStack {

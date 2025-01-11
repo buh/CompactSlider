@@ -43,7 +43,7 @@ extension CompactSlider {
         
         if event.isEnded {
             if !options.contains(.snapToSteps) {
-                updateProgress(currentProgress, isEnded: true)
+                updateLinearProgress(currentProgress, isEnded: true)
             }
             
             return
@@ -60,7 +60,7 @@ extension CompactSlider {
                 progressStep: step?.linearProgressStep
             )
             
-            updateProgress(newProgress, isEnded: false)
+            updateLinearProgress(newProgress, isEnded: false)
             return
         }
         
@@ -70,12 +70,11 @@ extension CompactSlider {
                 size: size,
                 location: location,
                 type: type,
-                isRightToLeft: isRightToLeft,
                 currentProgress: currentProgress,
                 progressStep: step?.linearProgressStep
             )
             
-            updateProgress(newProgress, isEnded: false)
+            updateLinearProgress(newProgress, isEnded: false)
             return
         }
     }
@@ -87,9 +86,12 @@ extension CompactSlider {
         isRightToLeft: Bool
     ) {
         if event.isEnded {
-            if !options.contains(.snapToSteps) {
-                updateProgress(progress.progresses[0], isEnded: true)
-                updateProgress(progress.progresses[1], isEnded: true)
+            if !options.contains(.snapToSteps), let pointProgressStep = step?.pointProgressStep {
+                let progressX = progress.progresses[0].rounded(toStep: pointProgressStep.x)
+                let progressY = progress.progresses[1].rounded(toStep: pointProgressStep.y)
+                
+                progress.update(progressX, at: 0)
+                progress.update(progressY, at: 1)
             }
             
             return
@@ -110,7 +112,6 @@ extension CompactSlider {
           size: size,
           location: location,
           type: .grid,
-          isRightToLeft: isRightToLeft,
           currentProgress: progress.progresses[1],
           progressStep: step?.pointProgressStep?.y
         ).clamped()
@@ -118,8 +119,8 @@ extension CompactSlider {
         let updatedX = progress.update(progressX, at: 0)
         let updatedY = progress.update(progressY, at: 1)
         
-        if (updatedX || updatedY)
-            && (progressX == 1 || progressX == 0 || progressY == 1 || progressY == 0) {
+        if (updatedX && (progressX == 1 || progressX == 0))
+            || (updatedY && (progressY == 1 || progressY == 0)) {
             HapticFeedback.vibrate(disabledHapticFeedback)
         }
     }
@@ -197,12 +198,10 @@ extension CompactSlider {
         size: CGSize,
         location: CGPoint,
         type: CompactSliderType,
-        isRightToLeft: Bool,
         currentProgress: Double,
         progressStep: Double?
     ) -> Double {
         let newProgress: Double
-        let currentProgress = onScrollWheelLinearCurrentProgressY(event, size: size, location: location)
         
         if let progressStep, options.contains(.snapToSteps) {
             let deltaProgressStep = (event.delta.y.sign == .minus ? -1 : 1) * progressStep

@@ -31,7 +31,7 @@ extension CompactSlider {
             }
             
             let location = CGPoint(x: startDragLocation.x + translationX, y: 0)
-            updateProgress(progress(at: location, size: size, type: type), isEnded: isEnded)
+            updateLinearProgress(progress(at: location, size: size, type: type), isEnded: isEnded)
             return
         }
         
@@ -51,11 +51,24 @@ extension CompactSlider {
             }
             
             let location = CGPoint(x: 0, y: startDragLocation.y + translationY)
-            updateProgress(progress(at: location, size: size, type: type), isEnded: isEnded)
+            updateLinearProgress(progress(at: location, size: size, type: type), isEnded: isEnded)
             return
         }
         
-        if type == .grid, isEnded == false {
+        if type == .grid {
+            if isEnded {
+                if !options.contains(.snapToSteps), let pointProgressStep = step?.pointProgressStep {
+                    let progressX = progress.progresses[0].rounded(toStep: pointProgressStep.x)
+                    let progressY = progress.progresses[1].rounded(toStep: pointProgressStep.y)
+                    
+                    progress.update(progressX, at: 0)
+                    progress.update(progressY, at: 1)
+                    HapticFeedback.vibrate(disabledHapticFeedback)
+                }
+                
+                return
+            }
+            
             var translationX = translation.width
             
             if isRightToLeft {
@@ -67,27 +80,18 @@ extension CompactSlider {
             var progressX = progress(at: locationX, size: size, type: .scrollableHorizontal).clamped()
             var progressY = 1 - progress(at: locationY, size: size, type: .scrollableVertical).clamped()
             
-            guard let pointProgressStep = step?.pointProgressStep else {
-                if progressX != progress.progresses[0] || progressY != progress.progresses[1] {
-                    let updatedX = progress.update(progressX, at: 0)
-                    let updatedY = progress.update(progressY, at: 1)
-                    
-                    if (updatedX || updatedY)
-                        && (progressX == 1 || progressX == 0 || progressY == 1 || progressY == 0) {
-                        HapticFeedback.vibrate(disabledHapticFeedback)
-                    }
-                }
-                
-                return
-            }
+            let isSnapped = options.contains(.snapToSteps) && step?.pointProgressStep != nil
             
-            progressX = progressX.rounded(toStep: pointProgressStep.x)
-            progressY = progressY.rounded(toStep: pointProgressStep.y)
+            if isSnapped, let pointProgressStep = step?.pointProgressStep {
+                progressX = progressX.rounded(toStep: pointProgressStep.x)
+                progressY = progressY.rounded(toStep: pointProgressStep.y)
+            }
             
             let updatedX = progress.update(progressX, at: 0)
             let updatedY = progress.update(progressY, at: 1)
             
-            if updatedX || updatedY {
+            if (updatedX && (progressX == 1 || progressX == 0))
+                || (updatedY && (progressY == 1 || progressY == 0)) {
                 HapticFeedback.vibrate(disabledHapticFeedback)
             }
             
@@ -95,7 +99,7 @@ extension CompactSlider {
         }
     }
     
-    func updateProgress(_ newValue: Double, isEnded: Bool) {
+    func updateLinearProgress(_ newValue: Double, isEnded: Bool) {
         let newValue = newValue.clampedOrRotated(withRotaion: options.contains(.loopValues))
         let progressAndIndex = nearestProgress(for: newValue)
         
