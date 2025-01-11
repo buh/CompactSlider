@@ -28,11 +28,11 @@ extension CompactSlider {
             point = .init(
                 x: newValue.progresses[0].convertPercentageToValue(
                     in: pointBounds.rangeX,
-                    step: step?.pointStep().x ?? 0.0
+                    step: step?.pointStep()?.x
                 ),
                 y: newValue.progresses[1].convertPercentageToValue(
                     in: pointBounds.rangeY,
-                    step: step?.pointStep().y ?? 0.0
+                    step: step?.pointStep()?.y
                 )
             )
             

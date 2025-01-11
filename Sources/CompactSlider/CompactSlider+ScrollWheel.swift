@@ -16,67 +16,136 @@ extension CompactSlider {
     ) {
         guard !bounds.isEmpty, size.width > 0 else { return }
         
-        let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
-        let newProgress: Double
+        guard type != .grid else {
+            onScrollWheelGridChange(event, size: size, location: location, isRightToLeft: isRightToLeft)
+            return
+        }
         
-        if type.isHorizontal,
-           let progress = onScrollWheelHorizontalProgress(
-            event,
-            size: size,
-            location: location,
-            type: type,
-            isRightToLeft: isRightToLeft
-           ) {
-            newProgress = progress
-        } else if type.isVertical,
-                  let progress = onScrollWheelVerticalProgress(
-                    event,
-                    size: size,
-                    location: location,
-                    type: type,
-                    isRightToLeft: isRightToLeft
-                  ) {
-            newProgress = progress
-        } else if type == .grid {
-            let progressX = onScrollWheelHorizontalProgress(
+        let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
+        var currentProgress: Double?
+        
+        if type.isHorizontal {
+            currentProgress = onScrollWheelLinearCurrentProgressX(
+                event,
+                size: size,
+                location: location,
+                isRightToLeft: isRightToLeft
+            )
+        } else if type.isVertical {
+            currentProgress = onScrollWheelLinearCurrentProgressY(
+                event,
+                size: size,
+                location: location
+            )
+        }
+        
+        guard let currentProgress else { return }
+        
+        if event.isEnded {
+            if !options.contains(.snapToSteps) {
+                updateProgress(currentProgress, isEnded: true)
+            }
+            
+            return
+        }
+        
+        if type.isHorizontal {
+            let newProgress = onScrollWheelHorizontalProgress(
                 event,
                 size: size,
                 location: location,
                 type: type,
-                isRightToLeft: isRightToLeft
-            )?.clamped()
+                isRightToLeft: isRightToLeft,
+                currentProgress: currentProgress,
+                progressStep: step?.linearProgressStep
+            )
             
-            let progressY = onScrollWheelVerticalProgress(
-              event,
-              size: size,
-              location: location,
-              type: type,
-              isRightToLeft: isRightToLeft
-            )?.clamped()
-            
-            if let progressX,
-               let progressY,
-               (progressX != progress.progresses[0] || progressY != progress.progresses[1]) {
-                if progressX != progress.progresses[0] {
-                    progress.update(progressX, at: 0)
-                }
-                
-                if progressY != progress.progresses[1] {
-                    progress.update(progressY, at: 1)
-                }
-                
-                if progressX == 1 || progressX == 0 || progressY == 1 || progressY == 0 {
-                    HapticFeedback.vibrate(disabledHapticFeedback)
-                }
-            }
-            
-            return
-
-        } else {
+            updateProgress(newProgress, isEnded: false)
             return
         }
         
-        updateProgress(newProgress, isEnded: false)
+        if type.isVertical {
+            let newProgress = onScrollWheelVerticalProgress(
+                event,
+                size: size,
+                location: location,
+                type: type,
+                isRightToLeft: isRightToLeft,
+                currentProgress: currentProgress,
+                progressStep: step?.linearProgressStep
+            )
+            
+            updateProgress(newProgress, isEnded: false)
+            return
+        }
+    }
+    
+    func onScrollWheelGridChange(
+        _ event: ScrollWheelEvent,
+        size: CGSize,
+        location: CGPoint,
+        isRightToLeft: Bool
+    ) {
+        if event.isEnded {
+            if !options.contains(.snapToSteps) {
+                updateProgress(progress.progresses[0], isEnded: true)
+                updateProgress(progress.progresses[1], isEnded: true)
+            }
+            
+            return
+        }
+        
+        let progressX = onScrollWheelHorizontalProgress(
+            event,
+            size: size,
+            location: location,
+            type: .grid,
+            isRightToLeft: isRightToLeft,
+            currentProgress: progress.progresses[0],
+            progressStep: step?.pointProgressStep?.x
+        ).clamped()
+        
+        let progressY = onScrollWheelVerticalProgress(
+          event,
+          size: size,
+          location: location,
+          type: .grid,
+          isRightToLeft: isRightToLeft,
+          currentProgress: progress.progresses[1],
+          progressStep: step?.pointProgressStep?.y
+        ).clamped()
+        
+        let updatedX = progress.update(progressX, at: 0)
+        let updatedY = progress.update(progressY, at: 1)
+        
+        if (updatedX || updatedY)
+            && (progressX == 1 || progressX == 0 || progressY == 1 || progressY == 0) {
+            HapticFeedback.vibrate(disabledHapticFeedback)
+        }
+    }
+    
+    func onScrollWheelLinearCurrentProgressX(
+        _ event: ScrollWheelEvent,
+        size: CGSize,
+        location: CGPoint,
+        isRightToLeft: Bool
+    ) -> Double {
+        var progressX = (event.location.x - location.x) / size.width
+        
+        if isRightToLeft {
+            progressX = 1 - progressX
+        }
+        
+        return nearestProgress(for: progressX).progress
+    }
+    
+    func onScrollWheelLinearCurrentProgressY(
+        _ event: ScrollWheelEvent,
+        size: CGSize,
+        location: CGPoint
+    ) -> Double {
+        let progressY = (event.location.y - location.y) / size.height
+        return nearestProgress(for: progressY).progress
     }
     
     func onScrollWheelHorizontalProgress(
@@ -84,34 +153,14 @@ extension CompactSlider {
         size: CGSize,
         location: CGPoint,
         type: CompactSliderType,
-        isRightToLeft: Bool
-    ) -> Double? {
+        isRightToLeft: Bool,
+        currentProgress: Double,
+        progressStep: Double?
+    ) -> Double {
         let newProgress: Double
-        var progressX = (event.location.x - location.x) / size.width
         
-        if isRightToLeft {
-            progressX = 1 - progressX
-        }
-        
-        let currentProgress: Double
-        
-        if type == .grid {
-            currentProgress = progress.progresses[0]
-        } else {
-            currentProgress = nearestProgress(for: progressX).progress
-        }
-        
-        if event.isEnded {
-            if !options.contains(.snapToSteps) {
-                updateProgress(currentProgress, isEnded: true)
-            }
-            
-            return nil
-        }
-        
-        if let step, options.contains(.snapToSteps) {
-            var deltaProgressStep = (event.delta.x.sign == .minus
-                                     ? -step.linearProgressStep : step.linearProgressStep)
+        if let progressStep, options.contains(.snapToSteps) {
+            var deltaProgressStep = (event.delta.x.sign == .minus ? -progressStep : progressStep)
             
             if isRightToLeft {
                 deltaProgressStep = -deltaProgressStep
@@ -148,28 +197,15 @@ extension CompactSlider {
         size: CGSize,
         location: CGPoint,
         type: CompactSliderType,
-        isRightToLeft: Bool
-    ) -> Double? {
+        isRightToLeft: Bool,
+        currentProgress: Double,
+        progressStep: Double?
+    ) -> Double {
         let newProgress: Double
-        let progressY = (event.location.y - location.y) / size.height
-        let currentProgress: Double
+        let currentProgress = onScrollWheelLinearCurrentProgressY(event, size: size, location: location)
         
-        if type == .grid {
-            currentProgress = progress.progresses[1]
-        } else {
-            currentProgress = nearestProgress(for: progressY).progress
-        }
-        
-        if event.isEnded {
-            if !options.contains(.snapToSteps) {
-                updateProgress(currentProgress, isEnded: true)
-            }
-            
-            return nil
-        }
-        
-        if let step, options.contains(.snapToSteps) {
-            let deltaProgressStep = (event.delta.y.sign == .minus ? -1 : 1) * step.linearProgressStep
+        if let progressStep, options.contains(.snapToSteps) {
+            let deltaProgressStep = (event.delta.y.sign == .minus ? -1 : 1) * progressStep
             
             if case .vertical(.bottom) = type {
                 newProgress = currentProgress - deltaProgressStep

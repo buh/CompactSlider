@@ -40,10 +40,14 @@ public struct Progress: Equatable {
         self.isCircularGridValues = isCircularGridValues
     }
     
-    mutating func update(_ progress: Double, at index: Int) {
-        guard index < progresses.count else { return }
+    @discardableResult
+    mutating func update(_ progress: Double, at index: Int) -> Bool {
+        guard index < progresses.count, progresses[index] != progress else {
+            return false
+        }
         
         progresses[index] = progress
+        return true
     }
     
     mutating func updateLowerProgress(_ progress: Double) {

@@ -57,8 +57,8 @@ struct CompactSliderPreview: View {
                 ZStack {
                     CompactSlider(
                         point: $point,
-                        in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100)
-//                        step: CGPoint(x: 10, y: 10)
+                        in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
+                        step: CGPoint(x: 10, y: 10)
                     )
                     .compactSliderStyle(default: .grid())
                     .compactSliderBackground { configuration in
@@ -76,28 +76,28 @@ struct CompactSliderPreview: View {
                                 .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
                                 .blur(radius: 25)
                             
-//                            Rectangle()
-//                                .fill(Color.accentColor.opacity(0.2))
-//                                .offset(
-//                                    x: (
-//                                        configuration.handleOffset(at: 0, handleWidth: 8).x
-//                                        - configuration.size.width / 2 + 4
-//                                    ).rounded(toStep: 6.1)
-//                                )
-//                                .frame(width: 4)
-//                            
-//                            Rectangle()
-//                                .fill(Color.accentColor.opacity(0.2))
-//                                .offset(
-//                                    y: (
-//                                        configuration.handleOffset(at: 0, handleWidth: 8).y
-//                                        - configuration.size.height / 2 + 4
-//                                    ).rounded(toStep: 6.1)
-//                                )
-//                                .frame(height: 4)
+                            Rectangle()
+                                .fill(Color.accentColor.opacity(0.1))
+                                .offset(
+                                    x: (
+                                        configuration.handleOffset(at: 0, handleWidth: 8).x
+                                        - configuration.size.width / 2 + 4
+                                    ).rounded(toStep: 6.1)
+                                )
+                                .frame(width: 6)
+                            
+                            Rectangle()
+                                .fill(Color.accentColor.opacity(0.1))
+                                .offset(
+                                    y: (
+                                        configuration.handleOffset(at: 0, handleWidth: 8).y
+                                        - configuration.size.height / 2 + 4
+                                    ).rounded(toStep: 6.1)
+                                )
+                                .frame(height: 6)
                             
                             if #available(macOS 12.0, iOS 15, *) {
-                                Grid(countX: 21, countY: 21, size: 3, padding: .all(9), inverse: true)
+                                Grid(countX: 11, countY: 11, size: 6, padding: .all(5), inverse: true)
                                     .fill(.ultraThinMaterial, style: .init(eoFill: true))
                             }
                         }

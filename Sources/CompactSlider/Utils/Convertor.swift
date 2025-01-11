@@ -31,8 +31,14 @@ public extension Double {
     /// - Returns: a value in bounds.
     func convertPercentageToValue<Value: BinaryFloatingPoint>(
         in bounds: ClosedRange<Value>,
-        step: Value = 0
+        step: Value? = nil
     ) -> Value {
-        (bounds.lowerBound + Value(self) * bounds.distance).rounded(toStep: step)
+        let value = (bounds.lowerBound + Value(self) * bounds.distance)
+        
+        if let step {
+            return value.rounded(toStep: step)
+        }
+        
+        return value
     }
 }

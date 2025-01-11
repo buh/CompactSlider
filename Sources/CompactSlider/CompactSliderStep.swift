@@ -33,44 +33,52 @@ public enum CompactSliderStep: Equatable {
         return 0
     }
     
-    public var linearProgressStep: Double {
+    public var linearProgressStep: Double? {
         if case .linear(_, let step, _) = self {
             return step
         }
         
-        return 0
+        return nil
     }
     
-    public var linearSteps: Int {
+    public var linearSteps: Int? {
         if case .linear(_, _, let steps) = self {
             return steps
         }
         
-        return 0
+        return nil
     }
     
-    public func pointStep<Value: BinaryFloatingPoint>() -> (x: Value, y: Value) {
+    public func pointStep<Value: BinaryFloatingPoint>() -> (x: Value, y: Value)? {
         if case .point(let step, _, _) = self {
             return (x: Value(step.x), y: Value(step.y))
         }
         
-        return (x: 0, y: 0)
+        return nil
     }
     
-    public var pointSteps: PointSteps {
+    public var pointProgressStep: PointValue? {
+        if case .point(_, let progressStep, _) = self {
+            return progressStep
+        }
+        
+        return nil
+    }
+    
+    public var pointSteps: PointSteps? {
         if case .point(_, _, let steps) = self {
             return steps
         }
         
-        return .init(x: 0, y: 0)
+        return nil
     }
     
-    public var polarPointSteps: PolarPointSteps {
+    public var polarPointSteps: PolarPointSteps? {
         if case .polarPoint(_, _, let steps) = self {
             return steps
         }
         
-        return .init(angle: 0, radius: 0)
+        return nil
     }
 }
 

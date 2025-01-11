@@ -55,7 +55,7 @@ extension CompactSlider {
             return
         }
         
-        if type == .grid {
+        if type == .grid, isEnded == false {
             var translationX = translation.width
             
             if isRightToLeft {
@@ -64,21 +64,31 @@ extension CompactSlider {
             
             let locationX = CGPoint(x: startDragLocation.x + translationX, y: 0)
             let locationY = CGPoint(x: 0, y: startDragLocation.y + translation.height)
-            let progressX = progress(at: locationX, size: size, type: .scrollableHorizontal).clamped()
-            let progressY = 1 - progress(at: locationY, size: size, type: .scrollableVertical).clamped()
+            var progressX = progress(at: locationX, size: size, type: .scrollableHorizontal).clamped()
+            var progressY = 1 - progress(at: locationY, size: size, type: .scrollableVertical).clamped()
             
-            if progressX != progress.progresses[0] || progressY != progress.progresses[1] {
-                if progressX != progress.progresses[0] {
-                    progress.update(progressX, at: 0)
+            guard let pointProgressStep = step?.pointProgressStep else {
+                if progressX != progress.progresses[0] || progressY != progress.progresses[1] {
+                    let updatedX = progress.update(progressX, at: 0)
+                    let updatedY = progress.update(progressY, at: 1)
+                    
+                    if (updatedX || updatedY)
+                        && (progressX == 1 || progressX == 0 || progressY == 1 || progressY == 0) {
+                        HapticFeedback.vibrate(disabledHapticFeedback)
+                    }
                 }
                 
-                if progressY != progress.progresses[1] {
-                    progress.update(progressY, at: 1)
-                }
-                
-                if progressX == 1 || progressX == 0 || progressY == 1 || progressY == 0 {
-                    HapticFeedback.vibrate(disabledHapticFeedback)
-                }
+                return
+            }
+            
+            progressX = progressX.rounded(toStep: pointProgressStep.x)
+            progressY = progressY.rounded(toStep: pointProgressStep.y)
+            
+            let updatedX = progress.update(progressX, at: 0)
+            let updatedY = progress.update(progressY, at: 1)
+            
+            if updatedX || updatedY {
+                HapticFeedback.vibrate(disabledHapticFeedback)
             }
             
             return
@@ -89,30 +99,22 @@ extension CompactSlider {
         let newValue = newValue.clampedOrRotated(withRotaion: options.contains(.loopValues))
         let progressAndIndex = nearestProgress(for: newValue)
         
-        guard let step else {
-            if progressAndIndex.progress != newValue {
-                progress.update(newValue, at: progressAndIndex.index)
-                
-                if newValue == 1 || newValue == 0 {
-                    HapticFeedback.vibrate(disabledHapticFeedback)
-                }
+        guard let linearProgressStep = step?.linearProgressStep else {
+            if progress.update(newValue, at: progressAndIndex.index), (newValue == 1 || newValue == 0) {
+                HapticFeedback.vibrate(disabledHapticFeedback)
             }
             
             return
         }
         
         guard isEnded || options.contains(.snapToSteps) else {
-            if progressAndIndex.progress != newValue {
-                progress.update(newValue, at: progressAndIndex.index)
-            }
-            
+            progress.update(newValue, at: progressAndIndex.index)
             return
         }
         
-        let roundedValue = newValue.rounded(toStep: step.linearProgressStep)
+        let roundedValue = newValue.rounded(toStep: linearProgressStep)
         
-        if progressAndIndex.progress != roundedValue {
-            progress.update(roundedValue, at: progressAndIndex.index)
+        if progress.update(roundedValue, at: progressAndIndex.index) {
             HapticFeedback.vibrate(disabledHapticFeedback)
         }
     }
