@@ -76,9 +76,9 @@ struct CompactSliderPreview: View {
                                     .fill(Color.accentColor)
                                     .offset(
                                         x: configuration.handleOffset(at: 0, handleWidth: 8).x
-                                            - configuration.size.width / 2 + 5,
+                                        - configuration.size.width / 2 + 5,
                                         y: configuration.handleOffset(at: 0, handleWidth: 8).y
-                                            - configuration.size.height / 2 + 5
+                                        - configuration.size.height / 2 + 5
                                     )
                                     .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
                                     .blur(radius: 25)
@@ -111,89 +111,43 @@ struct CompactSliderPreview: View {
                         }
                         .frame(width: 150, height: 150)
                         
-                        CompactSlider(
-                            point: $point,
-                            in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
-                            step: CGPoint(x: 10, y: 10),
-                            gestureOptions: [.scrollWheel, .snapToSteps]
-                        )
-                        .compactSliderStyle(default: .grid())
-                        .compactSliderBackground { configuration in
-                            ZStack {
-                                Defaults.backgroundColor.opacity(0.1)
-                                
-                                Circle()
-                                    .fill(Color.accentColor)
-                                    .offset(
-                                        x: configuration.handleOffset(at: 0, handleWidth: 8).x
-                                            - configuration.size.width / 2 + 5,
-                                        y: configuration.handleOffset(at: 0, handleWidth: 8).y
-                                            - configuration.size.height / 2 + 5
+                        ZStack {
+                            Circle()
+                                .fill(
+                                    AngularGradient(
+                                        colors: [
+                                            Color(hue: 0, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.1, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.2, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.3, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.4, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.5, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.6, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.7, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.8, saturation: 0.8, brightness: 1),
+                                            Color(hue: 0.9, saturation: 0.8, brightness: 1),
+                                            Color(hue: 1, saturation: 0.8, brightness: 1),
+                                        ],
+                                        center: .center
                                     )
-                                    .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
-                                    .blur(radius: 25)
-                                
-                                Rectangle()
-                                    .fill(Color.accentColor.opacity(0.1))
-                                    .offset(
-                                        x: (
-                                            configuration.handleOffset(at: 0, handleWidth: 8).x
-                                            - configuration.size.width / 2 + 5
-                                        ).rounded(toStep: 6.1)
+                                )
+
+                            Circle()
+                                .fill(
+                                    RadialGradient(
+                                        colors: [.black, .black.opacity(0)],
+                                        center: .center,
+                                        startRadius: 40,
+                                        endRadius: 150
                                     )
-                                    .frame(width: 6)
-                                
-                                Rectangle()
-                                    .fill(Color.accentColor.opacity(0.1))
-                                    .offset(
-                                        y: (
-                                            configuration.handleOffset(at: 0, handleWidth: 8).y
-                                            - configuration.size.height / 2 + 5
-                                        ).rounded(toStep: 6.1)
-                                    )
-                                    .frame(height: 6)
-                                
-                                if #available(macOS 12.0, iOS 15, *) {
-                                    Grid(countX: 11, countY: 11, size: 6, padding: .all(6), inverse: true)
-                                        .fill(.ultraThinMaterial, style: .init(eoFill: true))
-                                }
-                            }
+                                )
+                            
+                            Circle()
+                                .stroke(Defaults.label.opacity(0.1), lineWidth: 1)
                         }
-                        .frame(width: 150, height: 150)                    }
+                        .frame(width: 150, height: 150)
+                    }
                 }
-                
-//                ZStack {
-//                    Circle()
-//                        .fill(
-//                            AngularGradient(
-//                                colors: [
-//                                    Color(hue: 0, saturation: 0.8, brightness: 1),
-//                                    Color(hue: 0.2, saturation: 0.8, brightness: 1),
-//                                    Color(hue: 0.4, saturation: 0.8, brightness: 1),
-//                                    Color(hue: 0.6, saturation: 0.8, brightness: 1),
-//                                    Color(hue: 0.8, saturation: 0.8, brightness: 1),
-//                                    Color(hue: 1, saturation: 0.8, brightness: 1),
-//                                ],
-//                                center: .center
-//                            )
-//                        )
-//                    
-//                    Circle()
-//                        .fill(
-//                            RadialGradient(
-//                                colors: [.black, .black.opacity(0)],
-//                                center: .center,
-//                                startRadius: 25,
-//                                endRadius: 80
-//                            )
-//                        )
-//                    
-//                    Circle()
-//                        .stroke(Color.secondary, lineWidth: 1)
-//                }
-//                .compositingGroup()
-//                .opacity(0.8)
-//                .frame(width: 100, height: 100)
             }
             
             Group {
