@@ -6,13 +6,6 @@
 #if DEBUG
 import SwiftUI
 
-#Preview {
-    CompactSliderPreview()
-        #if os(macOS)
-        .frame(width: 400, height: 800, alignment: .top)
-        #endif
-}
-
 struct CompactSliderPreview: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var layoutDirection: LayoutDirection = .leftToRight
@@ -23,7 +16,8 @@ struct CompactSliderPreview: View {
     @State private var toProgress: Double = 0.7
     @State private var progresses: [Double] = [0.2, 0.5, 0.8]
     @State private var point = CGPoint(x: 50, y: 50)
-    
+    @State private var polarPoint = CompactSliderPolarPoint.zero
+
     var body: some View {
         VStack(spacing: 16) {
             HStack {
@@ -68,48 +62,12 @@ struct CompactSliderPreview: View {
                             step: CGPoint(x: 10, y: 10)
                         )
                         .compactSliderStyle(default: .grid())
-                        .compactSliderBackground { configuration in
-                            ZStack {
-                                Defaults.backgroundColor.opacity(0.1)
-                                
-                                Circle()
-                                    .fill(Color.accentColor)
-                                    .offset(
-                                        x: configuration.handleOffset(at: 0, handleWidth: 8).x
-                                        - configuration.size.width / 2 + 5,
-                                        y: configuration.handleOffset(at: 0, handleWidth: 8).y
-                                        - configuration.size.height / 2 + 5
-                                    )
-                                    .frame(width: configuration.size.width / 3, height: configuration.size.height / 3)
-                                    .blur(radius: 25)
-                                
-                                Rectangle()
-                                    .fill(Color.accentColor.opacity(0.1))
-                                    .offset(
-                                        x: (
-                                            configuration.handleOffset(at: 0, handleWidth: 8).x
-                                            - configuration.size.width / 2 + 5
-                                        ).rounded(toStep: 6.1)
-                                    )
-                                    .frame(width: 6)
-                                
-                                Rectangle()
-                                    .fill(Color.accentColor.opacity(0.1))
-                                    .offset(
-                                        y: (
-                                            configuration.handleOffset(at: 0, handleWidth: 8).y
-                                            - configuration.size.height / 2 + 5
-                                        ).rounded(toStep: 6.1)
-                                    )
-                                    .frame(height: 6)
-                                
-                                if #available(macOS 12.0, iOS 15, *) {
-                                    Grid(countX: 11, countY: 11, size: 6, padding: .all(6), inverse: true)
-                                        .fill(.ultraThinMaterial, style: .init(eoFill: true))
-                                }
-                            }
+                        .compactSliderBackground {
+                            GridBackgroundView(configuration: $0, padding: $1)
                         }
                         .frame(width: 150, height: 150)
+                        
+                        CompactSlider(polarPoint: $polarPoint)
                         
                         ZStack {
                             Circle()
@@ -207,7 +165,7 @@ struct CompactSliderPreview: View {
                         Circle()
                             .fill(index == 1 ? Color.purple : .blue)
                     }
-                    .compactSliderBackground { _ in
+                    .compactSliderBackground { _, _ in
                         Capsule()
                             .fill(Defaults.backgroundColor)
                             .frame(maxHeight: 10)
@@ -224,7 +182,7 @@ struct CompactSliderPreview: View {
                         )
                         .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
                     }
-                    .compactSliderBackground { _ in
+                    .compactSliderBackground { _, _ in
                         RoundedRectangle(cornerRadius: Defaults.cornerRadius)
                             .fill(
                                 LinearGradient(
@@ -355,7 +313,7 @@ struct CompactSliderPreview: View {
                             Circle()
                                 .fill(index == 1 ? Color.purple : .blue)
                         }
-                        .compactSliderBackground { _ in
+                        .compactSliderBackground { _, _ in
                             Capsule()
                                 .fill(Defaults.backgroundColor)
                                 .frame(maxWidth: 10)
@@ -382,7 +340,7 @@ struct CompactSliderPreview: View {
                             )
                             .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
                         }
-                        .compactSliderBackground { _ in
+                        .compactSliderBackground { _, _ in
                             RoundedRectangle(cornerRadius: Defaults.cornerRadius)
                                 .fill(
                                     LinearGradient(
@@ -408,5 +366,12 @@ struct CompactSliderPreview: View {
         .accentColor(.purple)
         .environment(\.layoutDirection, layoutDirection)
     }
+}
+
+#Preview {
+    CompactSliderPreview()
+        #if os(macOS)
+        .frame(width: 400, height: 800, alignment: .top)
+        #endif
 }
 #endif

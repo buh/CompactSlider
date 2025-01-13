@@ -32,11 +32,13 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         ZStack(alignment: .center) {
             if !configuration.progress.isMultipleValues,
                !configuration.progress.isGridValues,
+               !configuration.progress.isCircularGridValues,
                !configuration.type.isScrollable {
                 CompactSliderStyleProgressView()
             }
             
             if !configuration.progress.isGridValues,
+               !configuration.progress.isCircularGridValues,
                let scaleStyle,
                configuration.isScaleVisible(scaleStyle: scaleStyle) {
                 CompactSliderStyleScaleView()
@@ -53,7 +55,8 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         .padding(padding)
         .backgroundIf(
             !configuration.options.contains(.moveBackgroundToScale)
-            && !configuration.options.contains(.withoutBackground)
+            && !configuration.options.contains(.withoutBackground),
+            padding: padding
         )
         .compositingGroup()
         .contentShape(Rectangle())

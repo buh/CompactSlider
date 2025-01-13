@@ -73,7 +73,7 @@ public extension HandleStyle {
         visibility: Visibility = .handleDefault,
         color: Color = .accentColor,
         radius: CGFloat = Defaults.circleHandleRadius,
-        lineWidth: CGFloat = Defaults.handleLineWidth
+        lineWidth: CGFloat = 0
     ) -> HandleStyle {
         .init(
             type: .circle,

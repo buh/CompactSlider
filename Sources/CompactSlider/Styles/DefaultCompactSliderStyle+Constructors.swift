@@ -56,7 +56,7 @@ public extension DefaultCompactSliderStyle {
     
     static func grid(
         handleStyle: HandleStyle = .circle(),
-        scaleStyle: ScaleStyle? = ScaleStyle(),
+        scaleStyle: ScaleStyle? = nil,
         cornerRadius: CGFloat = Defaults.gridCornerRadius,
         padding: EdgeInsets = .all(Defaults.gridCornerRadius / 2)
     ) -> DefaultCompactSliderStyle {

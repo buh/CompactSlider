@@ -7,23 +7,30 @@ import SwiftUI
 
 public struct CompactSliderStyleBackgroundView: View {
     @Environment(\.compactSliderBackgroundView) var backgroundView
+    let padding: EdgeInsets
+    
+    public init(padding: EdgeInsets) {
+        self.padding = padding
+    }
     
     public var body: some View {
-        backgroundView
+        backgroundView(padding)
     }
 }
 
 // MARK: - Environment
 
 struct BackgroundViewKey: EnvironmentKey {
-    static var defaultValue: AnyView = BackgroundContainerView { _ in
-        Defaults.backgroundColor
+    static var defaultValue: (EdgeInsets) -> AnyView = { padding in
+        BackgroundContainerView(padding: padding) { _, _ in
+            Defaults.backgroundColor
+        }
+        .anyView()
     }
-    .anyView()
 }
 
 extension EnvironmentValues {
-    var compactSliderBackgroundView: AnyView {
+    var compactSliderBackgroundView: (EdgeInsets) -> AnyView {
         get { self[BackgroundViewKey.self] }
         set { self[BackgroundViewKey.self] = newValue }
     }
@@ -33,14 +40,19 @@ extension EnvironmentValues {
 
 public extension View {
     func compactSliderBackground<V: View>(
-        @ViewBuilder backgroundView: @escaping (_ configuration: CompactSliderStyleConfiguration) -> V
+        @ViewBuilder backgroundView: @escaping (
+            _ configuration: CompactSliderStyleConfiguration,
+            _ padding: EdgeInsets
+        ) -> V
     ) -> some View {
         environment(
             \.compactSliderBackgroundView,
-             BackgroundContainerView {
-                 backgroundView($0)
+             { padding in
+                 BackgroundContainerView(padding: padding) {
+                     backgroundView($0, $1)
+                 }
+                 .anyView()
              }
-             .anyView()
         )
     }
 }

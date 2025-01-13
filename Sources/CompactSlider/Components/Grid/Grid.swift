@@ -41,12 +41,12 @@ public struct Grid: Shape {
             }
             
             let paddingX: CGFloat = (
-                rect.width - padding.leading - padding.trailing - CGFloat(countX) * size
-            ) / CGFloat(countX + 1)
+                rect.width - padding.horizontal - CGFloat(countX) * size
+            ) / CGFloat(countX - 1)
             
             let paddingY: CGFloat = (
-                rect.height - padding.top - padding.bottom - CGFloat(countY) * size
-            ) / CGFloat(countY + 1)
+                rect.height - padding.vertical - CGFloat(countY) * size
+            ) / CGFloat(countY - 1)
             
             guard paddingX > 0 && paddingY > 0 else {
                 return
@@ -55,8 +55,8 @@ public struct Grid: Shape {
             for x in 0 ..< countX {
                 for y in 0 ..< countY {
                     let rect = CGRect(
-                        x: padding.leading + paddingX + CGFloat(x) * (size + paddingX),
-                        y: padding.top + paddingY + CGFloat(y) * (size + paddingY),
+                        x: padding.leading + CGFloat(x) * (size + paddingX),
+                        y: padding.top + CGFloat(y) * (size + paddingY),
                         width: size,
                         height: size
                     )
@@ -74,6 +74,13 @@ public struct Grid: Shape {
 
 #Preview {
     VStack {
+        Grid(countX: 10, countY: 10, size: 10, inverse: true)
+            .fill(
+                LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing),
+                style: .init(eoFill: true)
+            )
+            .frame(width: 200, height: 200)
+        
         Grid(countX: 10, countY: 10, size: 10, padding: .all(10), inverse: true)
             .fill(
                 LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing),

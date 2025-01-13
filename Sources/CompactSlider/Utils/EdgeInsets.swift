@@ -19,4 +19,12 @@ public extension EdgeInsets {
     static func vertical(_ value: CGFloat) -> EdgeInsets {
         .init(top: value, leading: 0, bottom: value, trailing: 0)
     }
+    
+    var horizontal: CGFloat {
+        leading + trailing
+    }
+    
+    var vertical: CGFloat {
+        top + bottom
+    }
 }

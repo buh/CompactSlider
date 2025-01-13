@@ -256,15 +256,15 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         self.step = CompactSliderStep(polarPointStep: step)
         self.options = gestureOptions
         
-        let progresses: [Double] = [polarPoint.wrappedValue.angle.radians, polarPoint.wrappedValue.radius]
+        let progresses: [Double] = [polarPoint.wrappedValue.angle.radians, polarPoint.wrappedValue.normalizedRadius]
         _progress = .init(initialValue: Progress(progresses, isCircularGridValues: true))
     }
     
     public var body: some View {
         GeometryReader { proxy in
             let size = CGSize(
-                width: proxy.size.width - compactSliderStyle.padding.leading - compactSliderStyle.padding.trailing,
-                height: proxy.size.height - compactSliderStyle.padding.top - compactSliderStyle.padding.bottom
+                width: proxy.size.width - compactSliderStyle.padding.horizontal,
+                height: proxy.size.height - compactSliderStyle.padding.vertical
             )
             
             compactSliderStyle

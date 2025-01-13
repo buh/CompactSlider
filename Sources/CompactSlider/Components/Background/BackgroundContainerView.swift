@@ -7,14 +7,19 @@ import SwiftUI
 
 struct BackgroundContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
-    let backgroundView: (CompactSliderStyleConfiguration) -> V
+    let padding: EdgeInsets
+    let backgroundView: (CompactSliderStyleConfiguration, EdgeInsets) -> V
     
-    init(backgroundView: @escaping (CompactSliderStyleConfiguration) -> V) {
+    init(
+        padding: EdgeInsets,
+        backgroundView: @escaping (CompactSliderStyleConfiguration, EdgeInsets) -> V
+    ) {
+        self.padding = padding
         self.backgroundView = backgroundView
     }
     
     var body: some View {
-        backgroundView(configuration)
+        backgroundView(configuration, padding)
             .allowsTightening(false)
     }
 }
