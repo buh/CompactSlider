@@ -38,6 +38,9 @@ public struct GridBackgroundView<GridFillStyle: ShapeStyle>: View {
         }
     }
     
+    private var countX: Int { configuration.step?.pointSteps?.x ?? 11 }
+    private var countY: Int { configuration.step?.pointSteps?.y ?? 11 }
+
     private var handleX: CGFloat {
         configuration.handleOffset(at: 0, handleWidth: handleStyle.width).x
             - configuration.size.width / 2 + handleStyle.width / 2
@@ -77,8 +80,9 @@ public struct GridBackgroundView<GridFillStyle: ShapeStyle>: View {
     
     @ViewBuilder
     private func gridView() -> some View {
-        let gridSize = self.gridSize ?? handleStyle.width / 3
+        let gridSize: CGFloat = max(2, self.gridSize ?? (handleStyle.width / 3).roundedByPixel())
         let offset = (handleStyle.width - gridSize) / 2
+        
         let padding = EdgeInsets(
             top: padding.top + offset,
             leading: padding.leading + offset,
@@ -88,8 +92,8 @@ public struct GridBackgroundView<GridFillStyle: ShapeStyle>: View {
         
         if let gridFill {
             Grid(
-                countX: 11,
-                countY: 11,
+                countX: countX,
+                countY: countY,
                 size: gridSize,
                 padding: padding,
                 inverse: true
@@ -97,8 +101,8 @@ public struct GridBackgroundView<GridFillStyle: ShapeStyle>: View {
             .fill(gridFill, style: .init(eoFill: true))
         } else if #available(macOS 12.0, iOS 15, *) {
             Grid(
-                countX: 11,
-                countY: 11,
+                countX: countX,
+                countY: countY,
                 size: gridSize,
                 padding: padding,
                 inverse: true
@@ -106,8 +110,8 @@ public struct GridBackgroundView<GridFillStyle: ShapeStyle>: View {
             .fill(.ultraThinMaterial, style: .init(eoFill: true))
         } else {
             Grid(
-                countX: 11,
-                countY: 11,
+                countX: countX,
+                countY: countY,
                 size: gridSize,
                 padding: padding,
                 inverse: true
