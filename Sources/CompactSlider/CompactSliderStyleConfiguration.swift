@@ -40,6 +40,8 @@ public extension CompactSliderStyleConfiguration {
             self.isHovering = isHovering
             self.isDragging = isDragging
         }
+        
+        public static var none = FocusState(isHovering: false, isDragging: false)
     }
 }
 
@@ -170,7 +172,7 @@ public extension CompactSliderStyleConfiguration {
         case .circularGrid:
             return CompactSliderPolarPoint(
                 angle: .radians(progress.progresses[0]),
-                radius: progress.progresses[1]
+                normalizedRadius: progress.progresses[1]
             )
             .toCartesian(size: size)
         }
