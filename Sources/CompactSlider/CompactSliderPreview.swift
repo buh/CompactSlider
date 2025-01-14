@@ -56,54 +56,89 @@ struct CompactSliderPreview: View {
                     }
                     
                     HStack {
-                        CompactSlider(
-                            point: $point,
-                            in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
-                            step: CGPoint(x: 10, y: 10)
-                        )
-                        .compactSliderStyle(default: .grid())
-                        .compactSliderBackground {
-                            GridBackgroundView(configuration: $0, padding: $1)
-                        }
-                        .frame(width: 150, height: 150)
-                        
-                        CompactSlider(polarPoint: $polarPoint)
-                        
-                        ZStack {
-                            Circle()
-                                .fill(
-                                    AngularGradient(
-                                        colors: [
-                                            Color(hue: 0, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.1, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.2, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.3, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.4, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.5, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.6, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.7, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.8, saturation: 0.8, brightness: 1),
-                                            Color(hue: 0.9, saturation: 0.8, brightness: 1),
-                                            Color(hue: 1, saturation: 0.8, brightness: 1),
-                                        ],
-                                        center: .center
-                                    )
-                                )
-
-                            Circle()
-                                .fill(
-                                    RadialGradient(
-                                        colors: [.black, .black.opacity(0)],
-                                        center: .center,
-                                        startRadius: 40,
-                                        endRadius: 150
-                                    )
-                                )
+                        VStack {
+                            CompactSlider(
+                                point: $point,
+                                in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
+                                step: CGPoint(x: 10, y: 10)
+                            )
+                            .compactSliderStyle(default: .grid())
+                            .compactSliderBackground {
+                                GridBackgroundView(configuration: $0, padding: $1)
+                                    .saturation($0.focusState.isFocused ? 1 : 0)
+                            }
+                            .frame(width: 150, height: 150)
                             
-                            Circle()
-                                .stroke(Defaults.label.opacity(0.1), lineWidth: 1)
+                            CompactSlider(
+                                point: $point,
+                                in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
+                                step: CGPoint(x: 10, y: 10)
+                            )
+                            .compactSliderStyle(
+                                default: .grid(cornerRadius: 16, padding: .all(4))
+                            )
+                            .compactSliderBackground {
+                                GridBackgroundView(
+                                    configuration: $0,
+                                    padding: $1,
+                                    backgroundColor: .white.opacity(0.6),
+                                    handleColor: .white,
+                                    guidelineColor: .white,
+                                    normalizedBacklightRadius: 0,
+                                    gridFill: LinearGradient(
+                                        colors: [
+                                            Color(red: 0.1020, green: 0.1647, blue: 0.1804),
+                                            Color(red: 0.3294, green: 0.4471, blue: 0.4235),
+                                            Color(red: 0.8431, green: 0.3529, blue: 0.3725)
+                                        ],
+                                        startPoint: .bottomLeading,
+                                        endPoint: .topTrailing
+                                    ),
+                                    gridSize: 2.5
+                                )
+                            }
+                            .frame(width: 100, height: 100)
+                            .accentColor(.white)
                         }
-                        .frame(width: 150, height: 150)
+
+//                        CompactSlider(polarPoint: $polarPoint)
+//                            .compactSliderBackground { configuration, padding in
+//                                ZStack {
+//                                    Circle()
+//                                        .fill(
+//                                            AngularGradient(
+//                                                colors: [
+//                                                    Color(hue: 0, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.1, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.2, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.3, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.4, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.5, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.6, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.7, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.8, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 0.9, saturation: 0.8, brightness: 1),
+//                                                    Color(hue: 1, saturation: 0.8, brightness: 1),
+//                                                ],
+//                                                center: .center
+//                                            )
+//                                        )
+//                                    
+//                                    Circle()
+//                                        .fill(
+//                                            RadialGradient(
+//                                                colors: [.black, .black.opacity(0)],
+//                                                center: .center,
+//                                                startRadius: 40,
+//                                                endRadius: 150
+//                                            )
+//                                        )
+//                                    
+//                                    Circle()
+//                                        .stroke(Defaults.label.opacity(0.1), lineWidth: 1)
+//                                }
+//                            }
+//                            .frame(width: 150, height: 150)
                     }
                 }
             }
