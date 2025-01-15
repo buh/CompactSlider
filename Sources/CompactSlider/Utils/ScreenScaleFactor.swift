@@ -6,15 +6,22 @@
 //
 
 import Foundation
+#if canImport(WatchKit)
+import WatchKit
+#endif
 #if canImport(UIKit)
     import UIKit
 #endif
 
 enum ScreenInfo {
-    #if canImport(UIKit)
-    static let scale = UIScreen.main.scale
+    #if os(watchOS)
+    static let scale = WKInterfaceDevice.current().screenScale
     #else
-    static let scale: Double = 2
+        #if canImport(UIKit)
+        static let scale = UIScreen.main.scale
+        #else
+        static let scale: Double = 2
+        #endif
     #endif
 }
 

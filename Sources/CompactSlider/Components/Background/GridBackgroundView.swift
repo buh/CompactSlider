@@ -118,7 +118,7 @@ public struct GridBackgroundView<GridShapeStyle: ShapeStyle>: View {
                 inverse: inverseGrid
             )
             .fill(gridFill, style: .init(eoFill: inverseGrid))
-        } else if #available(macOS 12.0, iOS 15, *) {
+        } else if #available(macOS 12.0, iOS 15, watchOS 10, *) {
             Grid(
                 countX: countX,
                 countY: countY,
