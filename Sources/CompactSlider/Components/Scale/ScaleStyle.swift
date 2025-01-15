@@ -7,11 +7,11 @@ import SwiftUI
 
 /// A scale style.
 public struct ScaleStyle: Equatable {
-    let visibility: Visibility
-    let alignment: Alignment
-    let minSpace: CGFloat = 2
-    let line: Line
-    let secondaryLine: Line?
+    public let visibility: Visibility
+    public let alignment: Alignment
+    public let minSpace: CGFloat = 2
+    public let line: Line
+    public let secondaryLine: Line?
     
     public init(
         visibility: Visibility = .hoveringOrDragging,

@@ -4,14 +4,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "CompactSlider",
+    name: "Demo",
     platforms: [
         .macOS(.v11), .iOS(.v14), .watchOS(.v7)
     ],
     products: [
-        .library(name: "CompactSlider", targets: ["CompactSlider"])
+        .library(name: "Demo", targets: ["Demo"])
     ],
+    dependencies: [.package(path: "..")],
     targets: [
-        .target(name: "CompactSlider", resources: [.process("PrivacyInfo.xcprivacy")])
+        .target(name: "Demo", dependencies: ["CompactSlider"])
     ]
 )

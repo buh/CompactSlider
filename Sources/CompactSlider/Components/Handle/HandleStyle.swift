@@ -11,12 +11,12 @@ public enum HandleType: Equatable {
 
 /// A handle style.
 public struct HandleStyle: Equatable {
-    let type: HandleType
-    let visibility: Visibility
-    let color: Color
-    let width: CGFloat
-    let lineWidth: CGFloat
-    let cornerRadius: CGFloat
+    public let type: HandleType
+    public let visibility: Visibility
+    public let color: Color
+    public let width: CGFloat
+    public let lineWidth: CGFloat
+    public let cornerRadius: CGFloat
     
     init(
         type: HandleType,

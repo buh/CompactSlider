@@ -3,8 +3,8 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
-#if DEBUG
 import SwiftUI
+import CompactSlider
 
 struct CompactSliderGridPreview: View {
     @State private var point = CGPoint(x: 50, y: 50)
@@ -456,4 +456,3 @@ struct CompactSliderPreview: View {
         .frame(width: 400, height: 800, alignment: .top)
         #endif
 }
-#endif
