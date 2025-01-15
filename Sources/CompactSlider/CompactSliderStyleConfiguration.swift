@@ -212,7 +212,10 @@ extension CompactSliderStyleConfiguration {
 
 extension CompactSliderStyleConfiguration {
     public func isHandleVisible(handleStyle: HandleStyle) -> Bool {
-        if progress.isMultipleValues || progress.isGridValues || type.isScrollable {
+        if progress.isMultipleValues
+            || progress.isGridValues
+            || progress.isCircularGridValues
+            || type.isScrollable {
             return true
         }
         

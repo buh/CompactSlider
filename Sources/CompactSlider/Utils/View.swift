@@ -33,13 +33,4 @@ extension View {
     func anyView() -> AnyView {
         AnyView(self)
     }
-    
-    @ViewBuilder
-    func backgroundIf(_ condition: Bool, padding: EdgeInsets = .zero) -> some View {
-        if condition {
-            background(CompactSliderStyleBackgroundView(padding: padding))
-        } else {
-            self
-        }
-    }
 }

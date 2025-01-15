@@ -22,8 +22,8 @@ public struct CompactSliderStyleBackgroundView: View {
 
 struct BackgroundViewKey: EnvironmentKey {
     static var defaultValue: (EdgeInsets) -> AnyView = { padding in
-        BackgroundContainerView(padding: padding) { _, _ in
-            Defaults.backgroundColor
+        BackgroundContainerView(padding: padding) {
+            DefaultBackgroundView(configuration: $0, padding: $1)
         }
         .anyView()
     }

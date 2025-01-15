@@ -22,14 +22,20 @@ public protocol CompactSliderStyle {
 // MARK: - View Extension
 
 extension View {
-    /// Sets a custom style for compact sliders.
-    public func compactSliderStyle<Style: CompactSliderStyle>(_ style: Style) -> some View {
-        environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
-    }
-    
     /// Sets the default style for compact sliders.
     public func compactSliderStyle(default style: DefaultCompactSliderStyle) -> some View {
-        environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
+        compactSliderStyle(style)
+    }
+    
+    /// Sets a custom style for compact sliders.
+    public func compactSliderStyle<Style: CompactSliderStyle>(_ style: Style) -> some View {
+        if style.type.isLinear {
+            environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
+        } else if style.type.isGrid {
+            environment(\.compactSliderGridStyle, AnyCompactSliderStyle(style))
+        } else {
+            environment(\.compactSliderCircularGridStyle, AnyCompactSliderStyle(style))
+        }
     }
 }
 
@@ -39,10 +45,28 @@ struct CompactSliderStyleKey: EnvironmentKey {
     static var defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle())
 }
 
+struct CompactSliderGridStyleKey: EnvironmentKey {
+    static var defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle.grid())
+}
+
+struct CompactSliderCircularGridStyleKey: EnvironmentKey {
+    static var defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle.circularGrid())
+}
+
 extension EnvironmentValues {
     var compactSliderStyle: AnyCompactSliderStyle {
         get { self[CompactSliderStyleKey.self] }
         set { self[CompactSliderStyleKey.self] = newValue }
+    }
+    
+    var compactSliderGridStyle: AnyCompactSliderStyle {
+        get { self[CompactSliderGridStyleKey.self] }
+        set { self[CompactSliderGridStyleKey.self] = newValue }
+    }
+    
+    var compactSliderCircularGridStyle: AnyCompactSliderStyle {
+        get { self[CompactSliderCircularGridStyleKey.self] }
+        set { self[CompactSliderCircularGridStyleKey.self] = newValue }
     }
 }
 

@@ -23,7 +23,8 @@ extension Defaults {
         #endif
     }()
     
-    public static let gridCornerRadius: CGFloat = 20
+    public static let gridCornerRadius: CGFloat = 16
+    public static let gridPadding: EdgeInsets = .all(4)
     
     // MARK: - Handle
     

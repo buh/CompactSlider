@@ -67,7 +67,16 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     }
 }
 
-private extension View {
+extension View {
+    @ViewBuilder
+    func backgroundIf(_ condition: Bool, padding: EdgeInsets = .zero) -> some View {
+        if condition {
+            background(CompactSliderStyleBackgroundView(padding: padding))
+        } else {
+            self
+        }
+    }
+    
     @ViewBuilder
     func clipRoundedShapeIf(type: CompactSliderType, cornerRadius: CGFloat) -> some View {
         if type == .circularGrid {

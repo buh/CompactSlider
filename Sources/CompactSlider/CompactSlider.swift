@@ -74,12 +74,15 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.isEnabled) var isEnabled
     @Environment(\.layoutDirection) var layoutDirection
     @Environment(\.compactSliderStyle) var compactSliderStyle
+    @Environment(\.compactSliderGridStyle) var compactSliderGridStyle
+    @Environment(\.compactSliderCircularGridStyle) var compactSliderCircularGridStyle
     @Environment(\.compactSliderDisabledHapticFeedback) var disabledHapticFeedback
     
     let bounds: ClosedRange<Value>
     let pointBounds: ClosedRange<Point>
     let step: CompactSliderStep?
     let options: Set<CompactSliderOption>
+    private var defaultType: CompactSliderType = .scrollableHorizontal
     
     @Binding var lowerValue: Value
     @Binding var upperValue: Value
@@ -94,6 +97,18 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @State var isDragging = false
     @State var startDragLocation: CGPoint?
     @State var scrollWheelEvent = ScrollWheelEvent.zero
+    
+    var style: AnyCompactSliderStyle {
+        if defaultType.isLinear {
+            return compactSliderStyle
+        }
+        
+        if defaultType.isGrid {
+            return compactSliderGridStyle
+        }
+        
+        return compactSliderCircularGridStyle
+    }
     
     /// Creates a slider to select a value from a given bounds.
     ///
@@ -238,6 +253,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         ]
         
         _progress = .init(initialValue: Progress(progresses, isGridValues: true))
+        defaultType = .grid
     }
     
     public init(
@@ -258,19 +274,20 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         
         let progresses: [Double] = [polarPoint.wrappedValue.angle.radians, polarPoint.wrappedValue.normalizedRadius]
         _progress = .init(initialValue: Progress(progresses, isCircularGridValues: true))
+        defaultType = .circularGrid
     }
     
     public var body: some View {
         GeometryReader { proxy in
             let size = CGSize(
-                width: proxy.size.width - compactSliderStyle.padding.horizontal,
-                height: proxy.size.height - compactSliderStyle.padding.vertical
+                width: proxy.size.width - style.padding.horizontal,
+                height: proxy.size.height - style.padding.vertical
             )
             
-            compactSliderStyle
+            style
                 .makeBody(
                     configuration: CompactSliderStyleConfiguration(
-                        type: compactSliderStyle.type,
+                        type: style.type,
                         size: size,
                         focusState: .init(isHovering: isHovering, isDragging: isDragging),
                         progress: progress,
@@ -287,7 +304,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                             startDragLocation = nearestProgressLocation(
                                 at: $0.startLocation,
                                 size: size,
-                                type: compactSliderStyle.type,
+                                type: style.type,
                                 isRightToLeft: layoutDirection == .rightToLeft
                             )
                         }
@@ -295,7 +312,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                         onDragLocationChange(
                             translation: $0.translation,
                             size: size,
-                            type: compactSliderStyle.type,
+                            type: style.type,
                             isEnded: false,
                             isRightToLeft: layoutDirection == .rightToLeft
                         )
@@ -305,7 +322,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                             onDragLocationChange(
                                 translation: $0.translation,
                                 size: proxy.size,
-                                type: compactSliderStyle.type,
+                                type: style.type,
                                 isEnded: true,
                                 isRightToLeft: layoutDirection == .rightToLeft
                             )
@@ -320,11 +337,11 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                     guard isHovering else { return }
                     
                     if !event.isEnded {
-                        if compactSliderStyle.type.isHorizontal, !event.isHorizontalDelta {
+                        if style.type.isHorizontal, !event.isHorizontalDelta {
                             return
                         }
                         
-                        if compactSliderStyle.type.isVertical, event.isHorizontalDelta {
+                        if style.type.isVertical, event.isHorizontalDelta {
                             return
                         }
                     }
@@ -333,7 +350,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                         event,
                         size: proxy.size,
                         location: proxy.frame(in: .global).origin,
-                        type: compactSliderStyle.type,
+                        type: style.type,
                         isRightToLeft: layoutDirection == .rightToLeft
                     )
                 }

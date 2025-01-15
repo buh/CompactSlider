@@ -56,14 +56,13 @@ extension DefaultCompactSliderStyle {
     
     public static func grid(
         handleStyle: HandleStyle = .circle(),
-        scaleStyle: ScaleStyle? = nil,
         cornerRadius: CGFloat = Defaults.gridCornerRadius,
-        padding: EdgeInsets = .all(Defaults.gridCornerRadius / 2)
+        padding: EdgeInsets = Defaults.gridPadding
     ) -> DefaultCompactSliderStyle {
         .init(
             type: .grid,
             handleStyle: handleStyle,
-            scaleStyle: scaleStyle,
+            scaleStyle: nil,
             cornerRadius: cornerRadius,
             padding: padding
         )
@@ -71,13 +70,12 @@ extension DefaultCompactSliderStyle {
     
     public static func circularGrid(
         handleStyle: HandleStyle = .circle(),
-        scaleStyle: ScaleStyle? = ScaleStyle(),
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
         .init(
             type: .circularGrid,
             handleStyle: handleStyle,
-            scaleStyle: scaleStyle,
+            scaleStyle: nil,
             cornerRadius: 0,
             padding: padding
         )
