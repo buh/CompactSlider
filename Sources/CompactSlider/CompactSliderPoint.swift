@@ -14,11 +14,11 @@ public protocol CompactSliderPoint: Equatable, Comparable {
     init(x: Value, y: Value)
 }
 
-public extension CompactSliderPoint {
-    static var zero: Self { Self(x: 0, y: 0) }
-    static var one: Self { Self(x: 1, y: 1) }
+extension CompactSliderPoint {
+    public static var zero: Self { Self(x: 0, y: 0) }
+    public static var one: Self { Self(x: 1, y: 1) }
     
-    static func < (lhs: Self, rhs: Self) -> Bool {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.x < rhs.x || (lhs.x == rhs.x && lhs.y < rhs.y)
     }
 }

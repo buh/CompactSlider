@@ -116,8 +116,8 @@ public struct CustomCompactSliderStyle: CompactSliderStyle {
     }
 }
 
-public extension CompactSliderStyle where Self == CustomCompactSliderStyle {
-    static var `custom`: CustomCompactSliderStyle { CustomCompactSliderStyle() }
+extension CompactSliderStyle where Self == CustomCompactSliderStyle {
+    public static var `custom`: CustomCompactSliderStyle { CustomCompactSliderStyle() }
 }
 ```
 

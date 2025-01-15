@@ -5,8 +5,8 @@
 
 import SwiftUI
 
-public extension View {
-    func horizontalGradientMask() -> some View {
+extension View {
+    public func horizontalGradientMask() -> some View {
         mask(
             LinearGradient(
                 colors: [.clear, .white, .white, .white, .clear],
@@ -16,7 +16,7 @@ public extension View {
         )
     }
     
-    func verticalGradientMask() -> some View {
+    public func verticalGradientMask() -> some View {
         mask(
             LinearGradient(
                 colors: [.clear, .white, .white, .white, .clear],

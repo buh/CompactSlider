@@ -35,8 +35,8 @@ public struct HandleStyle: Equatable {
     }
 }
 
-public extension HandleStyle {
-    static func rectangle(
+extension HandleStyle {
+    public static func rectangle(
         visibility: Visibility = .handleDefault,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
@@ -52,7 +52,7 @@ public extension HandleStyle {
         )
     }
     
-    static func roundedRectangle(
+    public static func roundedRectangle(
         visibility: Visibility = .handleDefault,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
@@ -69,7 +69,7 @@ public extension HandleStyle {
         )
     }
     
-    static func circle(
+    public static func circle(
         visibility: Visibility = .handleDefault,
         color: Color = .accentColor,
         radius: CGFloat = Defaults.circleHandleRadius,

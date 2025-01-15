@@ -140,8 +140,8 @@ public struct GridBackgroundView<GridShapeStyle: ShapeStyle>: View {
     }
 }
 
-public extension GridBackgroundView where GridShapeStyle == Color {
-    init(
+extension GridBackgroundView where GridShapeStyle == Color {
+    public init(
         configuration: CompactSliderStyleConfiguration,
         padding: EdgeInsets,
         backgroundColor: Color? = Defaults.backgroundColor.opacity(0.1),

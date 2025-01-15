@@ -33,8 +33,8 @@ extension EnvironmentValues {
 
 // MARK: - View
 
-public extension View {
-    func compactSliderHandle<V: View>(
+extension View {
+    public func compactSliderHandle<V: View>(
         @ViewBuilder handleView: @escaping (
             _ configuration: CompactSliderStyleConfiguration,
             _ handleStyle: HandleStyle,

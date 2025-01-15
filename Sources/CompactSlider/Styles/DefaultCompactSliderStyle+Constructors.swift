@@ -5,8 +5,8 @@
 
 import SwiftUI
 
-public extension DefaultCompactSliderStyle {
-    static func horizontal(
+extension DefaultCompactSliderStyle {
+    public static func horizontal(
         _ alignment: HorizontalAlignment = .leading,
         handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
@@ -22,7 +22,7 @@ public extension DefaultCompactSliderStyle {
         )
     }
     
-    static func vertical(
+    public static func vertical(
         _ alignment: VerticalAlignment = .top,
         handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
@@ -38,7 +38,7 @@ public extension DefaultCompactSliderStyle {
         )
     }
     
-    static func scrollable(
+    public static func scrollable(
         _ axis: Axis = .horizontal,
         handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
@@ -54,7 +54,7 @@ public extension DefaultCompactSliderStyle {
         )
     }
     
-    static func grid(
+    public static func grid(
         handleStyle: HandleStyle = .circle(),
         scaleStyle: ScaleStyle? = nil,
         cornerRadius: CGFloat = Defaults.gridCornerRadius,
@@ -69,7 +69,7 @@ public extension DefaultCompactSliderStyle {
         )
     }
     
-    static func circularGrid(
+    public static func circularGrid(
         handleStyle: HandleStyle = .circle(),
         scaleStyle: ScaleStyle? = ScaleStyle(),
         padding: EdgeInsets = .zero

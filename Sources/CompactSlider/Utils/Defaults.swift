@@ -14,8 +14,8 @@ public enum Defaults {}
 
 // MARK: - CGFloat
 
-public extension Defaults {
-    static let cornerRadius: CGFloat = {
+extension Defaults {
+    public static let cornerRadius: CGFloat = {
         #if os(macOS)
         4
         #else
@@ -23,11 +23,11 @@ public extension Defaults {
         #endif
     }()
     
-    static let gridCornerRadius: CGFloat = 20
+    public static let gridCornerRadius: CGFloat = 20
     
     // MARK: - Handle
     
-    static let handleWidth: CGFloat = {
+    public static let handleWidth: CGFloat = {
         #if os(macOS)
         3
         #else
@@ -35,10 +35,10 @@ public extension Defaults {
         #endif
     }()
     
-    static let circleHandleRadius: CGFloat = 5
-    static let handleLineWidth: CGFloat = 2
+    public static let circleHandleRadius: CGFloat = 5
+    public static let handleLineWidth: CGFloat = 2
     
-    static let handleCornerRadius: CGFloat = {
+    public static let handleCornerRadius: CGFloat = {
         #if os(macOS)
         0
         #else
@@ -48,9 +48,9 @@ public extension Defaults {
     
     // MARK: - Scale
     
-    static let scaleLineThickness: CGFloat = 1
+    public static let scaleLineThickness: CGFloat = 1
     
-    static let scaleLineLength: CGFloat = {
+    public static let scaleLineLength: CGFloat = {
         #if os(macOS)
         5
         #else
@@ -58,7 +58,7 @@ public extension Defaults {
         #endif
     }()
     
-    static let secondaryScaleLineLength: CGFloat = {
+    public static let secondaryScaleLineLength: CGFloat = {
         #if os(macOS)
         3
         #else
@@ -69,24 +69,24 @@ public extension Defaults {
 
 // MARK: - Colors
 
-public extension Defaults {
+extension Defaults {
     #if os(macOS)
-    static let label = Color(NSColor.labelColor)
+    public static let label = Color(NSColor.labelColor)
     #elseif os(watchOS)
-    static let label = Color.white
+    public static let label = Color.white
     #else
-    static let label = Color(UIColor.label)
+    public static let label = Color(UIColor.label)
     #endif
     
-    static let backgroundOpacity: Double = 0.075
-    static let progressOpacity: Double = 0.1
-    static let focusedProgressOpacity: Double = 0.125
-    static let scaleLineOpacity: Double = 0.5
-    static let secondaryScaleLineOpacity: Double = 0.25
+    public static let backgroundOpacity: Double = 0.075
+    public static let progressOpacity: Double = 0.1
+    public static let focusedProgressOpacity: Double = 0.125
+    public static let scaleLineOpacity: Double = 0.5
+    public static let secondaryScaleLineOpacity: Double = 0.25
     
-    static let backgroundColor: Color = label.opacity(Self.backgroundOpacity)
-    static let progressColor: Color = label.opacity(Self.progressOpacity)
-    static let focusedProgressColor: Color = label.opacity(Self.focusedProgressOpacity)
-    static let scaleLineColor: Color = label.opacity(Self.scaleLineOpacity)
-    static let secondaryScaleLineColor: Color = label.opacity(Self.secondaryScaleLineOpacity)
+    public static let backgroundColor: Color = label.opacity(Self.backgroundOpacity)
+    public static let progressColor: Color = label.opacity(Self.progressOpacity)
+    public static let focusedProgressColor: Color = label.opacity(Self.focusedProgressOpacity)
+    public static let scaleLineColor: Color = label.opacity(Self.scaleLineOpacity)
+    public static let secondaryScaleLineColor: Color = label.opacity(Self.secondaryScaleLineOpacity)
 }

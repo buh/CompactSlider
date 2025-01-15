@@ -26,9 +26,9 @@ public struct CompactSliderStyleConfiguration: Equatable {
     }
 }
 
-public extension CompactSliderStyleConfiguration {
+extension CompactSliderStyleConfiguration {
     /// A dragging or hovering state of the slider.
-    struct FocusState: Equatable {
+    public struct FocusState: Equatable {
         /// True, when hovering the slider.
         public var isHovering: Bool
         /// True, when dragging the slider.
@@ -45,8 +45,8 @@ public extension CompactSliderStyleConfiguration {
     }
 }
 
-public extension CompactSliderStyleConfiguration {
-    func sliderSize() -> OptionalCGSize {
+extension CompactSliderStyleConfiguration {
+    public func sliderSize() -> OptionalCGSize {
         switch type {
         case .horizontal, .scrollableHorizontal:
             OptionalCGSize(width: size.width)
@@ -57,7 +57,7 @@ public extension CompactSliderStyleConfiguration {
         }
     }
     
-    func progressSize() -> OptionalCGSize {
+    public func progressSize() -> OptionalCGSize {
         if progress.isMultipleValues || type.isScrollable {
             return OptionalCGSize()
         }
@@ -88,7 +88,7 @@ public extension CompactSliderStyleConfiguration {
         }
     }
     
-    func progressOffset() -> CGPoint {
+    public func progressOffset() -> CGPoint {
         if progress.isMultipleValues || type.isScrollable {
             return .zero
         }
@@ -140,7 +140,7 @@ public extension CompactSliderStyleConfiguration {
         }
     }
     
-    func handleOffset(at index: Int, handleWidth: CGFloat) -> CGPoint {
+    public func handleOffset(at index: Int, handleWidth: CGFloat) -> CGPoint {
         guard index < progress.progresses.count else { return .zero }
         
         let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
@@ -178,7 +178,7 @@ public extension CompactSliderStyleConfiguration {
         }
     }
     
-    func scaleOffset() -> CGPoint {
+    public func scaleOffset() -> CGPoint {
         guard type.isScrollable, progress.isSingularValue else { return .zero }
         
         switch type {
@@ -194,8 +194,8 @@ public extension CompactSliderStyleConfiguration {
 
 // MARK: - Handle
 
-public extension CompactSliderStyleConfiguration {
-    func isHandleVisible(handleStyle: HandleStyle) -> Bool {
+extension CompactSliderStyleConfiguration {
+    public func isHandleVisible(handleStyle: HandleStyle) -> Bool {
         if progress.isMultipleValues || progress.isGridValues || type.isScrollable {
             return true
         }
@@ -231,7 +231,7 @@ public extension CompactSliderStyleConfiguration {
         return false
     }
     
-    func isScaleVisible(scaleStyle: ScaleStyle) -> Bool {
+    public func isScaleVisible(scaleStyle: ScaleStyle) -> Bool {
         if type.isScrollable {
             return true
         }

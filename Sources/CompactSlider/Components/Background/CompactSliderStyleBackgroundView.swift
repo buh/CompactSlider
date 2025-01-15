@@ -38,8 +38,8 @@ extension EnvironmentValues {
 
 // MARK: - View
 
-public extension View {
-    func compactSliderBackground<V: View>(
+extension View {
+    public func compactSliderBackground<V: View>(
         @ViewBuilder backgroundView: @escaping (
             _ configuration: CompactSliderStyleConfiguration,
             _ padding: EdgeInsets

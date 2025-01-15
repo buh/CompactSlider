@@ -53,8 +53,8 @@ public struct ScaleStyle: Equatable {
     }
 }
 
-public extension ScaleStyle {
-    struct Line: Equatable {
+extension ScaleStyle {
+    public struct Line: Equatable {
         let color: Color
         let length: CGFloat?
         let thickness: CGFloat
@@ -77,13 +77,13 @@ public extension ScaleStyle {
     }
 }
 
-public extension ScaleStyle.Line {
-    static let primary = ScaleStyle.Line(
+extension ScaleStyle.Line {
+    public static let primary = ScaleStyle.Line(
         color: Defaults.scaleLineColor,
         length: Defaults.scaleLineLength
     )
     
-    static let secondary = ScaleStyle.Line(
+    public static let secondary = ScaleStyle.Line(
         color: Defaults.secondaryScaleLineColor,
         length: Defaults.secondaryScaleLineLength
     )

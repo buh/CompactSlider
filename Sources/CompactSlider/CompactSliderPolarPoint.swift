@@ -25,13 +25,14 @@ public struct CompactSliderPolarPoint: Hashable {
 
 extension CompactSliderPolarPoint: Comparable {
     public static func < (lhs: Self, rhs: Self) -> Bool {
-        lhs.angle < rhs.angle || (lhs.angle == rhs.angle && lhs.normalizedRadius < rhs.normalizedRadius)
+        lhs.angle < rhs.angle ||
+        (lhs.angle == rhs.angle && lhs.normalizedRadius < rhs.normalizedRadius)
     }
 }
 
 // MARK: - Defaults
 
-public extension CompactSliderPolarPoint {
-    static var zero: Self { .init(angle: .zero, normalizedRadius: 0) }
-    static var full: Self { .init(angle: .degrees(360), normalizedRadius: 1) }
+extension CompactSliderPolarPoint {
+    public static let zero = CompactSliderPolarPoint(angle: .zero, normalizedRadius: 0)
+    public static let full = CompactSliderPolarPoint(angle: .degrees(360), normalizedRadius: 1)
 }

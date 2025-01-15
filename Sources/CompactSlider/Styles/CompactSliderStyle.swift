@@ -21,14 +21,14 @@ public protocol CompactSliderStyle {
 
 // MARK: - View Extension
 
-public extension View {
+extension View {
     /// Sets a custom style for compact sliders.
-    func compactSliderStyle<Style: CompactSliderStyle>(_ style: Style) -> some View {
+    public func compactSliderStyle<Style: CompactSliderStyle>(_ style: Style) -> some View {
         environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
     }
     
     /// Sets the default style for compact sliders.
-    func compactSliderStyle(default style: DefaultCompactSliderStyle) -> some View {
+    public func compactSliderStyle(default style: DefaultCompactSliderStyle) -> some View {
         environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
     }
 }
