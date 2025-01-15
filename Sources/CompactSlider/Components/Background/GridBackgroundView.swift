@@ -5,58 +5,72 @@
 
 import SwiftUI
 
-public struct GridBackgroundView<GridShapeStyle: ShapeStyle>: View {
+public struct GridBackgroundView<
+        BackgroundShapeStyle: ShapeStyle,
+        GridShapeStyle: ShapeStyle
+    >: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.handleStyle) var handleStyle
     
     let configuration: CompactSliderStyleConfiguration
     let padding: EdgeInsets
-    let backgroundColor: Color?
+    let backgroundShapeStyle: BackgroundShapeStyle?
     let handleColor: Color?
     let guidelineColor: Color?
     let normalizedBacklightRadius: CGFloat
-    let gridFill: GridShapeStyle?
     let gridSize: CGFloat?
-    let inverseGrid: Bool
+    let gridFill: GridShapeStyle?
+    let invertedGrid: Bool
     
     public init(
         configuration: CompactSliderStyleConfiguration,
         padding: EdgeInsets,
-        backgroundColor: Color? = Defaults.backgroundColor.opacity(0.1),
+        backgroundFill: BackgroundShapeStyle,
         handleColor: Color? = nil,
         guidelineColor: Color? = nil,
         normalizedBacklightRadius: CGFloat = 0.5,
-        gridFill: GridShapeStyle,
         gridSize: CGFloat? = nil,
-        inverseGrid: Bool = true
+        invertedGrid: Bool = true,
+        gridFill: GridShapeStyle
     ) {
         self.configuration = configuration
         self.padding = padding
-        self.backgroundColor = backgroundColor
+        self.backgroundShapeStyle = backgroundFill
         self.handleColor = handleColor
         self.guidelineColor = guidelineColor
         self.normalizedBacklightRadius = normalizedBacklightRadius.clamped()
-        self.gridFill = gridFill
         self.gridSize = gridSize
-        self.inverseGrid = inverseGrid
+        self.invertedGrid = invertedGrid
+        self.gridFill = gridFill
     }
     
     public var body: some View {
         ZStack {
-            backgroundColor
-            
-            if normalizedBacklightRadius > 0, configuration.focusState.isFocused {
-                backlightView()
+            ZStack {
+                if let backgroundShapeStyle {
+                    Rectangle()
+                        .fill(backgroundShapeStyle)
+                }
+                
+                if normalizedBacklightRadius > 0, configuration.focusState.isFocused {
+                    backlightView()
+                }
+                
+                if invertedGrid {
+                    guidelinesView(step: configuration.step)
+                }
+                
+                backgroundGridView()
             }
+            .compositingGroup()
             
-            guidelinesView(step: configuration.step)
-            gridView()
+            if !invertedGrid {
+                guidelinesView(step: configuration.step)
+                    .blendMode(.destinationOut)
+            }
         }
     }
     
-    private var countX: Int { configuration.step?.pointSteps?.x ?? 11 }
-    private var countY: Int { configuration.step?.pointSteps?.y ?? 11 }
-
     private var handleX: CGFloat {
         configuration.handleOffset(at: 0, handleWidth: handleStyle.width).x
             - configuration.size.width / 2 + handleStyle.width / 2
@@ -98,49 +112,27 @@ public struct GridBackgroundView<GridShapeStyle: ShapeStyle>: View {
     }
     
     @ViewBuilder
-    private func gridView() -> some View {
-        let gridSize: CGFloat = max(2, self.gridSize ?? (handleStyle.width / 3).roundedByPixel())
-        let offset = (handleStyle.width - gridSize) / 2
-        
-        let padding = EdgeInsets(
-            top: padding.top + offset,
-            leading: padding.leading + offset,
-            bottom: padding.bottom + offset,
-            trailing: padding.trailing + offset
-        )
-        
+    private func backgroundGridView() -> some View {
         if let gridFill {
-            Grid(
-                countX: countX,
-                countY: countY,
-                size: gridSize,
+            GridView<GridShapeStyle>(
+                configuration: configuration,
                 padding: padding,
-                inverse: inverseGrid
+                gridFill: gridFill,
+                gridSize: gridSize,
+                inverted: invertedGrid
             )
-            .fill(gridFill, style: .init(eoFill: inverseGrid))
-        } else if #available(macOS 12.0, iOS 15, watchOS 10, *) {
-            Grid(
-                countX: countX,
-                countY: countY,
-                size: gridSize,
+        } else if gridFill == nil {
+            GridView(
+                configuration: configuration,
                 padding: padding,
-                inverse: inverseGrid
+                gridSize: gridSize,
+                inverted: invertedGrid
             )
-            .fill(.ultraThinMaterial, style: .init(eoFill: inverseGrid))
-        } else {
-            Grid(
-                countX: countX,
-                countY: countY,
-                size: gridSize,
-                padding: padding,
-                inverse: inverseGrid
-            )
-            .fill(Color(white: colorScheme == .dark ? 0.2 : 0.85), style: .init(eoFill: inverseGrid))
         }
     }
 }
 
-extension GridBackgroundView where GridShapeStyle == Color {
+extension GridBackgroundView where BackgroundShapeStyle == Color, GridShapeStyle == Color {
     public init(
         configuration: CompactSliderStyleConfiguration,
         padding: EdgeInsets,
@@ -149,34 +141,63 @@ extension GridBackgroundView where GridShapeStyle == Color {
         guidelineColor: Color? = nil,
         normalizedBacklightRadius: CGFloat = 0.5,
         gridSize: CGFloat? = nil,
-        inverseGrid: Bool = true
+        invertedGrid: Bool = true
     ) {
         self.configuration = configuration
         self.padding = padding
-        self.backgroundColor = backgroundColor
+        self.backgroundShapeStyle = backgroundColor
         self.handleColor = handleColor
         self.guidelineColor = guidelineColor
         self.normalizedBacklightRadius = normalizedBacklightRadius.clamped()
-        self.gridFill = nil
         self.gridSize = gridSize
-        self.inverseGrid = inverseGrid
+        self.invertedGrid = invertedGrid
+        self.gridFill = nil
     }
 }
 
-#Preview {
-    GridBackgroundView(
-        configuration: .init(
-            type: .grid,
-            size: .init(width: 300, height: 300),
-            focusState: .none,
-            progress: .init([0.5, 0.5]),
-            step: nil,
-            options: []
-        ),
-        padding: .all(Defaults.gridCornerRadius / 2)
-    )
-    #if os(macOS)
-    .frame(width: 300, height: 300, alignment: .top)
-    #endif
-    .padding()
+extension GridBackgroundView where GridShapeStyle == Color {
+    public init(
+        configuration: CompactSliderStyleConfiguration,
+        padding: EdgeInsets,
+        backgroundFill: BackgroundShapeStyle,
+        handleColor: Color? = nil,
+        guidelineColor: Color? = nil,
+        normalizedBacklightRadius: CGFloat = 0.5,
+        gridSize: CGFloat? = nil,
+        invertedGrid: Bool = true
+    ) {
+        self.configuration = configuration
+        self.padding = padding
+        self.backgroundShapeStyle = backgroundFill
+        self.handleColor = handleColor
+        self.guidelineColor = guidelineColor
+        self.normalizedBacklightRadius = normalizedBacklightRadius.clamped()
+        self.gridSize = gridSize
+        self.invertedGrid = invertedGrid
+        self.gridFill = nil
+    }
+}
+
+extension GridBackgroundView where BackgroundShapeStyle == Color {
+    public init(
+        configuration: CompactSliderStyleConfiguration,
+        padding: EdgeInsets,
+        backgroundColor: Color? = nil,
+        handleColor: Color? = nil,
+        guidelineColor: Color? = nil,
+        normalizedBacklightRadius: CGFloat = 0.5,
+        gridSize: CGFloat? = nil,
+        invertedGrid: Bool = true,
+        gridFill: GridShapeStyle
+    ) {
+        self.configuration = configuration
+        self.padding = padding
+        self.backgroundShapeStyle = backgroundColor
+        self.handleColor = handleColor
+        self.guidelineColor = guidelineColor
+        self.normalizedBacklightRadius = normalizedBacklightRadius.clamped()
+        self.gridSize = gridSize
+        self.invertedGrid = invertedGrid
+        self.gridFill = gridFill
+    }
 }

@@ -24,6 +24,22 @@ public struct CompactSliderStyleConfiguration: Equatable {
         
         return progress.progresses[index]
     }
+    
+    init(
+        type: CompactSliderType,
+        size: CGSize,
+        focusState: FocusState,
+        progress: Progress,
+        step: CompactSliderStep?,
+        options: Set<CompactSliderOption>
+    ) {
+        self.type = type
+        self.size = size
+        self.focusState = focusState
+        self.progress = progress
+        self.step = step
+        self.options = options
+    }
 }
 
 extension CompactSliderStyleConfiguration {
@@ -239,6 +255,14 @@ extension CompactSliderStyleConfiguration {
         return scaleStyle.visibility != .hidden
             && (type.isHorizontal || type.isVertical)
             && (scaleStyle.visibility == .always || focusState.isFocused)
+    }
+}
+
+// MARK: - Grid
+
+extension CompactSliderStyleConfiguration {
+    public var pointSteps: CompactSliderStep.PointSteps {
+        step?.pointSteps ?? .init(x: 11, y: 11)
     }
 }
 
