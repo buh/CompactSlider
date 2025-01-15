@@ -13,11 +13,16 @@
 
 The slider is a replacement for the build-in slider and is designed specifically for SwiftUI. For me, the main motivation for writing a component that already exists is the very slow performance under macOS (e.g. when you need to resize the screen with multiple sliders or when animating) and the severely outdated design. At the same time, I was inspired by the slider design that Apple's [Photos](https://www.apple.com/macos/photos/#edit-gallery) app developed, which makes heavy use of sliders.
 
+
+## Version 1.0
+
 > **Warning**
 > Version 2.x.x is in active development on the `main` branch.
-> Please specify explicitly the version `1.2.1` for the previous major version ([README for v1](https://github.com/buh/CompactSlider/blob/main/README_v1.md)).
+> Please specify explicitly the version `1.2.1` for the previous major version.
 
-## Version 2.0
+[README v1](https://github.com/buh/CompactSlider/blob/main/README_v1.md)
+
+## Version 2.0 (in development)
 <img width="442" alt="image" src="https://github.com/user-attachments/assets/83c84076-2e22-4822-a610-58ec43cdb11f" />
 
 # Requirements
