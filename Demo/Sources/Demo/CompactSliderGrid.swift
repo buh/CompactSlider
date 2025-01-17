@@ -8,11 +8,19 @@ import CompactSlider
 
 struct CompactSliderGridPreview: View {
     @Environment(\.colorScheme) var colorScheme
+    @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var point = CGPoint(x: 50, y: 50)
     @State private var snappedPoint = CGPoint(x: 50, y: 50)
     
     var body: some View {
         VStack(spacing: 16) {
+            Picker(selection: $layoutDirection) {
+                Text("Left-to-Right").tag(LayoutDirection.leftToRight)
+                Text("Right-to-Left").tag(LayoutDirection.rightToLeft)
+            } label: { EmptyView() }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 20)
+            
             HStack(spacing: 16) {
                 Spacer()
                 
@@ -29,6 +37,7 @@ struct CompactSliderGridPreview: View {
         }
         .padding()
         .accentColor(.purple)
+        .environment(\.layoutDirection, layoutDirection)
     }
     
     @ViewBuilder

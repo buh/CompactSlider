@@ -7,11 +7,19 @@ import SwiftUI
 import CompactSlider
 
 struct CompactSliderCircularGridPreview: View {
+    @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var point: CompactSliderPolarPoint = .zero
     @State private var brightness = 0.5
     
     var body: some View {
         VStack(spacing: 16) {
+            Picker(selection: $layoutDirection) {
+                Text("Left-to-Right").tag(LayoutDirection.leftToRight)
+                Text("Right-to-Left").tag(LayoutDirection.rightToLeft)
+            } label: { EmptyView() }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 20)
+            
             HStack(spacing: 16) {
                 Spacer()
                 
@@ -27,6 +35,7 @@ struct CompactSliderCircularGridPreview: View {
         }
         .padding()
         .accentColor(.purple)
+        .environment(\.layoutDirection, layoutDirection)
     }
     
     @ViewBuilder
