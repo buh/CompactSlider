@@ -6,7 +6,7 @@
 import SwiftUI
 import CompactSlider
 
-struct CompactSliderPreview: View {
+struct CompactSliderDemo: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var progress: Double = 0.3
@@ -287,7 +287,7 @@ struct CompactSliderPreview: View {
 }
 
 #Preview("Slider") {
-    CompactSliderPreview()
+    CompactSliderDemo()
         #if os(macOS)
         .frame(width: 400, height: 800, alignment: .top)
         #endif

@@ -5,6 +5,12 @@
 
 import SwiftUI
 
+enum ScaleMark {
+    case line
+    case circle
+    case capsule
+}
+
 /// A scale style.
 public struct ScaleStyle: Equatable {
     public let visibility: Visibility

@@ -6,7 +6,7 @@
 import SwiftUI
 import CompactSlider
 
-struct CompactSliderGridPreview: View {
+struct CompactSliderGridDemo: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var point = CGPoint(x: 50, y: 50)
@@ -146,7 +146,7 @@ struct CompactSliderGridPreview: View {
 }
 
 #Preview("Grid") {
-    CompactSliderGridPreview()
+    CompactSliderGridDemo()
         #if os(macOS)
         .frame(width: 400, height: 800, alignment: .top)
         #endif

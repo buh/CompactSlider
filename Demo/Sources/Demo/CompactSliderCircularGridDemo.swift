@@ -6,7 +6,7 @@
 import SwiftUI
 import CompactSlider
 
-struct CompactSliderCircularGridPreview: View {
+struct CompactSliderCircularGridDemo: View {
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var point: CompactSliderPolarPoint = .zero
     @State private var brightness = 0.5
@@ -129,7 +129,7 @@ struct CompactSliderCircularGridPreview: View {
 }
 
 #Preview("Circular Grid") {
-    CompactSliderCircularGridPreview()
+    CompactSliderCircularGridDemo()
         #if os(macOS)
         .frame(width: 400, height: 800, alignment: .top)
         #endif
