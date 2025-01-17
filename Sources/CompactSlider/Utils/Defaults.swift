@@ -94,4 +94,5 @@ extension Defaults {
     public static let focusedProgressColor: Color = label.opacity(Self.focusedProgressOpacity)
     public static let scaleLineColor: Color = label.opacity(Self.scaleLineOpacity)
     public static let secondaryScaleLineColor: Color = label.opacity(Self.secondaryScaleLineOpacity)
+    public static let circularScaleLineColor: Color = label.opacity(0.1)
 }

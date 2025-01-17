@@ -17,13 +17,8 @@ public struct CompactSliderStyleScaleView: View {
 
 struct ScaleViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
-        ScaleContainerView { configuration, style in
-            ScaleView(
-                style: style,
-                alignment: configuration.type.isHorizontal ? .horizontal : .vertical,
-                startFromCenter: configuration.type.isCenter,
-                steps: configuration.step?.linearSteps ?? 0
-            )
+        ScaleContainerView {
+            DefaultScaleView(configuration: $0, style: $1)
         }
         .anyView()
 }

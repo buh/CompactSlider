@@ -9,7 +9,7 @@ extension DefaultCompactSliderStyle {
     public static func horizontal(
         _ alignment: HorizontalAlignment = .leading,
         handleStyle: HandleStyle = .rectangle(),
-        scaleStyle: ScaleStyle? = ScaleStyle(),
+        scaleStyle: ScaleStyle? = .linear(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
@@ -25,7 +25,7 @@ extension DefaultCompactSliderStyle {
     public static func vertical(
         _ alignment: VerticalAlignment = .top,
         handleStyle: HandleStyle = .rectangle(),
-        scaleStyle: ScaleStyle? = ScaleStyle(),
+        scaleStyle: ScaleStyle? = .linear(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
@@ -41,7 +41,7 @@ extension DefaultCompactSliderStyle {
     public static func scrollable(
         _ axis: Axis = .horizontal,
         handleStyle: HandleStyle = .rectangle(),
-        scaleStyle: ScaleStyle? = ScaleStyle(),
+        scaleStyle: ScaleStyle? = .linear(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
@@ -93,11 +93,13 @@ extension DefaultCompactSliderStyle {
     
     public static func circularGrid(
         handleStyle: HandleStyle = .circle(),
+        scaleStyle: ScaleStyle? = nil,
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
         .init(
             type: .circularGrid,
             handleStyle: handleStyle,
+            scaleStyle: scaleStyle,
             cornerRadius: 0,
             padding: padding
         )

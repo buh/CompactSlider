@@ -257,7 +257,7 @@ extension CompactSliderStyleConfiguration {
         }
         
         return scaleStyle.visibility != .hidden
-            && (type.isHorizontal || type.isVertical)
+            && (type.isHorizontal || type.isVertical || type.isCircularGrid)
             && (scaleStyle.visibility == .always || focusState.isFocused)
     }
 }

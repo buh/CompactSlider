@@ -73,7 +73,7 @@ struct CompactSliderPreview: View {
         )
         .compactSliderStyle(default: .scrollable(
             handleStyle: .rectangle(),
-            scaleStyle: .init(
+            scaleStyle: .linear(
                 alignment: .bottom,
                 line: .init(length: 16, skipEdges: false),
                 secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
@@ -166,7 +166,7 @@ struct CompactSliderPreview: View {
         )
         .compactSliderStyle(default: .scrollable(
             .vertical,
-            scaleStyle: .init(
+            scaleStyle: .linear(
                 line: .init(
                     length: nil,
                     skipEdges: false,
@@ -186,7 +186,7 @@ struct CompactSliderPreview: View {
         CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
             .compactSliderStyle(default: .scrollable(
                 .vertical,
-                scaleStyle: .init(
+                scaleStyle: .linear(
                     line: .init(
                         length: nil,
                         padding: .horizontal(8)
@@ -203,7 +203,7 @@ struct CompactSliderPreview: View {
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .vertical(
                 .bottom,
-                scaleStyle: .init(
+                scaleStyle: .linear(
                     line: .init(
                         length: nil,
                         padding: .horizontal(4)
@@ -222,7 +222,7 @@ struct CompactSliderPreview: View {
         CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
             .compactSliderStyle(default: .vertical(
                 .center,
-                scaleStyle: .init(
+                scaleStyle: .linear(
                     line: .init(length: nil, padding: .horizontal(4)),
                     secondaryLine: .init(
                         color: Defaults.secondaryScaleLineColor,
@@ -274,7 +274,7 @@ struct CompactSliderPreview: View {
         
         CompactSlider(values: $progresses)
             .compactSliderStyle(default: .vertical(
-                scaleStyle: .init(
+                scaleStyle: .linear(
                     line: .init(
                         color: Defaults.label.opacity(0.2),
                         length: nil,

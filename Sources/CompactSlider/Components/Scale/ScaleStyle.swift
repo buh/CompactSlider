@@ -13,16 +13,42 @@ public struct ScaleStyle: Equatable {
     public let line: Line
     public let secondaryLine: Line?
     
-    public init(
-        visibility: Visibility = .hoveringOrDragging,
-        alignment: Alignment = .topLeading,
-        line: Line = .primary,
-        secondaryLine: Line? = .secondary
+    init(
+        visibility: Visibility,
+        alignment: Alignment,
+        line: Line,
+        secondaryLine: Line?
     ) {
         self.visibility = visibility
         self.alignment = alignment
         self.line = line
         self.secondaryLine = secondaryLine
+    }
+    
+    static public func linear(
+        visibility: Visibility = .hoveringOrDragging,
+        alignment: Alignment = .topLeading,
+        line: Line = .primary,
+        secondaryLine: Line? = .secondary
+    ) -> ScaleStyle {
+        ScaleStyle(
+            visibility: visibility,
+            alignment: alignment,
+            line: line,
+            secondaryLine: secondaryLine
+        )
+    }
+    
+    static public func circular(
+        visibility: Visibility = .always,
+        line: Line = .circular
+    ) -> ScaleStyle {
+        ScaleStyle(
+            visibility: visibility,
+            alignment: .center,
+            line: line,
+            secondaryLine: nil
+        )
     }
     
     func skipedEdges(_ value: Bool) -> Self {
@@ -63,7 +89,7 @@ extension ScaleStyle {
         
         public init(
             color: Color = Defaults.scaleLineColor,
-            length: CGFloat?,
+            length: CGFloat? = nil,
             thickness: CGFloat = Defaults.scaleLineThickness,
             skipEdges: Bool = true,
             padding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
@@ -87,12 +113,14 @@ extension ScaleStyle.Line {
         color: Defaults.secondaryScaleLineColor,
         length: Defaults.secondaryScaleLineLength
     )
+    
+    public static let circular = ScaleStyle.Line(color: Defaults.circularScaleLineColor)
 }
 
 // MARK: - Environment
 
 struct ScaleStyleKey: EnvironmentKey {
-    static var defaultValue: ScaleStyle? = ScaleStyle()
+    static var defaultValue: ScaleStyle? = .linear()
 }
 
 extension EnvironmentValues {

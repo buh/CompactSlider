@@ -41,7 +41,6 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
             }
             
             if !configuration.progress.isGridValues,
-               !configuration.progress.isCircularGridValues,
                let scaleStyle,
                configuration.isScaleVisible(scaleStyle: scaleStyle) {
                 CompactSliderStyleScaleView()

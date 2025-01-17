@@ -22,7 +22,7 @@ public struct ScaleView: View {
     let steps: Int
     
     public init(
-        style: ScaleStyle = ScaleStyle(),
+        style: ScaleStyle = .linear(),
         alignment: Axis = .horizontal,
         startFromCenter: Bool = false,
         steps: Int = 0
@@ -83,7 +83,7 @@ public struct ScaleView: View {
             .background(Defaults.label.opacity(0.1))
             
             ZStack {
-                ScaleView(style: .init(
+                ScaleView(style: .linear(
                     line: .init(length: 20, skipEdges: false),
                     secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 10, skipEdges: false)
                 ))
@@ -92,7 +92,7 @@ public struct ScaleView: View {
             .background(Defaults.label.opacity(0.1))
 
             ZStack {
-                ScaleView(style: .init(
+                ScaleView(style: .linear(
                     line: .init(length: 25, thickness: 2),
                     secondaryLine: .init(length: 15, thickness: 2)
                 ))
@@ -101,7 +101,7 @@ public struct ScaleView: View {
             .background(Defaults.label.opacity(0.1))
             
             ZStack {
-                ScaleView(style: .init(line: .init(length: 10), secondaryLine: nil))
+                ScaleView(style: .linear(line: .init(length: 10), secondaryLine: nil))
                     .frame(height: 50, alignment: .top)
             }
             .background(Defaults.label.opacity(0.1))
@@ -110,7 +110,7 @@ public struct ScaleView: View {
                 .frame(height: 50, alignment: .top)
                 .background(Defaults.label.opacity(0.1))
             
-            ScaleView(style: .init(line: .init(length: 25, thickness: 5)), steps: 10)
+            ScaleView(style: .linear(line: .init(length: 25, thickness: 5)), steps: 10)
                 .frame(height: 50, alignment: .top)
                 .background(Defaults.label.opacity(0.1))
         }
