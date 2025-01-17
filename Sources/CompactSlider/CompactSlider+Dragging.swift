@@ -116,7 +116,7 @@ extension CompactSlider {
     }
     
     func updateLinearProgress(_ newValue: Double, isEnded: Bool) {
-        let newValue = newValue.clampedOrRotated(withRotaion: options.contains(.loopValues))
+        let newValue = newValue.clampedOrRotated(rotated: options.contains(.loopValues))
         let progressAndIndex = nearestProgress(for: newValue)
         
         guard let linearProgressStep = step?.linearProgressStep else {

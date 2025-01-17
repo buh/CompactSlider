@@ -6,7 +6,7 @@
 import Foundation
 
 extension Comparable where Self: BinaryFloatingPoint {
-    func clampedOrRotated(withRotaion rotation: Bool)  ->  Self {
+    func clampedOrRotated(rotated rotation: Bool)  ->  Self {
         rotation ? rotated() : clamped()
     }
     
