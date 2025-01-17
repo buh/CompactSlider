@@ -24,7 +24,7 @@ struct HandleViewContainerView<V: View>: View {
     
     var body: some View {
         Group {
-            if configuration.type == .grid {
+            if configuration.type == .grid || configuration.type == .circularGrid {
                 let offset = configuration.handleOffset(at: 0, handleWidth: handleStyle.width)
                 
                 handleView(configuration, handleStyle, configuration.progress(at: 0), 0)

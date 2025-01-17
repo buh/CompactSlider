@@ -18,24 +18,22 @@ struct CompactSliderPreview: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            if #available(macOS 12.0, iOS 15, *) {
-                HStack {
-                    Spacer()
-                    
-                    Text("\(progress, format: .percent.precision(.fractionLength(0)))")
-                    Text("\(Int(centerProgress))")
-                    Text("\(fromProgress, format: .percent.precision(.fractionLength(0)))-\(toProgress, format: .percent.precision(.fractionLength(0)))")
-                    
-                    Spacer()
-                    Text("Multi:")
-                    ForEach(progresses, id: \.self) { p in
-                        Text("\(Int(p * 100))%")
-                    }
-                    Spacer()
+            HStack {
+                Spacer()
+                
+                Text("\(progress, format: .percent.precision(.fractionLength(0)))")
+                Text("\(Int(centerProgress))")
+                Text("\(fromProgress, format: .percent.precision(.fractionLength(0)))-\(toProgress, format: .percent.precision(.fractionLength(0)))")
+                
+                Spacer()
+                Text("Multi:")
+                ForEach(progresses, id: \.self) { p in
+                    Text("\(Int(p * 100))%")
                 }
-                .monospacedDigit()
+                Spacer()
             }
-
+            .monospacedDigit()
+            
             Picker(selection: $layoutDirection) {
                 Text("Left-to-Right").tag(LayoutDirection.leftToRight)
                 Text("Right-to-Left").tag(LayoutDirection.rightToLeft)

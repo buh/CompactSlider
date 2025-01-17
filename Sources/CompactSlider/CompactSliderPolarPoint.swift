@@ -12,11 +12,18 @@ public struct CompactSliderPolarPoint: Hashable {
     
     public init(angle: Angle, normalizedRadius: Double) {
         self.angle = angle
-        self.normalizedRadius = max(0, min(1, normalizedRadius))
+        self.normalizedRadius = normalizedRadius
+    }
+    
+    func rounded(_ step: CompactSliderPolarPoint) -> Self {
+        .init(
+            angle: .degrees(angle.degrees.rounded(step: step.angle.degrees)),
+            normalizedRadius: normalizedRadius.rounded(step: step.normalizedRadius)
+        )
     }
     
     func toCartesian(size: CGSize) -> CGPoint {
-        let radius = normalizedRadius * min(size.width, size.height) / 2
+        let radius = normalizedRadius * size.minValue / 2
         let x = size.width / 2 + radius * cos(angle.radians)
         let y = size.height / 2 + radius * sin(angle.radians)
         return CGPoint(x: x, y: y)

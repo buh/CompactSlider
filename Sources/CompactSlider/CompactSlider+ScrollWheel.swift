@@ -87,8 +87,8 @@ extension CompactSlider {
     ) {
         if event.isEnded {
             if !options.contains(.snapToSteps), let pointProgressStep = step?.pointProgressStep {
-                let progressX = progress.progresses[0].rounded(toStep: pointProgressStep.x)
-                let progressY = progress.progresses[1].rounded(toStep: pointProgressStep.y)
+                let progressX = progress.progresses[0].rounded(step: pointProgressStep.x)
+                let progressY = progress.progresses[1].rounded(step: pointProgressStep.y)
                 
                 progress.update(progressX, at: 0)
                 progress.update(progressY, at: 1)

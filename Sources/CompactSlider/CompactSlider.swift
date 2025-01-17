@@ -276,12 +276,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         self.step = CompactSliderStep(polarPointStep: step)
         self.options = gestureOptions
         
-        let progresses: [Double] = [
-            polarPoint.wrappedValue.angle.degrees,
-            polarPoint.wrappedValue.normalizedRadius
-        ]
-        
-        _progress = .init(initialValue: Progress(progresses, isCircularGridValues: true))
+        _progress = .init(initialValue: Progress(polarPoint.wrappedValue))
         defaultType = .circularGrid
     }
     

@@ -11,16 +11,14 @@ struct CompactSliderCircularGridPreview: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            if #available(macOS 12.0, iOS 15, watchOS 8, *) {
-                HStack(spacing: 16) {
-                    Spacer()
-                    
-                    Text("\(Int(point.angle.degrees))º x \(point.normalizedRadius, format: .percent)")
-                    
-                    Spacer()
-                }
-                .monospacedDigit()
+            HStack(spacing: 16) {
+                Spacer()
+                
+                Text("\(Int(point.angle.degrees))º x \(point.normalizedRadius, format: .percent.precision(.fractionLength(0)))")
+                
+                Spacer()
             }
+            .monospacedDigit()
             
             Divider()
             
@@ -32,8 +30,12 @@ struct CompactSliderCircularGridPreview: View {
     
     @ViewBuilder
     func circularGridSliders() -> some View {
-        CompactSlider(polarPoint: $point)
-            .frame(width: 150, height: 150)
+        CompactSlider(
+            polarPoint: $point,
+            step: .init(angle: .degrees(5), normalizedRadius: 0.05),
+            gestureOptions: .default.union([.snapToSteps])
+        )
+        .frame(width: 150, height: 150)
         
         CompactSlider(polarPoint: $point)
             .compactSliderBackground { configuration, padding in

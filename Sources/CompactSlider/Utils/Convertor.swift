@@ -16,7 +16,7 @@ extension BinaryFloatingPoint {
         return Double(self - bounds.lowerBound) / distance
     }
     
-    public func rounded(toStep step: Self) -> Self {
+    public func rounded(step: Self) -> Self {
         guard step > 0 else { return self }
         
         return (self / step).rounded() * step
@@ -36,7 +36,7 @@ extension Double {
         let value = (bounds.lowerBound + Value(self) * bounds.distance)
         
         if let step {
-            return value.rounded(toStep: step)
+            return value.rounded(step: step)
         }
         
         return value

@@ -13,18 +13,16 @@ struct CompactSliderGridPreview: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            if #available(macOS 12.0, iOS 15, watchOS 8, *) {
-                HStack(spacing: 16) {
-                    Spacer()
-                    
-                    Text("\(Int(point.x)) x \(Int(point.y))")
-                    Text("\(Int(snappedPoint.x)) x \(Int(snappedPoint.y))")
-                    
-                    Spacer()
-                }
-                .monospacedDigit()
+            HStack(spacing: 16) {
+                Spacer()
+                
+                Text("\(Int(point.x)) x \(Int(point.y))")
+                Text("\(Int(snappedPoint.x)) x \(Int(snappedPoint.y))")
+                
+                Spacer()
             }
-
+            .monospacedDigit()
+            
             Divider()
             
             gridSliders()

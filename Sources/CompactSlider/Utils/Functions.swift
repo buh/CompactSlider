@@ -14,15 +14,15 @@ extension Comparable where Self: BinaryFloatingPoint {
         (self > 1 ? (self - 1) : (self < 0 ? (self + 1) : self)).clamped()
     }
     
-    func clamped(_ f: Self = 0, _ t: Self = 1)  ->  Self {
+    func clamped(_ from: Self = 0, _ to: Self = 1)  ->  Self {
         var value = self
         
-        if value < f {
-            value = f
+        if value < from {
+            value = from
         }
         
-        if value > t {
-            value = t
+        if value > to {
+            value = to
         }
         
         return value

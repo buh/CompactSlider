@@ -117,17 +117,12 @@ extension CompactSliderStep {
     init?(polarPointStep: CompactSliderPolarPoint) {
         guard polarPointStep.angle.degrees > 0, polarPointStep.normalizedRadius > 0 else { return nil }
         
-        let polarPointProgressStep = CompactSliderPolarPoint(
-            angle: Angle(degrees: polarPointStep.angle.degrees / 360.0),
-            normalizedRadius: polarPointStep.normalizedRadius
-        )
-        
         self = .polarPoint(
             valueStep: polarPointStep,
-            progressStep: polarPointProgressStep,
+            progressStep: polarPointStep,
             steps: .init(
-                angle: Int((360.0 / polarPointProgressStep.angle.degrees).rounded()) + 1,
-                radius: Int((1.0 / polarPointProgressStep.normalizedRadius).rounded()) + 1
+                angle: Int((360.0 / polarPointStep.angle.degrees).rounded()) + 1,
+                radius: Int((1.0 / polarPointStep.normalizedRadius).rounded()) + 1
             )
         )
     }

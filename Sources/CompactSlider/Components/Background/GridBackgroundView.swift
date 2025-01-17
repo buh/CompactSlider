@@ -98,14 +98,14 @@ public struct GridBackgroundView<
             Rectangle()
                 .fill(guidelineColor ?? handleStyle.color.opacity(0.333))
                 .offset(x: handleX.rounded(
-                    toStep: pointProgressStep.x * (configuration.size.width - handleStyle.width)
+                    step: pointProgressStep.x * (configuration.size.width - handleStyle.width)
                 ))
                 .frame(width: handleStyle.width)
             
             Rectangle()
                 .fill(guidelineColor ?? handleStyle.color.opacity(0.333))
                 .offset(y: handleY.rounded(
-                    toStep: pointProgressStep.y * (configuration.size.height - handleStyle.width)
+                    step: pointProgressStep.y * (configuration.size.height - handleStyle.width)
                 ))
                 .frame(height: handleStyle.width)
         }

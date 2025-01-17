@@ -95,7 +95,7 @@ extension CompactSlider {
             return
         }
         
-        let roundedValue = newValue.rounded(toStep: linearProgressStep)
+        let roundedValue = newValue.rounded(step: linearProgressStep)
         
         if progress.update(roundedValue, at: progressAndIndex.index) {
             HapticFeedback.vibrate(disabledHapticFeedback)
@@ -116,8 +116,8 @@ extension CompactSlider {
         
         if isEnded {
             if !options.contains(.snapToSteps), let pointProgressStep = step?.pointProgressStep {
-                let progressX = progress.progresses[0].rounded(toStep: pointProgressStep.x)
-                let progressY = progress.progresses[1].rounded(toStep: pointProgressStep.y)
+                let progressX = progress.progresses[0].rounded(step: pointProgressStep.x)
+                let progressY = progress.progresses[1].rounded(step: pointProgressStep.y)
                 
                 progress.update(progressX, at: 0)
                 progress.update(progressY, at: 1)
@@ -141,8 +141,8 @@ extension CompactSlider {
         let isSnapped = options.contains(.snapToSteps) && step?.pointProgressStep != nil
         
         if isSnapped, let pointProgressStep = step?.pointProgressStep {
-            progressX = progressX.rounded(toStep: pointProgressStep.x)
-            progressY = progressY.rounded(toStep: pointProgressStep.y)
+            progressX = progressX.rounded(step: pointProgressStep.x)
+            progressY = progressY.rounded(step: pointProgressStep.y)
         }
         
         let updatedX = progress.update(progressX, at: 0)
@@ -164,20 +164,13 @@ extension CompactSlider {
         isEnded: Bool,
         isRightToLeft: Bool
     ) {
-        let maxDistance = CGPoint(x: size.width / 2, y: size.height / 2).calculateDistance()
+        let maxDistance = CGPoint(x: size.minValue / 2, y: size.minValue / 2).calculateDistance()
         
         guard let startDragLocation, maxDistance > 0 else { return }
         
         if isEnded {
-            if !options.contains(.snapToSteps),
-               let polarPointProgressStep = step?.polarPointProgressStep {
-                let progressAngle = progress.progresses[0]
-                    .rounded(toStep: polarPointProgressStep.angle.degrees)
-                let progressRadius = progress.progresses[1]
-                    .rounded(toStep: polarPointProgressStep.normalizedRadius)
-                
-                progress.update(progressAngle, at: 0)
-                progress.update(progressRadius, at: 1)
+            if !options.contains(.snapToSteps), let step = step?.polarPointProgressStep {
+                progress.updatePolarPoint(progress.polarPoint.rounded(step))
                 HapticFeedback.vibrate(disabledHapticFeedback)
             }
             
@@ -191,8 +184,8 @@ extension CompactSlider {
         }
         
         let progressLocation = CGPoint(
-            x: startDragLocation.x + translationX - size.width / 2,
-            y: startDragLocation.y + translation.height - size.height / 2
+            x: startDragLocation.x + translationX - size.minValue / 2,
+            y: startDragLocation.y + translation.height - size.minValue / 2
         )
         
         var angle = progressLocation.calculateAngle()
@@ -203,20 +196,26 @@ extension CompactSlider {
         let isSnapped = options.contains(.snapToSteps) && step?.polarPointProgressStep != nil
         
         if isSnapped, let polarPointProgressStep = step?.polarPointProgressStep {
-            angle = .degrees(angle.degrees.rounded(toStep: polarPointProgressStep.angle.degrees))
+            let roundedPolarPoint = CompactSliderPolarPoint(
+                angle: angle,
+                normalizedRadius: normalizedRadius
+            ).rounded(polarPointProgressStep)
             
-            normalizedRadius = normalizedRadius
-                .rounded(toStep: polarPointProgressStep.normalizedRadius)
+            angle = roundedPolarPoint.angle
+            normalizedRadius = roundedPolarPoint.normalizedRadius
         }
         
-        let updatedAngle = progress.update(angle.degrees, at: 0)
-        let updatedRadius = progress.update(normalizedRadius, at: 1)
+        let updated = progress.updatePolarPoint(.init(
+            angle: angle,
+            normalizedRadius: normalizedRadius
+        ))
         
-        let degrees = angle.degrees
+        let degrees = angle.degrees.clamped(0, 360)
+        let isAngleSnapped = (degrees == 0 || degrees == 90 || degrees == 180
+                              || degrees == 270 || degrees == 360)
         
-        if (updatedAngle
-            && (degrees == 0 || degrees == 90 || degrees == 180 || degrees == 270 || degrees == 360))
-            || (updatedRadius && (normalizedRadius == 0 || normalizedRadius == 1)) {
+        if (updated.angle && isAngleSnapped)
+            || (updated.radius && (normalizedRadius.clamped() == 0 || normalizedRadius.clamped() == 1)) {
             HapticFeedback.vibrate(disabledHapticFeedback)
         }
     }
@@ -261,6 +260,10 @@ extension CompactSlider {
                 x: progressLocation(progress.progresses[0], size: size, type: .scrollableHorizontal).x,
                 y: progressLocation(1 - progress.progresses[1], size: size, type: .scrollableVertical).y
             )
+        }
+        
+        guard type != .circularGrid else {
+            return progress.polarPoint.toCartesian(size: size)
         }
         
         let p: Double

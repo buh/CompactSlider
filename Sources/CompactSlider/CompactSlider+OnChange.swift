@@ -39,6 +39,11 @@ extension CompactSlider {
             return
         }
         
+        if progress.isCircularGridValues {
+            polarPoint = progress.polarPoint
+            return
+        }
+        
         lowerValue = convertProgressToValue(newValue.progresses[0])
         
         guard progress.isRangeValues else { return }
@@ -77,12 +82,7 @@ extension CompactSlider {
     
     func onPolarPointChange(_ newValue: CompactSliderPolarPoint) {
         if isValueChangingInternally { return }
-        
-        progress.progresses[0] = newValue.angle.degrees.convertValueToPercentage(in: 0...360)
-            .clamped()
-        
-        progress.progresses[1] = newValue.normalizedRadius.convertValueToPercentage(in: 0...1)
-            .clamped()
+        progress.updatePolarPoint(newValue)
     }
     
     func convertValueToProgress(_ value: Value) -> Double {

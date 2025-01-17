@@ -190,11 +190,8 @@ extension CompactSliderStyleConfiguration {
                 y: (size.height - handleWidth) * progress.progresses[1]
             )
         case .circularGrid:
-            return CompactSliderPolarPoint(
-                angle: .radians(progress.progresses[0]),
-                normalizedRadius: progress.progresses[1]
-            )
-            .toCartesian(size: size)
+            let location = progress.polarPoint.toCartesian(size: size)
+            return CGPoint(x: location.x - handleWidth / 2, y: location.y - handleWidth / 2)
         }
     }
     

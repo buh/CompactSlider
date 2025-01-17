@@ -27,6 +27,17 @@ public struct Progress: Equatable {
     public let isGridValues: Bool
     /// True if the slider uses circular grid values.
     public let isCircularGridValues: Bool
+    
+    public var polarPoint: CompactSliderPolarPoint {
+        guard progresses.count == 2 else {
+            return .zero
+        }
+        
+        return CompactSliderPolarPoint(
+            angle: .degrees(progresses[0]),
+            normalizedRadius: progresses[1]
+        )
+    }
 
     init(
         _ progresses: [Double] = [],
@@ -38,6 +49,17 @@ public struct Progress: Equatable {
         self.isMultipleValues = isMultipleValues
         self.isGridValues = isGridValues
         self.isCircularGridValues = isCircularGridValues
+    }
+    
+    init(_ polarPoint: CompactSliderPolarPoint) {
+        progresses = [
+            polarPoint.angle.degrees,
+            polarPoint.normalizedRadius
+        ]
+        
+        isMultipleValues = false
+        isGridValues = false
+        isCircularGridValues = true
     }
     
     @discardableResult
@@ -56,6 +78,21 @@ public struct Progress: Equatable {
     
     mutating func updateUpperProgress(_ progress: Double) {
         update(progress, at: 1)
+    }
+    
+    @discardableResult
+    mutating func updatePolarPoint(
+        _ polarPoint: CompactSliderPolarPoint
+    ) -> (angle: Bool, radius: Bool) {
+        let radius = polarPoint.normalizedRadius.clamped()
+        
+        let updatedAngle = update(
+            radius == 0 ? .zero : polarPoint.angle.degrees.clamped(0, 360),
+            at: 0)
+        
+        let updatedRadius = update(radius, at: 1)
+        
+        return (updatedAngle, updatedRadius)
     }
     
     public func value<Value: BinaryFloatingPoint>(

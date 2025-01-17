@@ -49,15 +49,6 @@ public struct GridView<GridShapeStyle: ShapeStyle>: View {
                 inverse: inverted
             )
             .fill(gridFill, style: .init(eoFill: inverted))
-        } else if #available(macOS 12.0, iOS 15, watchOS 10, *) {
-            Grid(
-                countX: configuration.pointSteps.x,
-                countY: configuration.pointSteps.y,
-                size: gridSize,
-                padding: padding,
-                inverse: inverted
-            )
-            .fill(.ultraThinMaterial, style: .init(eoFill: inverted))
         } else {
             Grid(
                 countX: configuration.pointSteps.x,
@@ -66,7 +57,7 @@ public struct GridView<GridShapeStyle: ShapeStyle>: View {
                 padding: padding,
                 inverse: inverted
             )
-            .fill(Color(white: colorScheme == .dark ? 0.2 : 0.85), style: .init(eoFill: inverted))
+            .fill(.ultraThinMaterial, style: .init(eoFill: inverted))
         }
     }
 }
