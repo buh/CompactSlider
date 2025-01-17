@@ -32,8 +32,7 @@ struct CompactSliderCircularGridPreview: View {
     func circularGridSliders() -> some View {
         CompactSlider(
             polarPoint: $point,
-            step: .init(angle: .degrees(5), normalizedRadius: 0.05),
-            gestureOptions: .default.union([.snapToSteps])
+            step: .init(angle: .degrees(5), normalizedRadius: 0.05)
         )
         .frame(width: 150, height: 150)
         
