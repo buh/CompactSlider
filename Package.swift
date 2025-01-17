@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "CompactSlider",
     platforms: [
-        .macOS(.v11), .iOS(.v14), .watchOS(.v7)
+        .macOS(.v12), .iOS(.v15), .watchOS(.v8)
     ],
     products: [
         .library(name: "CompactSlider", targets: ["CompactSlider"])
