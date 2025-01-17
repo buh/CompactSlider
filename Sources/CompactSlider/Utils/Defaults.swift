@@ -66,6 +66,10 @@ extension Defaults {
         6
         #endif
     }()
+    
+    // MARK: - Gauge
+    
+    public static let gaugeLineWidth: CGFloat = 10
 }
 
 // MARK: - Colors

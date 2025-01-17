@@ -12,18 +12,21 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     
     let handleStyle: HandleStyle
     let scaleStyle: ScaleStyle?
+    let gaugeStyle: GaugeStyle?
     let cornerRadius: CGFloat
-
+    
     public init(
         type: CompactSliderType = .horizontal(.leading),
         handleStyle: HandleStyle = .rectangle(),
-        scaleStyle: ScaleStyle? = ScaleStyle(),
+        scaleStyle: ScaleStyle? = nil,
+        gaugeStyle: GaugeStyle? = nil,
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
     ) {
         self.type = type
         self.handleStyle = handleStyle
         self.scaleStyle = scaleStyle
+        self.gaugeStyle = gaugeStyle
         self.cornerRadius = cornerRadius
         self.padding = padding
     }
@@ -60,7 +63,11 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         )
         .compositingGroup()
         .contentShape(Rectangle())
-        .clipRoundedShapeIf(type: type, cornerRadius: cornerRadius)
+        .clipRoundedShapeIf(
+            type: type,
+            size: configuration.size,
+            cornerRadius: cornerRadius
+        )
         .environment(\.compactSliderStyleConfiguration, configuration)
         .environment(\.handleStyle, handleStyle)
         .environment(\.scaleStyle, scaleStyle)
@@ -78,9 +85,17 @@ extension View {
     }
     
     @ViewBuilder
-    func clipRoundedShapeIf(type: CompactSliderType, cornerRadius: CGFloat) -> some View {
-        if type == .circularGrid {
+    func clipRoundedShapeIf(
+        type: CompactSliderType,
+        size: CGSize,
+        cornerRadius: CGFloat
+    ) -> some View {
+        if type == .gauge {
+            self
+        } else if type == .circularGrid {
             clipShape(Circle())
+        } else if cornerRadius > 0, size.minValue == 2 * cornerRadius {
+            clipShape(Capsule())
         } else if cornerRadius > 0 {
             clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         } else {

@@ -33,4 +33,18 @@ extension View {
     func anyView() -> AnyView {
         AnyView(self)
     }
+    
+    func reversedMask<Mask: View>(
+        alignment: Alignment = .center,
+        @ViewBuilder _ mask: () -> Mask
+    ) -> some View {
+        self.mask(alignment: alignment) {
+            ZStack {
+                self.saturation(0).brightness(1)
+                mask().saturation(0).brightness(-1)
+            }
+            .compositingGroup()
+            .luminanceToAlpha()
+        }
+    }
 }

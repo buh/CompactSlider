@@ -21,6 +21,7 @@ public enum CompactSliderType: Equatable {
     case vertical(VerticalAlignment)
     case scrollableHorizontal
     case scrollableVertical
+    case gauge
     case grid
     case circularGrid
     
@@ -67,6 +68,13 @@ public enum CompactSliderType: Equatable {
     public var isScrollable: Bool {
         switch self {
         case .scrollableHorizontal, .scrollableVertical: return true
+        default: return false
+        }
+    }
+    
+    public var isGauge: Bool {
+        switch self {
+        case .gauge: return true
         default: return false
         }
     }

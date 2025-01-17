@@ -68,6 +68,8 @@ extension CompactSliderStyleConfiguration {
             OptionalCGSize(width: size.width)
         case .vertical, .scrollableVertical:
             OptionalCGSize(height: size.height)
+        case .gauge:
+            OptionalCGSize(width: size.minValue, height: size.minValue)
         case .grid, .circularGrid:
             OptionalCGSize(width: size.width, height: size.height)
         }
@@ -180,6 +182,8 @@ extension CompactSliderStyleConfiguration {
             return CGPoint(x: (size.width - handleWidth) / 2, y: 0)
         case .scrollableVertical:
             return CGPoint(x: 0, y: (size.height - handleWidth) / 2)
+        case .gauge:
+            return .zero // TODO: Gauge
         case .grid:
             return CGPoint(
                 x: (size.width - handleWidth) * progress.progresses[0],
