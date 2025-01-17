@@ -65,7 +65,7 @@ extension CompactSlider {
         progress.progresses = newValues.map(convertValueToProgress)
     }
     
-    func onValue2DChange(_ newValue: Point) {
+    func onPointChange(_ newValue: Point) {
         if isValueChangingInternally { return }
         
         progress.progresses[0] = newValue.x.convertValueToPercentage(in: pointBounds.rangeX)
@@ -75,7 +75,18 @@ extension CompactSlider {
             .clampedOrRotated(withRotaion: options.contains(.loopValues))
     }
     
+    func onPolarPointChange(_ newValue: CompactSliderPolarPoint) {
+        if isValueChangingInternally { return }
+        
+        progress.progresses[0] = newValue.angle.degrees.convertValueToPercentage(in: 0...360)
+            .clamped()
+        
+        progress.progresses[1] = newValue.normalizedRadius.convertValueToPercentage(in: 0...1)
+            .clamped()
+    }
+    
     func convertValueToProgress(_ value: Value) -> Double {
-        value.convertValueToPercentage(in: bounds).clampedOrRotated(withRotaion: options.contains(.loopValues))
+        value.convertValueToPercentage(in: bounds)
+            .clampedOrRotated(withRotaion: options.contains(.loopValues))
     }
 }

@@ -56,46 +56,62 @@ extension CompactSlider {
         }
         
         if type == .grid {
-            if isEnded {
-                if !options.contains(.snapToSteps), let pointProgressStep = step?.pointProgressStep {
-                    let progressX = progress.progresses[0].rounded(toStep: pointProgressStep.x)
-                    let progressY = progress.progresses[1].rounded(toStep: pointProgressStep.y)
-                    
-                    progress.update(progressX, at: 0)
-                    progress.update(progressY, at: 1)
-                    HapticFeedback.vibrate(disabledHapticFeedback)
-                }
+            onDragGridLocationChange(
+                translation: translation,
+                size: size,
+                isEnded: isEnded,
+                isRightToLeft: isRightToLeft
+            )
+            
+            return
+        }
+    }
+    
+    func onDragGridLocationChange(
+        translation: CGSize,
+        size: CGSize,
+        isEnded: Bool,
+        isRightToLeft: Bool
+    ) {
+        guard let startDragLocation, size.width > 0, size.height > 0 else { return }
+        
+        if isEnded {
+            if !options.contains(.snapToSteps), let pointProgressStep = step?.pointProgressStep {
+                let progressX = progress.progresses[0].rounded(toStep: pointProgressStep.x)
+                let progressY = progress.progresses[1].rounded(toStep: pointProgressStep.y)
                 
-                return
-            }
-            
-            var translationX = translation.width
-            
-            if isRightToLeft {
-                translationX = -translationX
-            }
-            
-            let locationX = CGPoint(x: startDragLocation.x + translationX, y: 0)
-            let locationY = CGPoint(x: 0, y: startDragLocation.y + translation.height)
-            var progressX = progress(at: locationX, size: size, type: .scrollableHorizontal).clamped()
-            var progressY = 1 - progress(at: locationY, size: size, type: .scrollableVertical).clamped()
-            
-            let isSnapped = options.contains(.snapToSteps) && step?.pointProgressStep != nil
-            
-            if isSnapped, let pointProgressStep = step?.pointProgressStep {
-                progressX = progressX.rounded(toStep: pointProgressStep.x)
-                progressY = progressY.rounded(toStep: pointProgressStep.y)
-            }
-            
-            let updatedX = progress.update(progressX, at: 0)
-            let updatedY = progress.update(progressY, at: 1)
-            
-            if (updatedX && (progressX == 1 || progressX == 0))
-                || (updatedY && (progressY == 1 || progressY == 0)) {
+                progress.update(progressX, at: 0)
+                progress.update(progressY, at: 1)
                 HapticFeedback.vibrate(disabledHapticFeedback)
             }
             
             return
+        }
+        
+        var translationX = translation.width
+        
+        if isRightToLeft {
+            translationX = -translationX
+        }
+        
+        let locationX = CGPoint(x: startDragLocation.x + translationX, y: 0)
+        let locationY = CGPoint(x: 0, y: startDragLocation.y + translation.height)
+        var progressX = progress(at: locationX, size: size, type: .scrollableHorizontal).clamped()
+        var progressY = 1 - progress(at: locationY, size: size, type: .scrollableVertical).clamped()
+        
+        let isSnapped = options.contains(.snapToSteps) && step?.pointProgressStep != nil
+        
+        if isSnapped, let pointProgressStep = step?.pointProgressStep {
+            progressX = progressX.rounded(toStep: pointProgressStep.x)
+            progressY = progressY.rounded(toStep: pointProgressStep.y)
+        }
+        
+        let updatedX = progress.update(progressX, at: 0)
+        let updatedY = progress.update(progressY, at: 1)
+        
+        if (updatedX && (progressX == 1 || progressX == 0))
+            || (updatedY && (progressY == 1 || progressY == 0)) {
+            HapticFeedback.vibrate(disabledHapticFeedback)
         }
     }
     
