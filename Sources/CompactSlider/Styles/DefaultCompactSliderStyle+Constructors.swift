@@ -9,7 +9,7 @@ extension DefaultCompactSliderStyle {
     public static func horizontal(
         _ alignment: HorizontalAlignment = .leading,
         handleStyle: HandleStyle = .rectangle(),
-        scaleStyle: ScaleStyle? = .linear(),
+        scaleStyle: ScaleStyle? = .atSide(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
@@ -25,7 +25,7 @@ extension DefaultCompactSliderStyle {
     public static func vertical(
         _ alignment: VerticalAlignment = .top,
         handleStyle: HandleStyle = .rectangle(),
-        scaleStyle: ScaleStyle? = .linear(),
+        scaleStyle: ScaleStyle? = .centered(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
@@ -41,7 +41,7 @@ extension DefaultCompactSliderStyle {
     public static func scrollable(
         _ axis: Axis = .horizontal,
         handleStyle: HandleStyle = .rectangle(),
-        scaleStyle: ScaleStyle? = .linear(),
+        scaleStyle: ScaleStyle? = .atSide(),
         cornerRadius: CGFloat = Defaults.cornerRadius,
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {

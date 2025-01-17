@@ -73,7 +73,7 @@ struct CompactSliderPreview: View {
         )
         .compactSliderStyle(default: .scrollable(
             handleStyle: .rectangle(),
-            scaleStyle: .linear(
+            scaleStyle: .atSide(
                 alignment: .bottom,
                 line: .init(length: 16, skipEdges: false),
                 secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
@@ -166,19 +166,7 @@ struct CompactSliderPreview: View {
         )
         .compactSliderStyle(default: .scrollable(
             .vertical,
-            scaleStyle: .linear(
-                line: .init(
-                    length: nil,
-                    skipEdges: false,
-                    padding: .horizontal(4)
-                ),
-                secondaryLine: .init(
-                    color: Defaults.secondaryScaleLineColor,
-                    length: nil,
-                    skipEdges: false,
-                    padding: .horizontal(8)
-                )
-            ),
+            scaleStyle: .centered(),
             cornerRadius: 0
         ))
         .verticalGradientMask()
@@ -186,13 +174,8 @@ struct CompactSliderPreview: View {
         CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
             .compactSliderStyle(default: .scrollable(
                 .vertical,
-                scaleStyle: .linear(
+                scaleStyle: .centered(
                     line: .init(
-                        length: nil,
-                        padding: .horizontal(8)
-                    ),
-                    secondaryLine: .init(
-                        color: Defaults.secondaryScaleLineColor,
                         length: nil,
                         padding: .horizontal(8)
                     )
@@ -203,11 +186,7 @@ struct CompactSliderPreview: View {
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .vertical(
                 .bottom,
-                scaleStyle: .linear(
-                    line: .init(
-                        length: nil,
-                        padding: .horizontal(4)
-                    ),
+                scaleStyle: .centered(
                     secondaryLine: .init(
                         color: Defaults.secondaryScaleLineColor,
                         length: nil,
@@ -222,14 +201,7 @@ struct CompactSliderPreview: View {
         CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)
             .compactSliderStyle(default: .vertical(
                 .center,
-                scaleStyle: .linear(
-                    line: .init(length: nil, padding: .horizontal(4)),
-                    secondaryLine: .init(
-                        color: Defaults.secondaryScaleLineColor,
-                        length: nil,
-                        padding: .horizontal(8)
-                    )
-                )
+                scaleStyle: .centered()
             ))
         
         CompactSlider(value: $progress)
@@ -274,7 +246,7 @@ struct CompactSliderPreview: View {
         
         CompactSlider(values: $progresses)
             .compactSliderStyle(default: .vertical(
-                scaleStyle: .linear(
+                scaleStyle: .centered(
                     line: .init(
                         color: Defaults.label.opacity(0.2),
                         length: nil,

@@ -8,6 +8,7 @@ import CompactSlider
 
 struct CompactSliderCircularGridPreview: View {
     @State private var point: CompactSliderPolarPoint = .zero
+    @State private var brightness = 0.5
     
     var body: some View {
         VStack(spacing: 16) {
@@ -36,7 +37,30 @@ struct CompactSliderCircularGridPreview: View {
         )
         .frame(width: 150, height: 150)
         
-        CompactSlider(polarPoint: $point)
+        Divider()
+        
+        Text("Color Picker")
+        
+        HStack {
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(
+                    hue: point.angle.degrees / 360,
+                    saturation: point.normalizedRadius,
+                    brightness: brightness
+                ))
+                .aspectRatio(.init(width: 1, height: 1), contentMode: .fit)
+            
+            CompactSlider(
+                polarPoint: $point,
+                step: .init(angle: .degrees(5), normalizedRadius: 0.05)
+            )
+            .compactSliderHandle(handleView: { _, handleStyle, _, _ in
+                ZStack {
+                    HandleView(style: handleStyle)
+                    Circle()
+                        .stroke(Defaults.label, lineWidth: 1)
+                }
+            })
             .compactSliderBackground { configuration, padding in
                 ZStack {
                     Circle()
@@ -58,22 +82,40 @@ struct CompactSliderCircularGridPreview: View {
                                 center: .center
                             )
                         )
+                        .opacity(brightness)
                     
                     Circle()
                         .fill(
                             RadialGradient(
-                                colors: [.black, .black.opacity(0)],
+                                colors: [
+                                    Color(
+                                        hue: 0,
+                                        saturation: 0,
+                                        brightness: brightness
+                                    ).opacity(1 - brightness),
+                                    .black.opacity(0)
+                                ],
                                 center: .center,
-                                startRadius: 40,
-                                endRadius: 150
+                                startRadius: 0,
+                                endRadius: 100
                             )
                         )
-                    
-                    Circle()
-                        .stroke(Defaults.label.opacity(0.1), lineWidth: 1)
                 }
             }
+            .accentColor(Color(
+                hue: point.angle.degrees / 360,
+                saturation: point.normalizedRadius,
+                brightness: brightness
+            ))
             .frame(width: 150, height: 150)
+            
+            CompactSlider(value: $brightness)
+                .compactSliderStyle(
+                    default: .vertical(.bottom, scaleStyle: .centered(secondaryLine: nil))
+                )
+                .frame(width: 30)
+        }
+        .frame(maxHeight: 150)
     }
 }
 

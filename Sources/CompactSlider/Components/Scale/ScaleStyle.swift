@@ -27,9 +27,37 @@ public struct ScaleStyle: Equatable {
     
     static public func linear(
         visibility: Visibility = .hoveringOrDragging,
+        alignment: Alignment = .center,
+        line: Line = .primaryCentered,
+        secondaryLine: Line? = .secondaryCentered
+    ) -> ScaleStyle {
+        ScaleStyle(
+            visibility: visibility,
+            alignment: alignment,
+            line: line,
+            secondaryLine: secondaryLine
+        )
+    }
+    
+    static public func atSide(
+        visibility: Visibility = .hoveringOrDragging,
         alignment: Alignment = .topLeading,
-        line: Line = .primary,
-        secondaryLine: Line? = .secondary
+        line: Line = .primaryAtSide,
+        secondaryLine: Line? = .secondaryAtSide
+    ) -> ScaleStyle {
+        ScaleStyle(
+            visibility: visibility,
+            alignment: alignment,
+            line: line,
+            secondaryLine: secondaryLine
+        )
+    }
+    
+    static public func centered(
+        visibility: Visibility = .hoveringOrDragging,
+        alignment: Alignment = .center,
+        line: Line = .primaryCentered,
+        secondaryLine: Line? = .secondaryCentered
     ) -> ScaleStyle {
         ScaleStyle(
             visibility: visibility,
@@ -104,14 +132,24 @@ extension ScaleStyle {
 }
 
 extension ScaleStyle.Line {
-    public static let primary = ScaleStyle.Line(
-        color: Defaults.scaleLineColor,
+    public static let primaryAtSide = ScaleStyle.Line(
         length: Defaults.scaleLineLength
     )
     
-    public static let secondary = ScaleStyle.Line(
+    public static let secondaryAtSide = ScaleStyle.Line(
         color: Defaults.secondaryScaleLineColor,
         length: Defaults.secondaryScaleLineLength
+    )
+    
+    public static let primaryCentered = ScaleStyle.Line(
+        length: nil,
+        padding: .horizontal(4)
+    )
+    
+    public static let secondaryCentered = ScaleStyle.Line(
+        color: Defaults.secondaryScaleLineColor,
+        length: nil,
+        padding: .horizontal(8)
     )
     
     public static let circular = ScaleStyle.Line(color: Defaults.circularScaleLineColor)
@@ -120,7 +158,7 @@ extension ScaleStyle.Line {
 // MARK: - Environment
 
 struct ScaleStyleKey: EnvironmentKey {
-    static var defaultValue: ScaleStyle? = .linear()
+    static var defaultValue: ScaleStyle? = .atSide()
 }
 
 extension EnvironmentValues {
