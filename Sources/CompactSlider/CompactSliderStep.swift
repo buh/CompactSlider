@@ -73,6 +73,14 @@ public enum CompactSliderStep: Equatable {
         return nil
     }
     
+    public var polarPointProgressStep: CompactSliderPolarPoint? {
+        if case .polarPoint(_, let progressStep, _) = self {
+            return progressStep
+        }
+        
+        return nil
+    }
+    
     public var polarPointSteps: PolarPointSteps? {
         if case .polarPoint(_, _, let steps) = self {
             return steps

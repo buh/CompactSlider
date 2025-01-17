@@ -90,7 +90,7 @@ struct CompactSliderGridPreview: View {
                 step: CGPoint(x: 10, y: 10)
             )
             .compactSliderBackground { configuration, padding in
-                if #available(macOS 15.0, *) {
+                if #available(macOS 15.0, iOS 18, *) {
                     GridBackgroundView(
                         configuration: configuration,
                         padding: padding,
