@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
-import SwiftUI
+import CoreGraphics
 
 public struct OptionalCGSize {
     public let width: CGFloat?

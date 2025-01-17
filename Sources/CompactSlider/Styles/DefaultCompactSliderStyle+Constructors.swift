@@ -62,7 +62,6 @@ extension DefaultCompactSliderStyle {
         .init(
             type: .grid,
             handleStyle: handleStyle,
-            scaleStyle: nil,
             cornerRadius: cornerRadius,
             padding: padding
         )
@@ -75,7 +74,6 @@ extension DefaultCompactSliderStyle {
         .init(
             type: .circularGrid,
             handleStyle: handleStyle,
-            scaleStyle: nil,
             cornerRadius: 0,
             padding: padding
         )

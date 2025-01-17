@@ -107,7 +107,11 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
             return compactSliderGridStyle
         }
         
-        return compactSliderCircularGridStyle
+        if defaultType.isCircularGrid {
+            return compactSliderCircularGridStyle
+        }
+        
+        return compactSliderStyle
     }
     
     /// Creates a slider to select a value from a given bounds.

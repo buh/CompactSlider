@@ -89,7 +89,7 @@ public struct GridBackgroundView<
                 width: configuration.size.width * normalizedBacklightRadius,
                 height: configuration.size.height * normalizedBacklightRadius
             )
-            .blur(radius: min(configuration.size.width, configuration.size.height) / 8)
+            .blur(radius: configuration.size.minValue / 8)
     }
     
     @ViewBuilder

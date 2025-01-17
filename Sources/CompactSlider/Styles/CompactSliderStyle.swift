@@ -33,8 +33,10 @@ extension View {
             environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
         } else if style.type.isGrid {
             environment(\.compactSliderGridStyle, AnyCompactSliderStyle(style))
-        } else {
+        } else if style.type.isCircularGrid {
             environment(\.compactSliderCircularGridStyle, AnyCompactSliderStyle(style))
+        } else {
+            environment(\.compactSliderStyle, AnyCompactSliderStyle(style))
         }
     }
 }
