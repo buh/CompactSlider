@@ -18,11 +18,11 @@ public struct CompactSliderStyleConfiguration: Equatable {
     public let step: CompactSliderStep?
     /// Slider options.
     public let options: Set<CompactSliderOption>
+    /// The possible color schemes, corresponding to the light and dark appearances.
+    public let colorScheme: ColorScheme
     
     public func progress(at index: Int) -> Double {
-        guard index < progress.progresses.count else { return 0 }
-        
-        return progress.progresses[index]
+        index < progress.progresses.count ? progress.progresses[index] : 0
     }
     
     init(
@@ -31,7 +31,8 @@ public struct CompactSliderStyleConfiguration: Equatable {
         focusState: FocusState,
         progress: Progress,
         step: CompactSliderStep?,
-        options: Set<CompactSliderOption>
+        options: Set<CompactSliderOption>,
+        colorScheme: ColorScheme
     ) {
         self.type = type
         self.size = size
@@ -39,6 +40,7 @@ public struct CompactSliderStyleConfiguration: Equatable {
         self.progress = progress
         self.step = step
         self.options = options
+        self.colorScheme = colorScheme
     }
 }
 
@@ -279,7 +281,8 @@ struct CompactSliderStyleConfigurationKey: EnvironmentKey {
         focusState: .init(isHovering: false, isDragging: false),
         progress: Progress(),
         step: nil,
-        options: []
+        options: [],
+        colorScheme: .light
     )
 }
 

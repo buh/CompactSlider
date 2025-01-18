@@ -73,6 +73,7 @@ import SwiftUI
 public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoint>: View {
     @Environment(\.isEnabled) var isEnabled
     @Environment(\.layoutDirection) var layoutDirection
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.compactSliderGridStyle) var compactSliderGridStyle
     @Environment(\.compactSliderCircularGridStyle) var compactSliderCircularGridStyle
@@ -294,7 +295,8 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                     focusState: .init(isHovering: isHovering, isDragging: isDragging),
                     progress: progress,
                     step: step,
-                    options: options
+                    options: options,
+                    colorScheme: colorScheme
                 )
             )
             .dragGesture(
