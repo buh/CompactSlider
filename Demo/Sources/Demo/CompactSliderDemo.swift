@@ -7,7 +7,6 @@ import SwiftUI
 import CompactSlider
 
 struct CompactSliderDemo: View {
-    @Environment(\.colorScheme) var colorScheme
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var progress: Double = 0.3
     @State private var degree: Double = 90
@@ -78,7 +77,7 @@ struct CompactSliderDemo: View {
                 line: .init(length: 16, skipEdges: false),
                 secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
             ),
-            cornerRadius: 0
+            clipShapeType: .none
         ))
         .horizontalGradientMask()
         .overlay(
@@ -102,7 +101,7 @@ struct CompactSliderDemo: View {
             .compactSliderStyle(default: .horizontal(
                 handleStyle: HandleStyle.rectangle(visibility: .always, width: 30),
                 scaleStyle: nil,
-                cornerRadius: 0
+                clipShapeType: .none
             ))
             .compactSliderProgress { _ in
                 Capsule()
@@ -138,7 +137,7 @@ struct CompactSliderDemo: View {
                 )
                 .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
             }
-            .compactSliderBackground { _, _ in
+            .compactSliderBackground { config, _ in
                 RoundedRectangle(cornerRadius: Defaults.cornerRadius)
                     .fill(
                         LinearGradient(
@@ -154,7 +153,7 @@ struct CompactSliderDemo: View {
                             endPoint: .trailing
                         )
                     )
-                    .opacity(colorScheme == .dark ? 0.1 : 0.2)
+                    .opacity(config.colorScheme == .dark ? 0.1 : 0.2)
             }
     }
     
@@ -167,7 +166,7 @@ struct CompactSliderDemo: View {
         .compactSliderStyle(default: .scrollable(
             .vertical,
             scaleStyle: .centered(),
-            cornerRadius: 0
+            clipShapeType: .none
         ))
         .verticalGradientMask()
         
@@ -219,7 +218,7 @@ struct CompactSliderDemo: View {
             .compactSliderStyle(default: .vertical(
                 handleStyle: HandleStyle.rectangle(visibility: .always, width: 30),
                 scaleStyle: nil,
-                cornerRadius: 0
+                clipShapeType: .none
             ))
             .compactSliderProgress { _ in
                 Capsule()
@@ -265,7 +264,7 @@ struct CompactSliderDemo: View {
                 )
                 .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
             }
-            .compactSliderBackground { _, _ in
+            .compactSliderBackground { config, _ in
                 RoundedRectangle(cornerRadius: Defaults.cornerRadius)
                     .fill(
                         LinearGradient(
@@ -281,7 +280,7 @@ struct CompactSliderDemo: View {
                             endPoint: .bottom
                         )
                     )
-                    .opacity(colorScheme == .dark ? 0.1 : 0.2)
+                    .opacity(config.colorScheme == .dark ? 0.1 : 0.2)
             }
     }
 }

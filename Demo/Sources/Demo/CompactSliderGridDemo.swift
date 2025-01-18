@@ -7,7 +7,6 @@ import SwiftUI
 import CompactSlider
 
 struct CompactSliderGridDemo: View {
-    @Environment(\.colorScheme) var colorScheme
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var point = CGPoint(x: 50, y: 50)
     @State private var snappedPoint = CGPoint(x: 50, y: 50)
@@ -83,7 +82,7 @@ struct CompactSliderGridDemo: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: Defaults.gridCornerRadius)
                         .stroke(
-                            colorScheme == .dark ? Color.white.opacity(0.03) : .black.opacity(0.03),
+                            $0.colorScheme == .dark ? Color.white.opacity(0.03) : .black.opacity(0.03),
                             lineWidth: 2
                         )
                         .padding(1)

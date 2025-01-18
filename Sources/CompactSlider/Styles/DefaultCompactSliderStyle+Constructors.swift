@@ -10,14 +10,14 @@ extension DefaultCompactSliderStyle {
         _ alignment: HorizontalAlignment = .leading,
         handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = .atSide(),
-        cornerRadius: CGFloat = Defaults.cornerRadius,
+        clipShapeType: ClipShapeType = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
         .init(
             type: .horizontal(alignment),
             handleStyle: handleStyle,
             scaleStyle: scaleStyle,
-            cornerRadius: cornerRadius,
+            clipShapeStyle: clipShapeType,
             padding: padding
         )
     }
@@ -26,14 +26,14 @@ extension DefaultCompactSliderStyle {
         _ alignment: VerticalAlignment = .top,
         handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = .centered(),
-        cornerRadius: CGFloat = Defaults.cornerRadius,
+        clipShapeType: ClipShapeType = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
         .init(
             type: .vertical(alignment),
             handleStyle: handleStyle,
             scaleStyle: scaleStyle,
-            cornerRadius: cornerRadius,
+            clipShapeStyle: clipShapeType,
             padding: padding
         )
     }
@@ -42,14 +42,14 @@ extension DefaultCompactSliderStyle {
         _ axis: Axis = .horizontal,
         handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = .atSide(),
-        cornerRadius: CGFloat = Defaults.cornerRadius,
+        clipShapeType: ClipShapeType = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
         .init(
             type: axis == .horizontal ? .scrollableHorizontal : .scrollableVertical,
             handleStyle: handleStyle,
             scaleStyle: scaleStyle,
-            cornerRadius: cornerRadius,
+            clipShapeStyle: clipShapeType,
             padding: padding
         )
     }
@@ -61,7 +61,7 @@ extension DefaultCompactSliderStyle {
         .init(
             type: .gauge,
             gaugeStyle: GaugeStyle(lineWidth: lineWidth),
-            cornerRadius: 0,
+            clipShapeStyle: .none,
             padding: padding
         )
     }
@@ -73,20 +73,20 @@ extension DefaultCompactSliderStyle {
         .init(
             type: .gauge,
             gaugeStyle: gaugeStyle,
-            cornerRadius: 0,
+            clipShapeStyle: .none,
             padding: padding
         )
     }
     
     public static func grid(
         handleStyle: HandleStyle = .circle(),
-        cornerRadius: CGFloat = Defaults.gridCornerRadius,
+        clipShapeType: ClipShapeType = .roundedRectangle(cornerRadius: Defaults.gridCornerRadius),
         padding: EdgeInsets = Defaults.gridPadding
     ) -> DefaultCompactSliderStyle {
         .init(
             type: .grid,
             handleStyle: handleStyle,
-            cornerRadius: cornerRadius,
+            clipShapeStyle: clipShapeType,
             padding: padding
         )
     }
@@ -100,7 +100,7 @@ extension DefaultCompactSliderStyle {
             type: .circularGrid,
             handleStyle: handleStyle,
             scaleStyle: scaleStyle,
-            cornerRadius: 0,
+            clipShapeStyle: .none,
             padding: padding
         )
     }

@@ -7,27 +7,31 @@ import SwiftUI
 
 /// The default slider style.
 public struct DefaultCompactSliderStyle: CompactSliderStyle {
+    #if os(macOS)
+    @Environment(\.appearsActive) var appearsActive
+    #endif
+    
     public let type: CompactSliderType
     public let padding: EdgeInsets
     
     let handleStyle: HandleStyle
     let scaleStyle: ScaleStyle?
     let gaugeStyle: GaugeStyle?
-    let cornerRadius: CGFloat
+    let clipShapeStyle: ClipShapeType
     
     public init(
         type: CompactSliderType = .horizontal(.leading),
         handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = nil,
         gaugeStyle: GaugeStyle? = nil,
-        cornerRadius: CGFloat = Defaults.cornerRadius,
+        clipShapeStyle: ClipShapeType = .none,
         padding: EdgeInsets = .zero
     ) {
         self.type = type
         self.handleStyle = handleStyle
         self.scaleStyle = scaleStyle
         self.gaugeStyle = gaugeStyle
-        self.cornerRadius = cornerRadius
+        self.clipShapeStyle = clipShapeStyle
         self.padding = padding
     }
     
@@ -62,14 +66,13 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         )
         .compositingGroup()
         .contentShape(Rectangle())
-        .clipRoundedShapeIf(
-            type: type,
-            size: configuration.size,
-            cornerRadius: cornerRadius
-        )
+        .clipShapeStyle(clipShapeStyle)
         .environment(\.compactSliderStyleConfiguration, configuration)
         .environment(\.handleStyle, handleStyle)
         .environment(\.scaleStyle, scaleStyle)
+        #if os(macOS)
+        .saturation(appearsActive ? 1 : 0)
+        #endif
     }
 }
 
@@ -80,25 +83,6 @@ extension View {
             background(CompactSliderStyleBackgroundView(padding: padding))
         } else {
             self
-        }
-    }
-    
-    @ViewBuilder
-    func clipRoundedShapeIf(
-        type: CompactSliderType,
-        size: CGSize,
-        cornerRadius: CGFloat
-    ) -> some View {
-        if type == .gauge {
-            self
-        } else if type == .circularGrid {
-            clipShape(Circle())
-        } else if cornerRadius > 0, size.minValue == 2 * cornerRadius {
-            clipShape(Capsule())
-        } else if cornerRadius > 0 {
-            clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-        } else {
-            clipShape(Rectangle())
         }
     }
 }
