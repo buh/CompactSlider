@@ -40,7 +40,7 @@ struct CompactSliderDisabledHapticFeedbackKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var compactSliderDisabledHapticFeedback: Bool {
+    public var compactSliderDisabledHapticFeedback: Bool {
         get { self[CompactSliderDisabledHapticFeedbackKey.self] }
         set { self[CompactSliderDisabledHapticFeedbackKey.self] = newValue }
     }

@@ -74,6 +74,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.isEnabled) var isEnabled
     @Environment(\.layoutDirection) var layoutDirection
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.compactSliderOptions) var options
     @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.compactSliderGridStyle) var compactSliderGridStyle
     @Environment(\.compactSliderCircularGridStyle) var compactSliderCircularGridStyle
@@ -82,7 +83,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     let bounds: ClosedRange<Value>
     let pointBounds: ClosedRange<Point>
     let step: CompactSliderStep?
-    let options: Set<CompactSliderOption>
     private var defaultType: CompactSliderType = .scrollableHorizontal
     
     @Binding var lowerValue: Value
@@ -128,8 +128,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     public init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
-        step: Value = 0,
-        options: Set<CompactSliderOption> = .default
+        step: Value = 0
     ) where Point == CompactSliderPointValue<Value> {
         _lowerValue = value
         _upperValue = .constant(0)
@@ -140,7 +139,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         self.bounds = bounds
         self.pointBounds = .zero ... .one
         self.step = CompactSliderStep(bounds: bounds, step: step)
-        self.options = options
         let distance = Double(bounds.distance)
         
         guard distance > 0 else {
@@ -156,8 +154,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     public init(
         values: Binding<[Value]>,
         in bounds: ClosedRange<Value> = 0...1,
-        step: Value = 0,
-        gestureOptions: Set<CompactSliderOption> = .default
+        step: Value = 0
     ) where Point == CompactSliderPointValue<Value> {
         _lowerValue = .constant(0)
         _upperValue = .constant(0)
@@ -168,7 +165,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         self.bounds = bounds
         self.pointBounds = .zero ... .one
         self.step = CompactSliderStep(bounds: bounds, step: step)
-        self.options = gestureOptions
         let distance = Double(bounds.distance)
         
         guard distance > 0 else {
@@ -199,8 +195,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         from lowerValue: Binding<Value>,
         to upperValue: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
-        step: Value = 0,
-        gestureOptions: Set<CompactSliderOption> = .default
+        step: Value = 0
     ) where Point == CompactSliderPointValue<Value> {
         _lowerValue = lowerValue
         _upperValue = upperValue
@@ -211,7 +206,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         self.bounds = bounds
         self.pointBounds = .zero ... .one
         self.step = CompactSliderStep(bounds: bounds, step: step)
-        self.options = gestureOptions
         
         let distance = Double(bounds.distance)
         
@@ -229,8 +223,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     public init(
         point: Binding<Point>,
         in bounds: ClosedRange<Point> = .zero ... .one,
-        step: Point = .zero,
-        gestureOptions: Set<CompactSliderOption> = .default
+        step: Point = .zero
     ) where Value == Point.Value {
         _lowerValue = .constant(0)
         _upperValue = .constant(0)
@@ -241,7 +234,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         self.bounds = 0 ... 1
         self.pointBounds = bounds
         self.step = CompactSliderStep(bounds: bounds, pointStep: step)
-        self.options = gestureOptions
         
         let distanceX = Double(bounds.distanceX)
         let distanceY = Double(bounds.distanceY)
@@ -263,8 +255,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     
     public init(
         polarPoint: Binding<CompactSliderPolarPoint>,
-        step: CompactSliderPolarPoint = .zero,
-        gestureOptions: Set<CompactSliderOption> = .default
+        step: CompactSliderPolarPoint = .zero
     ) where Point == CompactSliderPointValue<Double>, Value == Point.Value {
         _lowerValue = .constant(0)
         _upperValue = .constant(0)
@@ -275,7 +266,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         self.bounds = 0...1
         self.pointBounds = .zero ... .one
         self.step = CompactSliderStep(polarPointStep: step)
-        self.options = gestureOptions
         
         _progress = .init(initialValue: Progress(polarPoint.wrappedValue))
         defaultType = .circularGrid
@@ -295,7 +285,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                     focusState: .init(isHovering: isHovering, isDragging: isDragging),
                     progress: progress,
                     step: step,
-                    options: options,
                     colorScheme: colorScheme
                 )
             )

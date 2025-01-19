@@ -54,30 +54,6 @@ extension DefaultCompactSliderStyle {
         )
     }
     
-    public static func gauge(
-        lineWidth: CGFloat = Defaults.gaugeLineWidth,
-        padding: EdgeInsets = .zero
-    ) -> DefaultCompactSliderStyle {
-        .init(
-            type: .gauge,
-            gaugeStyle: GaugeStyle(lineWidth: lineWidth),
-            clipShapeStyle: .none,
-            padding: padding
-        )
-    }
-    
-    public static func gauge(
-        gaugeStyle: GaugeStyle,
-        padding: EdgeInsets = .zero
-    ) -> DefaultCompactSliderStyle {
-        .init(
-            type: .gauge,
-            gaugeStyle: gaugeStyle,
-            clipShapeStyle: .none,
-            padding: padding
-        )
-    }
-    
     public static func grid(
         handleStyle: HandleStyle = .circle(),
         clipShapeType: ClipShapeType = .roundedRectangle(cornerRadius: Defaults.gridCornerRadius),

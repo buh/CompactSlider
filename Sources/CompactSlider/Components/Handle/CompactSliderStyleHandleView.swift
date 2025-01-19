@@ -25,7 +25,7 @@ struct HandleViewKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var compactSliderHandleView: AnyView {
+    public var compactSliderHandleView: AnyView {
         get { self[HandleViewKey.self] }
         set { self[HandleViewKey.self] = newValue }
     }

@@ -28,7 +28,7 @@ struct ProgressViewKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var compactSliderProgressView: AnyView {
+    public var compactSliderProgressView: AnyView {
         get { self[ProgressViewKey.self] }
         set { self[ProgressViewKey.self] = newValue }
     }

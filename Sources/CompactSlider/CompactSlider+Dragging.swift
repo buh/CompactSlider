@@ -115,12 +115,8 @@ extension CompactSlider {
         guard let startDragLocation, size.width > 0, size.height > 0 else { return }
         
         if isEnded {
-            if !options.contains(.snapToSteps), let pointProgressStep = step?.pointProgressStep {
-                let progressX = progress.progresses[0].rounded(step: pointProgressStep.x)
-                let progressY = progress.progresses[1].rounded(step: pointProgressStep.y)
-                
-                progress.update(progressX, at: 0)
-                progress.update(progressY, at: 1)
+            if !options.contains(.snapToSteps), let step = step?.pointProgressStep {
+                progress.updatePoint(rounded: step)
                 HapticFeedback.vibrate(disabledHapticFeedback)
             }
             

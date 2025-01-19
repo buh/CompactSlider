@@ -79,52 +79,6 @@ extension CompactSlider {
         }
     }
     
-    func onScrollWheelGridChange(
-        _ event: ScrollWheelEvent,
-        size: CGSize,
-        location: CGPoint,
-        isRightToLeft: Bool
-    ) {
-        if event.isEnded {
-            if !options.contains(.snapToSteps), let pointProgressStep = step?.pointProgressStep {
-                let progressX = progress.progresses[0].rounded(step: pointProgressStep.x)
-                let progressY = progress.progresses[1].rounded(step: pointProgressStep.y)
-                
-                progress.update(progressX, at: 0)
-                progress.update(progressY, at: 1)
-            }
-            
-            return
-        }
-        
-        let progressX = onScrollWheelHorizontalProgress(
-            event,
-            size: size,
-            location: location,
-            type: .grid,
-            isRightToLeft: isRightToLeft,
-            currentProgress: progress.progresses[0],
-            progressStep: step?.pointProgressStep?.x
-        ).clamped()
-        
-        let progressY = onScrollWheelVerticalProgress(
-          event,
-          size: size,
-          location: location,
-          type: .grid,
-          currentProgress: progress.progresses[1],
-          progressStep: step?.pointProgressStep?.y
-        ).clamped()
-        
-        let updatedX = progress.update(progressX, at: 0)
-        let updatedY = progress.update(progressY, at: 1)
-        
-        if (updatedX && (progressX == 1 || progressX == 0))
-            || (updatedY && (progressY == 1 || progressY == 0)) {
-            HapticFeedback.vibrate(disabledHapticFeedback)
-        }
-    }
-    
     func onScrollWheelLinearCurrentProgressX(
         _ event: ScrollWheelEvent,
         size: CGSize,
@@ -220,6 +174,53 @@ extension CompactSlider {
         }
         
         return newProgress
+    }
+}
+
+// MARK: - Grid
+
+extension CompactSlider {
+    func onScrollWheelGridChange(
+        _ event: ScrollWheelEvent,
+        size: CGSize,
+        location: CGPoint,
+        isRightToLeft: Bool
+    ) {
+        if event.isEnded {
+            if !options.contains(.snapToSteps), let step = step?.pointProgressStep {
+                progress.updatePoint(rounded: step)
+                HapticFeedback.vibrate(disabledHapticFeedback)
+            }
+            
+            return
+        }
+        
+        let progressX = onScrollWheelHorizontalProgress(
+            event,
+            size: size,
+            location: location,
+            type: .grid,
+            isRightToLeft: isRightToLeft,
+            currentProgress: progress.progresses[0],
+            progressStep: step?.pointProgressStep?.x
+        ).clamped()
+        
+        let progressY = onScrollWheelVerticalProgress(
+          event,
+          size: size,
+          location: location,
+          type: .grid,
+          currentProgress: progress.progresses[1],
+          progressStep: step?.pointProgressStep?.y
+        ).clamped()
+        
+        let updatedX = progress.update(progressX, at: 0)
+        let updatedY = progress.update(progressY, at: 1)
+        
+        if (updatedX && (progressX == 1 || progressX == 0))
+            || (updatedY && (progressY == 1 || progressY == 0)) {
+            HapticFeedback.vibrate(disabledHapticFeedback)
+        }
     }
 }
 #endif

@@ -5,16 +5,20 @@
 
 import SwiftUI
 
-public struct CompactSliderStyleBackgroundView: View {
+struct CompactSliderStyleBackgroundView: View {
+    @Environment(\.compactSliderOptions) var sliderOptions
     @Environment(\.compactSliderBackgroundView) var backgroundView
     let padding: EdgeInsets
     
-    public init(padding: EdgeInsets) {
+    init(padding: EdgeInsets = .zero) {
         self.padding = padding
     }
     
-    public var body: some View {
-        backgroundView(padding)
+    var body: some View {
+        if !sliderOptions.contains(.moveBackgroundToScale),
+           !sliderOptions.contains(.withoutBackground) {
+            backgroundView(padding)
+        }
     }
 }
 
@@ -30,7 +34,7 @@ struct BackgroundViewKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var compactSliderBackgroundView: (EdgeInsets) -> AnyView {
+    public var compactSliderBackgroundView: (EdgeInsets) -> AnyView {
         get { self[BackgroundViewKey.self] }
         set { self[BackgroundViewKey.self] = newValue }
     }

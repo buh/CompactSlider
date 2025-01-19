@@ -80,6 +80,11 @@ public struct Progress: Equatable {
         update(progress, at: 1)
     }
     
+    mutating func updatePoint(rounded step: CompactSliderStep.PointValue) {
+        update(progresses[0].rounded(step: step.x), at: 0)
+        update(progresses[1].rounded(step: step.y), at: 1)
+    }
+    
     @discardableResult
     mutating func updatePolarPoint(
         _ polarPoint: CompactSliderPolarPoint

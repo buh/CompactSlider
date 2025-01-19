@@ -16,8 +16,6 @@ public struct CompactSliderStyleConfiguration: Equatable {
     /// Progress values represents the position of the selected value within bounds, mapped into 0...1.
     public let progress: Progress
     public let step: CompactSliderStep?
-    /// Slider options.
-    public let options: Set<CompactSliderOption>
     /// The possible color schemes, corresponding to the light and dark appearances.
     public let colorScheme: ColorScheme
     
@@ -31,7 +29,6 @@ public struct CompactSliderStyleConfiguration: Equatable {
         focusState: FocusState,
         progress: Progress,
         step: CompactSliderStep?,
-        options: Set<CompactSliderOption>,
         colorScheme: ColorScheme
     ) {
         self.type = type
@@ -39,7 +36,6 @@ public struct CompactSliderStyleConfiguration: Equatable {
         self.focusState = focusState
         self.progress = progress
         self.step = step
-        self.options = options
         self.colorScheme = colorScheme
     }
 }
@@ -70,8 +66,6 @@ extension CompactSliderStyleConfiguration {
             OptionalCGSize(width: size.width)
         case .vertical, .scrollableVertical:
             OptionalCGSize(height: size.height)
-        case .gauge:
-            OptionalCGSize(width: size.minValue, height: size.minValue)
         case .grid, .circularGrid:
             OptionalCGSize(width: size.width, height: size.height)
         }
@@ -184,8 +178,6 @@ extension CompactSliderStyleConfiguration {
             return CGPoint(x: (size.width - handleWidth) / 2, y: 0)
         case .scrollableVertical:
             return CGPoint(x: 0, y: (size.height - handleWidth) / 2)
-        case .gauge:
-            return .zero // TODO: Gauge
         case .grid:
             return CGPoint(
                 x: (size.width - handleWidth) * progress.progresses[0],
@@ -281,7 +273,6 @@ struct CompactSliderStyleConfigurationKey: EnvironmentKey {
         focusState: .init(isHovering: false, isDragging: false),
         progress: Progress(),
         step: nil,
-        options: [],
         colorScheme: .light
     )
 }

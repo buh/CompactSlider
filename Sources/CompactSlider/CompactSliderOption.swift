@@ -85,3 +85,31 @@ extension View {
         }
     }
 }
+
+// MARK: - Environment
+
+struct CompactSliderOptionKey: EnvironmentKey {
+    static var defaultValue: Set<CompactSliderOption> = .default
+}
+
+extension EnvironmentValues {
+    public var compactSliderOptions: Set<CompactSliderOption> {
+        get { self[CompactSliderOptionKey.self] }
+        set { self[CompactSliderOptionKey.self] = newValue }
+    }
+}
+
+extension View {
+    /// Sets the default options for compact sliders.
+    public func compactSliderOptions(_ options: CompactSliderOption...) -> some View {
+        environment(\.compactSliderOptions, Set(options))
+    }
+    
+    /// Sets the default options for compact sliders.
+    public func compactSliderOptionsByAdding(_ options: CompactSliderOption...) -> some View {
+        environment(
+            \.compactSliderOptions,
+             CompactSliderOptionKey.defaultValue.union(options)
+        )
+    }
+}

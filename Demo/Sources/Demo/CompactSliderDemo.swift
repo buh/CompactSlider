@@ -51,10 +51,8 @@ struct CompactSliderDemo: View {
             // MARK: - Vertical
             
             HStack(spacing: 16) {
-                Group {
-                    verticalSliders()
-                }
-                .frame(maxWidth: 30, minHeight: 100)
+                verticalSliders()
+                    .frame(maxWidth: 30, minHeight: 100)
             }
         }
         .padding()
@@ -64,33 +62,30 @@ struct CompactSliderDemo: View {
     
     @ViewBuilder
     private func horizontalSliders() -> some View {
-        CompactSlider(
-            value: $degree,
-            in: 0 ... 360,
-            step: 5,
-            options: [.dragGestureMinimumDistance(0), .scrollWheel, .withoutBackground, .loopValues]
-        )
-        .compactSliderStyle(default: .scrollable(
-            handleStyle: .rectangle(),
-            scaleStyle: .atSide(
-                alignment: .bottom,
-                line: .init(length: 16, skipEdges: false),
-                secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
-            ),
-            clipShapeType: .none
-        ))
-        .horizontalGradientMask()
-        .overlay(
-            Text("\(Int(degree))º")
-                .offset(x: 2, y: -24)
-        )
-        .padding(.top, 12)
-        .frame(height: 40)
+        CompactSlider(value: $degree, in: 0 ... 360, step: 5)
+            .compactSliderStyle(default: .scrollable(
+                handleStyle: .rectangle(),
+                scaleStyle: .atSide(
+                    alignment: .bottom,
+                    line: .init(length: 16, skipEdges: false),
+                    secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
+                ),
+                clipShapeType: .rectangle
+            ))
+            .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
+            .horizontalGradientMask()
+            .overlay(
+                Text("\(Int(degree))º")
+                    .offset(x: 2, y: -24)
+            )
+            .padding(.top, 12)
+            .frame(height: 40)
         
         CompactSlider(value: $progress)
         
-        CompactSlider(value: $centerProgress, in: -19 ... 19, step: 1, options: [.dragGestureMinimumDistance(0), .snapToSteps, .scrollWheel])
+        CompactSlider(value: $centerProgress, in: -19 ... 19, step: 1)
             .compactSliderStyle(default: .horizontal(.center))
+            .compactSliderOptionsByAdding(.snapToSteps)
         
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .horizontal(.trailing))
@@ -159,15 +154,13 @@ struct CompactSliderDemo: View {
     
     @ViewBuilder
     private func verticalSliders() -> some View {
-        CompactSlider(
-            value: $progress,
-            options: [.dragGestureMinimumDistance(0), .scrollWheel, .loopValues]
-        )
+        CompactSlider(value: $progress)
         .compactSliderStyle(default: .scrollable(
             .vertical,
             scaleStyle: .centered(),
-            clipShapeType: .none
+            clipShapeType: .rectangle
         ))
+        .compactSliderOptionsByAdding(.loopValues)
         .verticalGradientMask()
         
         CompactSlider(value: $centerProgress, in: -20 ... 20, step: 1)

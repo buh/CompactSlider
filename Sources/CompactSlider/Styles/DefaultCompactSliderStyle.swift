@@ -59,11 +59,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
             }
         }
         .padding(padding)
-        .backgroundIf(
-            !configuration.options.contains(.moveBackgroundToScale)
-            && !configuration.options.contains(.withoutBackground),
-            padding: padding
-        )
+        .background(CompactSliderStyleBackgroundView(padding: padding))
         .compositingGroup()
         .contentShape(Rectangle())
         .clipShapeStyle(clipShapeStyle)
@@ -73,16 +69,5 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         #if os(macOS)
         .saturation(appearsActive ? 1 : 0)
         #endif
-    }
-}
-
-extension View {
-    @ViewBuilder
-    func backgroundIf(_ condition: Bool, padding: EdgeInsets = .zero) -> some View {
-        if condition {
-            background(CompactSliderStyleBackgroundView(padding: padding))
-        } else {
-            self
-        }
     }
 }

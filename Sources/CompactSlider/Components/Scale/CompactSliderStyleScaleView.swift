@@ -24,7 +24,7 @@ struct ScaleViewKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var compactSliderScaleView: AnyView {
+    public var compactSliderScaleView: AnyView {
         get { self[ScaleViewKey.self] }
         set { self[ScaleViewKey.self] = newValue }
     }
