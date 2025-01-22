@@ -63,7 +63,7 @@ public struct ScaleStyle: Equatable {
         visibility: Visibility = .hoveringOrDragging,
         alignment: Alignment = .center,
         line: Line = .primaryCentered,
-        secondaryLine: Line? = .secondaryCentered
+        secondaryLine: Line? = nil
     ) -> ScaleStyle {
         ScaleStyle(
             visibility: visibility,

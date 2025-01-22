@@ -32,7 +32,7 @@ extension Defaults {
         #if os(macOS)
         3
         #else
-        16
+        8
         #endif
     }()
     

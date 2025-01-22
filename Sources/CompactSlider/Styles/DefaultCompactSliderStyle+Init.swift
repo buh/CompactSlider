@@ -23,7 +23,7 @@ extension DefaultCompactSliderStyle {
     }
     
     public static func vertical(
-        _ alignment: VerticalAlignment = .top,
+        _ alignment: VerticalAlignment = .bottom,
         handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = .centered(),
         clipShapeType: ClipShapeType = .roundedRectangle(cornerRadius: Defaults.cornerRadius),

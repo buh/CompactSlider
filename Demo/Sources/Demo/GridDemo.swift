@@ -3,6 +3,7 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
+#if os(macOS) || os(iOS) || targetEnvironment(macCatalyst)
 import SwiftUI
 import CompactSlider
 
@@ -150,3 +151,4 @@ struct CompactSliderGridDemo: View {
         .frame(width: 400, height: 800, alignment: .top)
         #endif
 }
+#endif

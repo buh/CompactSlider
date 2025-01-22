@@ -1,8 +1,6 @@
+// The MIT License (MIT)
 //
-//  CompactSliderSystemDemo.swift
-//  Demo
-//
-//  Created by Aleksei Bukhtin on 17-01-2025.
+// Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
 import SwiftUI
