@@ -12,7 +12,6 @@ import AppKit
 #endif
 
 enum HapticFeedback {
-    
     #if os(iOS)
     private static let feedbackGenerator: UISelectionFeedbackGenerator = {
         let generator = UISelectionFeedbackGenerator()
@@ -20,9 +19,9 @@ enum HapticFeedback {
         return generator
     }()
     #endif
-
-    static func vibrate(_ disabled: Bool) {
-        guard !disabled else { return }
+    
+    static func vibrate(isEnabled: Bool) {
+        guard isEnabled else { return }
         
         #if os(macOS)
         NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
@@ -30,28 +29,5 @@ enum HapticFeedback {
         feedbackGenerator.selectionChanged()
         feedbackGenerator.prepare()
         #endif
-    }
-}
-
-// MARK: - Environment
-
-struct CompactSliderDisabledHapticFeedbackKey: EnvironmentKey {
-    static var defaultValue = false
-}
-
-extension EnvironmentValues {
-    public var compactSliderDisabledHapticFeedback: Bool {
-        get { self[CompactSliderDisabledHapticFeedbackKey.self] }
-        set { self[CompactSliderDisabledHapticFeedbackKey.self] = newValue }
-    }
-}
-
-// MARK: - View
-
-extension View {
-    /// Adds a condition that controls haptic feedback to the user.
-    /// - Parameter disabled: a boolean value that determines whether users can receive haptic feedback.
-    public func compactSliderDisabledHapticFeedback(_ disabled: Bool) -> some View {
-        environment(\.compactSliderDisabledHapticFeedback, disabled)
     }
 }

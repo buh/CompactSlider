@@ -6,6 +6,7 @@
 import SwiftUI
 
 public enum CompactSliderOption: Hashable {
+    case enabledHapticFeedback
     /// Creates a dragging gesture with the minimum dragging distance before the gesture succeeds.
     /// Default values 1 and 0 for iOS and macOS respectively.
     case dragGestureMinimumDistance(CGFloat)
@@ -32,9 +33,9 @@ extension Set<CompactSliderOption> {
     /// For macOS: minimum drag distance 0.
     public static var `default`: Self {
         #if os(macOS)
-        [.dragGestureMinimumDistance(0), .scrollWheel]
+        [.enabledHapticFeedback, .dragGestureMinimumDistance(0), .scrollWheel]
         #else
-        [.dragGestureMinimumDistance(1), .delayedGesture]
+        [.enabledHapticFeedback, .dragGestureMinimumDistance(1), .delayedGesture]
         #endif
     }
     

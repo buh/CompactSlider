@@ -35,6 +35,20 @@ struct DefaultCircularGridBackgroundView: View {
     @Environment(\.colorScheme) var colorScheme
     let configuration: CompactSliderStyleConfiguration
     
+    var defaultScaleColor: Color {
+        colorScheme == .dark ? Color.white.opacity(0.1) : .black.opacity(0.1)
+    }
+    
+    var scaleColor: Color {
+        configuration.focusState.isFocused ? Color.accentColor : defaultScaleColor
+    }
+    
+    var centerCircleColor: Color {
+        configuration.progress.polarPoint.normalizedRadius == 0
+            ? .accentColor
+            : (colorScheme == .dark ? Color.white.opacity(0.3) : .black.opacity(0.3))
+    }
+    
     var body: some View {
         Circle()
             .fill(
@@ -53,18 +67,24 @@ struct DefaultCircularGridBackgroundView: View {
             .overlay(
                 CircularScale(
                     step: .degrees(
-                        360 / Double(configuration.step?.polarPointSteps?.angle ?? 72).clamped(3, 120)
+                        360 / Double(configuration.step?.polarPointSteps?.angle ?? 8).clamped(3, 120)
                     ),
                     minRadius: 0.9,
                     maxRadius: 0.95
                 )
-                .stroke(
-                    configuration.focusState.isFocused
-                    ? Color.accentColor
-                    : (colorScheme == .dark ? Color.white.opacity(0.1) : .black.opacity(0.1)),
-                    lineWidth: 1
-                )
+                .stroke(scaleColor, lineWidth: 1)
             )
+            .overlay {
+                if configuration.focusState.isDragging,
+                   configuration.progress.polarPoint.normalizedRadius < 0.2 {
+                    Circle()
+                        .stroke(
+                            centerCircleColor,
+                            style: .init(lineWidth: 1, dash: [1, 4])
+                        )
+                        .frame(width: 30, height: 30)
+                }
+            }
             .overlay(
                 Circle()
                     .stroke(

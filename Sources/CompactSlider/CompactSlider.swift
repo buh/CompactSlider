@@ -78,7 +78,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.compactSliderGridStyle) var compactSliderGridStyle
     @Environment(\.compactSliderCircularGridStyle) var compactSliderCircularGridStyle
-    @Environment(\.compactSliderDisabledHapticFeedback) var disabledHapticFeedback
     
     let bounds: ClosedRange<Value>
     let pointBounds: ClosedRange<Point>
@@ -115,6 +114,107 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         return compactSliderStyle
     }
     
+    var isHapticFeedbackEnabled: Bool { options.contains(.enabledHapticFeedback) }
+    
+    public var body: some View {
+        GeometryReader { proxy in
+            let size = CGSize(
+                width: proxy.size.width - style.padding.horizontal,
+                height: proxy.size.height - style.padding.vertical
+            )
+            
+            style.makeBody(
+                configuration: CompactSliderStyleConfiguration(
+                    type: style.type,
+                    size: size,
+                    focusState: .init(isHovering: isHovering, isDragging: isDragging),
+                    progress: progress,
+                    step: step,
+                    colorScheme: colorScheme
+                )
+            )
+            .dragGesture(
+                options: options,
+                onChanged: {
+                    isDragging = true
+                    
+                    if startDragLocation == nil {
+                        startDragLocation = nearestProgressLocation(
+                            at: $0.startLocation,
+                            size: size,
+                            type: style.type,
+                            isRightToLeft: layoutDirection == .rightToLeft
+                        )
+                    }
+                    
+                    onDragLocationChange(
+                        translation: $0.translation,
+                        size: size,
+                        type: style.type,
+                        isEnded: false,
+                        isRightToLeft: layoutDirection == .rightToLeft
+                    )
+                },
+                onEnded: {
+                    if step != nil, !options.contains(.snapToSteps) {
+                        onDragLocationChange(
+                            translation: $0.translation,
+                            size: proxy.size,
+                            type: style.type,
+                            isEnded: true,
+                            isRightToLeft: layoutDirection == .rightToLeft
+                        )
+                    }
+                    
+                    startDragLocation = nil
+                    isDragging = false
+                }
+            )
+            #if os(macOS)
+            .onScrollWheel(isEnabled: options.contains(.scrollWheel)) { event in
+                guard isHovering else { return }
+                
+                if !event.isEnded {
+                    if style.type.isHorizontal, !event.isHorizontalDelta {
+                        return
+                    }
+                    
+                    if style.type.isVertical, event.isHorizontalDelta {
+                        return
+                    }
+                }
+                
+                onScrollWheelChange(
+                    event,
+                    size: proxy.size,
+                    location: proxy.frame(in: .global).origin,
+                    type: style.type,
+                    isRightToLeft: layoutDirection == .rightToLeft
+                )
+            }
+            #endif
+        }
+        .opacity(isEnabled ? 1 : 0.5)
+        #if os(macOS) || os(iOS)
+        .onHover { isHovering = isEnabled && $0 }
+        #endif
+        .onChange(of: progress, perform: onProgressesChange)
+        .onChange(of: lowerValue, perform: onLowerValueChange)
+        .onChange(of: upperValue, perform: onUpperValueChange)
+        .onChange(of: values, perform: onValuesChange)
+        .onChange(of: point, perform: onPointChange)
+        .onChange(of: polarPoint, perform: onPolarPointChange)
+        .animation(nil, value: lowerValue)
+        .animation(nil, value: upperValue)
+        .animation(nil, value: values)
+        .animation(nil, value: point)
+        .animation(nil, value: polarPoint)
+    }
+}
+
+// MARK: - Constructors
+
+extension CompactSlider {
     /// Creates a slider to select a value from a given bounds.
     ///
     /// The value of the created instance is equal to the position of the given value
@@ -269,100 +369,5 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         
         _progress = .init(initialValue: Progress(polarPoint.wrappedValue))
         defaultType = .circularGrid
-    }
-    
-    public var body: some View {
-        GeometryReader { proxy in
-            let size = CGSize(
-                width: proxy.size.width - style.padding.horizontal,
-                height: proxy.size.height - style.padding.vertical
-            )
-            
-            style.makeBody(
-                configuration: CompactSliderStyleConfiguration(
-                    type: style.type,
-                    size: size,
-                    focusState: .init(isHovering: isHovering, isDragging: isDragging),
-                    progress: progress,
-                    step: step,
-                    colorScheme: colorScheme
-                )
-            )
-            .dragGesture(
-                options: options,
-                onChanged: {
-                    isDragging = true
-                    
-                    if startDragLocation == nil {
-                        startDragLocation = nearestProgressLocation(
-                            at: $0.startLocation,
-                            size: size,
-                            type: style.type,
-                            isRightToLeft: layoutDirection == .rightToLeft
-                        )
-                    }
-                    
-                    onDragLocationChange(
-                        translation: $0.translation,
-                        size: size,
-                        type: style.type,
-                        isEnded: false,
-                        isRightToLeft: layoutDirection == .rightToLeft
-                    )
-                },
-                onEnded: {
-                    if step != nil, !options.contains(.snapToSteps) {
-                        onDragLocationChange(
-                            translation: $0.translation,
-                            size: proxy.size,
-                            type: style.type,
-                            isEnded: true,
-                            isRightToLeft: layoutDirection == .rightToLeft
-                        )
-                    }
-                    
-                    startDragLocation = nil
-                    isDragging = false
-                }
-            )
-            #if os(macOS)
-            .onScrollWheel(isEnabled: options.contains(.scrollWheel)) { event in
-                guard isHovering else { return }
-                
-                if !event.isEnded {
-                    if style.type.isHorizontal, !event.isHorizontalDelta {
-                        return
-                    }
-                    
-                    if style.type.isVertical, event.isHorizontalDelta {
-                        return
-                    }
-                }
-                
-                onScrollWheelChange(
-                    event,
-                    size: proxy.size,
-                    location: proxy.frame(in: .global).origin,
-                    type: style.type,
-                    isRightToLeft: layoutDirection == .rightToLeft
-                )
-            }
-            #endif
-        }
-        .opacity(isEnabled ? 1 : 0.5)
-        #if os(macOS) || os(iOS)
-        .onHover { isHovering = isEnabled && $0 }
-        #endif
-        .onChange(of: progress, perform: onProgressesChange)
-        .onChange(of: lowerValue, perform: onLowerValueChange)
-        .onChange(of: upperValue, perform: onUpperValueChange)
-        .onChange(of: values, perform: onValuesChange)
-        .onChange(of: point, perform: onPointChange)
-        .onChange(of: polarPoint, perform: onPolarPointChange)
-        .animation(nil, value: lowerValue)
-        .animation(nil, value: upperValue)
-        .animation(nil, value: values)
-        .animation(nil, value: point)
-        .animation(nil, value: polarPoint)
     }
 }
