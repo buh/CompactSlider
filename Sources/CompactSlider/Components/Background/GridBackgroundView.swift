@@ -52,7 +52,7 @@ public struct GridBackgroundView<
                         .fill(backgroundShapeStyle)
                 }
                 
-                if normalizedBacklightRadius > 0, configuration.focusState.isFocused {
+                if normalizedBacklightRadius > 0 {
                     backlightView()
                 }
                 
@@ -136,7 +136,7 @@ extension GridBackgroundView where BackgroundShapeStyle == Color, GridShapeStyle
     public init(
         configuration: CompactSliderStyleConfiguration,
         padding: EdgeInsets,
-        backgroundColor: Color? = Defaults.backgroundColor.opacity(0.1),
+        backgroundColor: Color? = nil,
         handleColor: Color? = nil,
         guidelineColor: Color? = nil,
         normalizedBacklightRadius: CGFloat = 0.5,

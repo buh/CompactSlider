@@ -115,11 +115,7 @@ extension CompactSlider {
         guard let startDragLocation, size.width > 0, size.height > 0 else { return }
         
         if isEnded {
-            if !options.contains(.snapToSteps), let step = step?.pointProgressStep {
-                progress.updatePoint(rounded: step)
-                HapticFeedback.vibrate(isEnabled: isHapticFeedbackEnabled)
-            }
-            
+            updateGridOnEnd()
             return
         }
         
@@ -149,6 +145,13 @@ extension CompactSlider {
             HapticFeedback.vibrate(isEnabled: isHapticFeedbackEnabled)
         }
     }
+    
+    func updateGridOnEnd() {
+        if !options.contains(.snapToSteps), let step = step?.pointProgressStep {
+            progress.updatePoint(rounded: step)
+            HapticFeedback.vibrate(isEnabled: isHapticFeedbackEnabled)
+        }
+    }
 }
 
 // MARK: - Circular Grid
@@ -165,11 +168,7 @@ extension CompactSlider {
         guard let startDragLocation, maxDistance > 0 else { return }
         
         if isEnded {
-            if !options.contains(.snapToSteps), let step = step?.polarPointProgressStep {
-                progress.updatePolarPoint(progress.polarPoint.rounded(step))
-                HapticFeedback.vibrate(isEnabled: isHapticFeedbackEnabled)
-            }
-            
+            updateCircularGridOnEnd()
             return
         }
         
@@ -179,18 +178,34 @@ extension CompactSlider {
             translationX = -translationX
         }
         
-        let progressLocation = CGPoint(
+        let newLocation = CGPoint(
             x: startDragLocation.x + translationX,
             y: startDragLocation.y + translation.height
         )
         
         let origin = CGPoint(x: size.minValue / 2, y: size.minValue / 2)
         
-        var angle = progressLocation.calculateAngle(from: origin)
+        var angle = newLocation.calculateAngle(from: origin)
         angle = angle < .zero ? .degrees(angle.degrees + 360) : angle
         
-        var normalizedRadius = progressLocation.calculateDistance(from: origin) / maxDistance
+        let normalizedRadius = newLocation.calculateDistance(from: origin) / maxDistance
         
+        updateCircularGrid(
+            polarPoint: .init(angle: angle, normalizedRadius: normalizedRadius),
+            maxDistance: maxDistance
+        )
+    }
+    
+    func updateCircularGridOnEnd() {
+        if !options.contains(.snapToSteps), let step = step?.polarPointProgressStep {
+            progress.updatePolarPoint(progress.polarPoint.rounded(step))
+            HapticFeedback.vibrate(isEnabled: isHapticFeedbackEnabled)
+        }
+    }
+    
+    func updateCircularGrid(polarPoint: CompactSliderPolarPoint, maxDistance: CGFloat) {
+        var angle = polarPoint.angle
+        var normalizedRadius = polarPoint.normalizedRadius
         let isSnapped = options.contains(.snapToSteps) && step?.polarPointProgressStep != nil
         
         if isSnapped, let polarPointProgressStep = step?.polarPointProgressStep {
