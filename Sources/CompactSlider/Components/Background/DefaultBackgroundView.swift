@@ -39,10 +39,23 @@ struct DefaultBackgroundView: View {
                     )
                 )
                 .overlay(
+                    CircularScale(
+                        step: .degrees(
+                            360 / Double(configuration.step?.polarPointSteps?.angle ?? 72).clamped(3, 120)
+                        ),
+                        minRadius: 0.9,
+                        maxRadius: 0.95
+                    )
+                    .stroke(
+                        colorScheme == .dark ? Color.white.opacity(0.1) : .black.opacity(0.1),
+                        lineWidth: 1
+                    )
+                )
+                .overlay(
                     Circle()
                         .stroke(
                             colorScheme == .dark ? Color.white.opacity(0.03) : .black.opacity(0.03),
-                            lineWidth: 2
+                            lineWidth: 1
                         )
                         .padding(1)
                 )

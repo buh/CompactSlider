@@ -23,6 +23,16 @@ extension CGSize {
 }
 
 extension CGPoint {
+    init(angle: Angle, radius: CGFloat, in rect: CGRect) {
+        self.init(angle: angle, radius: radius, in: rect.size)
+    }
+    
+    init(angle: Angle, radius: CGFloat, in size: CGSize) {
+        let x = size.width / 2 + radius * cos(angle.radians)
+        let y = size.height / 2 + radius * sin(angle.radians)
+        self.init(x: x, y: y)
+    }
+    
     func calculateAngle(from origin: CGPoint = .zero) -> Angle {
         Angle(radians: atan2(y - origin.y, x - origin.x))
     }

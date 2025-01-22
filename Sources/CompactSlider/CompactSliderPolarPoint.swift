@@ -23,10 +23,7 @@ public struct CompactSliderPolarPoint: Hashable {
     }
     
     func toCartesian(size: CGSize) -> CGPoint {
-        let radius = normalizedRadius * size.minValue / 2
-        let x = size.width / 2 + radius * cos(angle.radians)
-        let y = size.height / 2 + radius * sin(angle.radians)
-        return CGPoint(x: x, y: y)
+        CGPoint(angle: angle, radius: normalizedRadius * size.minValue / 2, in: size)
     }
 }
 

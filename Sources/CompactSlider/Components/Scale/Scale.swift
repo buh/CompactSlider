@@ -6,7 +6,7 @@
 import SwiftUI
 
 /// A shape that draws a scale of possible values.
-struct Scale: Shape {
+public struct Scale: Shape {
     var alignment: Axis = .horizontal
     let count: Int
     var lineWidth: CGFloat = 1
@@ -15,7 +15,7 @@ struct Scale: Shape {
     var skipEdges: Bool = false
     var startFromCenter: Bool = false
     
-    func path(in rect: CGRect) -> Path {
+    public func path(in rect: CGRect) -> Path {
         Path { path in
             guard count > 1, minSpacing > 1 else { return }
             

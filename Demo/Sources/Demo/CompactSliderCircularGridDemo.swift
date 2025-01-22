@@ -40,11 +40,19 @@ struct CompactSliderCircularGridDemo: View {
     
     @ViewBuilder
     func circularGridSliders() -> some View {
-        CompactSlider(
-            polarPoint: $point,
-            step: .init(angle: .degrees(5), normalizedRadius: 0.05)
-        )
-        .frame(width: 150, height: 150)
+        HStack {
+            CompactSlider(
+                polarPoint: $point,
+                step: .init(angle: .degrees(5), normalizedRadius: 0.05)
+            )
+            .frame(width: 200, height: 200)
+            
+            CompactSlider(
+                polarPoint: $point,
+                step: .init(angle: .degrees(5), normalizedRadius: 0.05)
+            )
+            .frame(width: 100, height: 100)
+        }
         
         Divider()
         
