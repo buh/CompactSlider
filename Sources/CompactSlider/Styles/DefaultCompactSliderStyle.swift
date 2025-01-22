@@ -16,21 +16,18 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     
     let handleStyle: HandleStyle
     let scaleStyle: ScaleStyle?
-    let gaugeStyle: GaugeStyle?
     let clipShapeStyle: ClipShapeType
     
     public init(
         type: CompactSliderType = .horizontal(.leading),
         handleStyle: HandleStyle = .rectangle(),
-        scaleStyle: ScaleStyle? = nil,
-        gaugeStyle: GaugeStyle? = nil,
-        clipShapeStyle: ClipShapeType = .none,
+        scaleStyle: ScaleStyle? = .atSide(),
+        clipShapeStyle: ClipShapeType = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
         padding: EdgeInsets = .zero
     ) {
         self.type = type
         self.handleStyle = handleStyle
         self.scaleStyle = scaleStyle
-        self.gaugeStyle = gaugeStyle
         self.clipShapeStyle = clipShapeStyle
         self.padding = padding
     }

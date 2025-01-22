@@ -223,4 +223,42 @@ extension CompactSlider {
         }
     }
 }
+
+
+#if DEBUG
+import SwiftUI
+
+struct ScrollWheelPreview: View {
+    @State var value = 0.3
+    @State var values: [Double] = [0.2, 0.5, 0.7]
+    @State var point = CGPoint(x: 50, y: 50)
+    @State var polarPoint: CompactSliderPolarPoint = .zero
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Group {
+                CompactSlider(value: $value)
+                CompactSlider(values: $values)
+            }
+            .frame(maxHeight: 30)
+            
+            CompactSlider(point: $point, in: .zero ... .init(x: 100, y: 100))
+                .frame(width: 200, height: 200)
+            
+            CompactSlider(
+                polarPoint: $polarPoint,
+                step: .init(angle: .degrees(5), normalizedRadius: 0.05)
+            )
+            .frame(width: 200, height: 200)
+        }
+    }
+}
+
+#Preview {
+    ScrollWheelPreview()
+        .padding()
+        .frame(width: 400, height: 800, alignment: .top)
+}
+#endif
+
 #endif
