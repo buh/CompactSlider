@@ -71,7 +71,7 @@ extension CompactSliderStyleConfiguration {
         }
     }
     
-    public func progressSize() -> OptionalCGSize {
+    public func progressSize(handleWidth: CGFloat) -> OptionalCGSize {
         if progress.isMultipleValues || type.isScrollable {
             return OptionalCGSize()
         }
@@ -87,7 +87,7 @@ extension CompactSliderStyleConfiguration {
                 progress = abs(progress - 0.5)
             }
             
-            return OptionalCGSize(width: size.width * progress)
+            return OptionalCGSize(width: (size.width - handleWidth) * progress)
         case .vertical(let alignment):
             switch alignment {
             case .top, .bottom:
@@ -96,13 +96,13 @@ extension CompactSliderStyleConfiguration {
                 progress = abs(progress - 0.5)
             }
             
-            return OptionalCGSize(height: size.height * progress)
+            return OptionalCGSize(height: (size.height - handleWidth) * progress)
         default:
             return OptionalCGSize()
         }
     }
     
-    public func progressOffset() -> CGPoint {
+    public func progressOffset(handleWidth: CGFloat) -> CGPoint {
         if progress.isMultipleValues || type.isScrollable {
             return .zero
         }
@@ -110,9 +110,19 @@ extension CompactSliderStyleConfiguration {
         if progress.isRangeValues {
             switch type {
             case .horizontal:
-                return CGPoint(x: size.width * min(progress.lowerProgress, progress.upperProgress), y: 0)
+                return CGPoint(
+                    x: (size.width - handleWidth)
+                        * min(progress.lowerProgress, progress.upperProgress)
+                        + handleWidth / 2,
+                    y: 0
+                )
             case .vertical:
-                return CGPoint(x: 0, y: size.height * min(progress.lowerProgress, progress.upperProgress))
+                return CGPoint(
+                    x: 0,
+                    y: (size.height - handleWidth)
+                        * min(progress.lowerProgress, progress.upperProgress)
+                        + handleWidth / 2
+                )
             default:
                 return CGPoint.zero
             }
@@ -128,10 +138,10 @@ extension CompactSliderStyleConfiguration {
                     return CGPoint(x: size.width / 2, y: 0)
                 }
                 
-                let progressSize = progressSize()
+                let progressSize = progressSize(handleWidth: handleWidth)
                 return CGPoint(x: size.width / 2 - (progressSize.width ?? 0), y: 0)
             case .trailing:
-                let progressSize = progressSize()
+                let progressSize = progressSize(handleWidth: handleWidth)
                 return CGPoint(x: size.width - (progressSize.width ?? 0), y: 0)
             }
         case .vertical(let alignment):
@@ -143,10 +153,10 @@ extension CompactSliderStyleConfiguration {
                     return CGPoint(x: 0, y: size.height / 2)
                 }
                 
-                let progressSize = progressSize()
+                let progressSize = progressSize(handleWidth: handleWidth)
                 return CGPoint(x: 0, y: size.height / 2 - (progressSize.height ?? 0))
             case .bottom:
-                let progressSize = progressSize()
+                let progressSize = progressSize(handleWidth: handleWidth)
                 return CGPoint(x: 0, y: size.height - (progressSize.height ?? 0))
             }
         default:
