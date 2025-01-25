@@ -25,7 +25,7 @@ struct HandleViewContainerView<V: View>: View {
     var body: some View {
         Group {
             if configuration.type == .grid || configuration.type == .circularGrid {
-                let offset = configuration.handleOffset(at: 0, handleWidth: handleStyle.width)
+                let offset = configuration.handleOffset(at: 0, handleStyle: handleStyle)
                 
                 handleView(configuration, handleStyle, configuration.progress(at: 0), 0)
                     .frame(width: handleStyle.width, height: handleStyle.width)
@@ -37,7 +37,7 @@ struct HandleViewContainerView<V: View>: View {
                     )
             } else {
                 ForEach(indices, id: \.self) { index in
-                    let offset = configuration.handleOffset(at: index, handleWidth: handleStyle.width)
+                    let offset = configuration.handleOffset(at: index, handleStyle: handleStyle)
                     
                     handleView(configuration, handleStyle, configuration.progress(at: index), index)
                         .frame(

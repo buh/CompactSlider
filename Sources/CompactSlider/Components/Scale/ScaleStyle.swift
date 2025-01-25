@@ -32,7 +32,7 @@ public struct ScaleStyle: Equatable {
     }
     
     static public func linear(
-        visibility: Visibility = .hoveringOrDragging,
+        visibility: Visibility = .focused,
         alignment: Alignment = .center,
         line: Line = .primaryCentered,
         secondaryLine: Line? = .secondaryCentered
@@ -46,7 +46,7 @@ public struct ScaleStyle: Equatable {
     }
     
     static public func atSide(
-        visibility: Visibility = .hoveringOrDragging,
+        visibility: Visibility = .focused,
         alignment: Alignment = .topLeading,
         line: Line = .primaryAtSide,
         secondaryLine: Line? = .secondaryAtSide
@@ -60,7 +60,7 @@ public struct ScaleStyle: Equatable {
     }
     
     static public func centered(
-        visibility: Visibility = .hoveringOrDragging,
+        visibility: Visibility = .focused,
         alignment: Alignment = .center,
         line: Line = .primaryCentered,
         secondaryLine: Line? = nil

@@ -7,6 +7,7 @@ import SwiftUI
 
 /// The default slider style.
 public struct DefaultCompactSliderStyle: CompactSliderStyle {
+    @Environment(\.handleStyle) var handleStyle
     #if os(macOS)
     @Environment(\.appearsActive) var appearsActive
     #endif
@@ -14,19 +15,16 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     public let type: CompactSliderType
     public let padding: EdgeInsets
     
-    let handleStyle: HandleStyle
     let scaleStyle: ScaleStyle?
     let clipShapeStyle: ClipShapeType
     
     public init(
         type: CompactSliderType = .horizontal(.leading),
-        handleStyle: HandleStyle = .rectangle(),
         scaleStyle: ScaleStyle? = .atSide(),
         clipShapeStyle: ClipShapeType = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
         padding: EdgeInsets = .zero
     ) {
         self.type = type
-        self.handleStyle = handleStyle
         self.scaleStyle = scaleStyle
         self.clipShapeStyle = clipShapeStyle
         self.padding = padding
@@ -47,13 +45,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                 CompactSliderStyleScaleView()
             }
             
-            if configuration.isHandleVisible(handleStyle: handleStyle) {
-                if configuration.progress.isMultipleValues, configuration.progress.progresses.count == 0 {
-                    Rectangle().fill(Color.clear)
-                } else {
-                    CompactSliderStyleHandleView()
-                }
-            }
+            DefaultCompactSliderStyleHandleView(configuration: configuration)
         }
         .padding(padding)
         .background(CompactSliderStyleBackgroundView(padding: padding))
@@ -61,7 +53,6 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         .contentShape(Rectangle())
         .clipShapeStyle(clipShapeStyle)
         .environment(\.compactSliderStyleConfiguration, configuration)
-        .environment(\.handleStyle, handleStyle)
         .environment(\.scaleStyle, scaleStyle)
         #if os(macOS)
         .saturation(appearsActive ? 1 : 0)

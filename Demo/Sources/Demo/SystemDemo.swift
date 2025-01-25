@@ -30,7 +30,6 @@ struct CompactSliderSystemDemo: View {
             Text("Progress")
             CompactSlider(value: $progress)
                 .compactSliderStyle(default: .horizontal(
-                    handleStyle: .circle(visibility: .always, radius: 10),
                     scaleStyle: nil,
                     clipShapeType: .none
                 ))
@@ -44,6 +43,7 @@ struct CompactSliderSystemDemo: View {
                         .fill(Color.accentColor)
                         .frame(maxHeight: 4)
                 }
+                .compactSliderHandleStyle(.circle(visibility: .always, radius: 10))
                 .compactSliderHandle { config, handleStyle, _, _ in
                     HandleView(
                         style: .circle(
@@ -64,7 +64,6 @@ struct CompactSliderSystemDemo: View {
         
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .horizontal(
-                handleStyle: .circle(visibility: .always, radius: 13.5),
                 scaleStyle: nil,
                 clipShapeType: .none
             ))
@@ -78,6 +77,7 @@ struct CompactSliderSystemDemo: View {
                     .fill(Color.accentColor)
                     .frame(maxHeight: 4)
             }
+            .compactSliderHandleStyle(.circle(visibility: .always, radius: 13.5))
             .compactSliderHandle { config, handleStyle, _, _ in
                 HandleView(
                     style: .circle(

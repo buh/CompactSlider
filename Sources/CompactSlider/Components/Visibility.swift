@@ -5,12 +5,12 @@
 
 /// A scale visibility determines the rules for showing a component.
 public enum Visibility {
-    case hoveringOrDragging, always, hidden
+    case focused, always, hidden
     
     /// Default the handle visibility.
     public static var handleDefault: Visibility {
         #if os(macOS)
-        .hoveringOrDragging
+        .focused
         #else
         .always
         #endif

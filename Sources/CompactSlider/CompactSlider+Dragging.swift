@@ -15,6 +15,30 @@ extension CompactSlider {
     ) {
         guard let startDragLocation, !bounds.isEmpty, size.width > 0 else { return }
         
+        if type == .grid {
+            onDragGridLocationChange(
+                translation: translation,
+                size: size,
+                isEnded: isEnded,
+                isRightToLeft: isRightToLeft
+            )
+            
+            return
+        }
+        
+        if type == .circularGrid {
+            onDragCircularGridLocationChange(
+                translation: translation,
+                size: size,
+                isEnded: isEnded,
+                isRightToLeft: isRightToLeft
+            )
+            
+            return
+        }
+        
+        let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
+        
         if type.isHorizontal {
             var translationX = translation.width
             
@@ -38,42 +62,19 @@ extension CompactSlider {
         if type.isVertical {
             var translationY = translation.height
             
-            if case .vertical(.center) = type {
+            if progress.isRangeValues {
                 translationY = -translationY
-            }
-            
-            if case .vertical(.top) = type {
+            } else if type.isScrollable {
                 translationY = -translationY
-            }
-            
-            if type.isScrollable {
+            } else if case .vertical(.center) = type {
+                translationY = -translationY
+            } else if case .vertical(.top) = type {
                 translationY = -translationY
             }
             
             let location = CGPoint(x: 0, y: startDragLocation.y + translationY)
-            updateLinearProgress(progress(at: location, size: size, type: type), isEnded: isEnded)
-            return
-        }
-        
-        if type == .grid {
-            onDragGridLocationChange(
-                translation: translation,
-                size: size,
-                isEnded: isEnded,
-                isRightToLeft: isRightToLeft
-            )
-            
-            return
-        }
-        
-        if type == .circularGrid {
-            onDragCircularGridLocationChange(
-                translation: translation,
-                size: size,
-                isEnded: isEnded,
-                isRightToLeft: isRightToLeft
-            )
-            
+            let newValue = progress(at: location, size: size, type: type)
+            updateLinearProgress(newValue, isEnded: isEnded)
             return
         }
     }
@@ -252,19 +253,6 @@ extension CompactSlider {
         return 0
     }
     
-    func progressLocation(_ progress: Double, size: CGSize, type: CompactSliderType) -> CGPoint {
-        if type.isHorizontal {
-            return CGPoint(x: progress * size.width, y: 0)
-            
-        }
-        
-        if type.isVertical {
-            return CGPoint(x: 0, y: (1 - progress) * size.height)
-        }
-        
-        return .zero
-    }
-    
     func nearestProgressLocation(
         at location: CGPoint,
         size: CGSize,
@@ -282,21 +270,18 @@ extension CompactSlider {
             return progress.polarPoint.toCartesian(size: size)
         }
         
-        let p: Double
-        
-        if progress.progresses.count > 1 {
-            var progressAtLocation = progress(at: location, size: size, type: type)
-            
-            if isRightToLeft || (type.isVertical && !progress.isSingularValue) {
-                progressAtLocation = 1 - progressAtLocation
-            }
-            
-            p = nearestProgress(for: progressAtLocation).progress
-        } else {
-            p = progress.progress
+        guard progress.progresses.count > 1 else {
+            return progressLocation(progress.progress, size: size, type: type)
         }
         
-        return progressLocation(p, size: size, type: type)
+        var progressAtLocation = progress(at: location, size: size, type: type)
+        
+        if isRightToLeft || progress.isRangeValues || progress.isMultipleValues {
+            progressAtLocation = 1 - progressAtLocation
+        }
+        
+        let value = nearestProgress(for: progressAtLocation).progress
+        return progressLocation(value, size: size, type: type)
     }
     
     func nearestProgress(for value: Double) -> (progress: Double, index: Int) {
@@ -316,5 +301,17 @@ extension CompactSlider {
         
         return (resultProgress, index)
     }
+    
+    func progressLocation(_ progress: Double, size: CGSize, type: CompactSliderType) -> CGPoint {
+        if type.isHorizontal {
+            return CGPoint(x: progress * size.width, y: 0)
+            
+        }
+        
+        if type.isVertical {
+            return CGPoint(x: 0, y: (1 - progress) * size.height)
+        }
+        
+        return .zero
+    }
 }
-

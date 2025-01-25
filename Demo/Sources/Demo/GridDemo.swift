@@ -61,9 +61,7 @@ struct CompactSliderGridDemo: View {
                 in: CGPoint(x: 0, y: 0) ... CGPoint(x: 100, y: 100),
                 step: CGPoint(x: 10, y: 10)
             )
-            .compactSliderStyle(default: .grid(
-                handleStyle: .circle(lineWidth: 2)
-            ))
+            .compactSliderStyle(default: .grid()) // .circle(lineWidth: 2)
             .frame(width: 100, height: 100)
         }
         

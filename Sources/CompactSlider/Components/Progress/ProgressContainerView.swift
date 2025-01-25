@@ -18,22 +18,13 @@ struct ProgressContainerView<V: View>: View {
         return .top
     }
     
-    var padding: CGFloat {
-        switch handleStyle.visibility {
-        case .always: handleStyle.width
-        case .hidden: 0
-        case .hoveringOrDragging:
-            configuration.focusState.isFocused ? handleStyle.width : 0
-        }
-    }
-    
     init(progressView: @escaping (CompactSliderStyleConfiguration) -> V) {
         self.progressView = progressView
     }
     
     var body: some View {
-        let size = configuration.progressSize(handleWidth: padding)
-        let offset = configuration.progressOffset(handleWidth: padding)
+        let size = configuration.progressSize(handleStyle: handleStyle)
+        let offset = configuration.progressOffset(handleStyle: handleStyle)
         
         progressView(configuration)
             .frame(width: size.width, height: size.height)

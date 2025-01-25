@@ -70,13 +70,59 @@ extension CompactSliderStyleConfiguration {
             OptionalCGSize(width: size.width, height: size.height)
         }
     }
+}
+
+// MARK: - Progress
+
+extension CompactSliderStyleConfiguration {
+    func handleWidth(handleStyle: HandleStyle) -> CGFloat {
+        switch handleStyle.visibility {
+        case .always:
+            break
+        case .hidden:
+            return 0
+        case .focused:
+            guard focusState.isFocused else { return 0 }
+            break
+        }
+        
+        return handleStyle.width
+    }
     
-    public func progressSize(handleWidth: CGFloat) -> OptionalCGSize {
+    public func progressSize(handleStyle: HandleStyle) -> OptionalCGSize {
         if progress.isMultipleValues || type.isScrollable {
             return OptionalCGSize()
         }
         
-        var progress = progress.isRangeValues ? abs(progress.upperProgress - progress.lowerProgress) : progress.lowerProgress
+        let isRangeValues = progress.isRangeValues
+        let type = isRangeValues ? type.normalizedRangeValuesType : type
+        var progress = isRangeValues ? abs(progress.upperProgress - progress.lowerProgress) : progress.progress
+        
+        let progressHandleWidth = handleWidth(handleStyle: handleStyle)
+        var offset: CGFloat
+        
+        switch handleStyle.progressAlignment {
+        case .inside:
+            if type.isCenter {
+                offset = progressHandleWidth / 2
+            } else {
+                offset = progressHandleWidth
+            }
+        case .center:
+            offset = (type.isCenter || isRangeValues ? 0 : progressHandleWidth / 2)
+        case .outside:
+            if isRangeValues {
+                offset = -progressHandleWidth
+            } else if type.isCenter {
+                offset = progressHandleWidth / -2
+            } else {
+                offset = 0
+            }
+        }
+        
+        if handleStyle.visibility == .focused, !focusState.isFocused {
+            offset = 0
+        }
         
         switch type {
         case .horizontal(let alignment):
@@ -87,7 +133,7 @@ extension CompactSliderStyleConfiguration {
                 progress = abs(progress - 0.5)
             }
             
-            return OptionalCGSize(width: (size.width - handleWidth) * progress)
+            return OptionalCGSize(width: offset + (size.width - progressHandleWidth) * progress)
         case .vertical(let alignment):
             switch alignment {
             case .top, .bottom:
@@ -96,32 +142,42 @@ extension CompactSliderStyleConfiguration {
                 progress = abs(progress - 0.5)
             }
             
-            return OptionalCGSize(height: (size.height - handleWidth) * progress)
+            return OptionalCGSize(height: offset + (size.height - progressHandleWidth) * progress)
         default:
             return OptionalCGSize()
         }
     }
     
-    public func progressOffset(handleWidth: CGFloat) -> CGPoint {
+    public func progressOffset(handleStyle: HandleStyle) -> CGPoint {
         if progress.isMultipleValues || type.isScrollable {
             return .zero
         }
         
         if progress.isRangeValues {
+            var offset: CGFloat = handleWidth(handleStyle: handleStyle) / 2
+            
+            if handleStyle.progressAlignment == .inside {
+                offset = 0
+            }
+            
+            if handleStyle.progressAlignment == .outside {
+                offset = handleWidth(handleStyle: handleStyle)
+            }
+            
             switch type {
             case .horizontal:
                 return CGPoint(
-                    x: (size.width - handleWidth)
+                    x: (size.width - handleWidth(handleStyle: handleStyle))
                         * min(progress.lowerProgress, progress.upperProgress)
-                        + handleWidth / 2,
+                        + offset,
                     y: 0
                 )
             case .vertical:
                 return CGPoint(
                     x: 0,
-                    y: (size.height - handleWidth)
+                    y: (size.height - handleWidth(handleStyle: handleStyle))
                         * min(progress.lowerProgress, progress.upperProgress)
-                        + handleWidth / 2
+                        + offset
                 )
             default:
                 return CGPoint.zero
@@ -138,10 +194,10 @@ extension CompactSliderStyleConfiguration {
                     return CGPoint(x: size.width / 2, y: 0)
                 }
                 
-                let progressSize = progressSize(handleWidth: handleWidth)
+                let progressSize = progressSize(handleStyle: handleStyle)
                 return CGPoint(x: size.width / 2 - (progressSize.width ?? 0), y: 0)
             case .trailing:
-                let progressSize = progressSize(handleWidth: handleWidth)
+                let progressSize = progressSize(handleStyle: handleStyle)
                 return CGPoint(x: size.width - (progressSize.width ?? 0), y: 0)
             }
         case .vertical(let alignment):
@@ -153,21 +209,27 @@ extension CompactSliderStyleConfiguration {
                     return CGPoint(x: 0, y: size.height / 2)
                 }
                 
-                let progressSize = progressSize(handleWidth: handleWidth)
+                let progressSize = progressSize(handleStyle: handleStyle)
                 return CGPoint(x: 0, y: size.height / 2 - (progressSize.height ?? 0))
             case .bottom:
-                let progressSize = progressSize(handleWidth: handleWidth)
+                let progressSize = progressSize(handleStyle: handleStyle)
                 return CGPoint(x: 0, y: size.height - (progressSize.height ?? 0))
             }
         default:
             return CGPoint.zero
         }
     }
-    
-    public func handleOffset(at index: Int, handleWidth: CGFloat) -> CGPoint {
+}
+
+// MARK: - Handle
+
+extension CompactSliderStyleConfiguration {
+    public func handleOffset(at index: Int, handleStyle: HandleStyle) -> CGPoint {
         guard index < progress.progresses.count else { return .zero }
         
-        let type = progress.isRangeValues ? type.normalizedRangeValuesType : type
+        let handleWidth = handleStyle.width
+        
+        let type = progress.isRangeValues || progress.isMultipleValues ? type.normalizedRangeValuesType : type
         
         switch type {
         case .horizontal(let alignment):
@@ -199,23 +261,6 @@ extension CompactSliderStyleConfiguration {
         }
     }
     
-    public func scaleOffset() -> CGPoint {
-        guard type.isScrollable, progress.isSingularValue else { return .zero }
-        
-        switch type {
-        case .scrollableHorizontal:
-            return CGPoint(x: size.width * (0.5 - progress.progress), y: 0)
-        case .scrollableVertical:
-            return CGPoint(x: 0, y: size.height * (progress.progress - 0.5))
-        default:
-            return .zero
-        }
-    }
-}
-
-// MARK: - Handle
-
-extension CompactSliderStyleConfiguration {
     public func isHandleVisible(handleStyle: HandleStyle) -> Bool {
         if progress.isMultipleValues
             || progress.isGridValues
@@ -224,7 +269,7 @@ extension CompactSliderStyleConfiguration {
             return true
         }
         
-        guard handleStyle.visibility == .hoveringOrDragging else {
+        guard handleStyle.visibility == .focused else {
             return handleStyle.visibility == .always
         }
         
@@ -263,6 +308,23 @@ extension CompactSliderStyleConfiguration {
         return scaleStyle.visibility != .hidden
             && (type.isHorizontal || type.isVertical || type.isCircularGrid)
             && (scaleStyle.visibility == .always || focusState.isFocused)
+    }
+}
+
+// MARK: - Scale
+
+extension CompactSliderStyleConfiguration {
+    public func scaleOffset() -> CGPoint {
+        guard type.isScrollable, progress.isSingularValue else { return .zero }
+        
+        switch type {
+        case .scrollableHorizontal:
+            return CGPoint(x: size.width * (0.5 - progress.progress), y: 0)
+        case .scrollableVertical:
+            return CGPoint(x: 0, y: size.height * (progress.progress - 0.5))
+        default:
+            return .zero
+        }
     }
 }
 

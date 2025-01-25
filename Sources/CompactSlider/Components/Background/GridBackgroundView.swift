@@ -72,12 +72,12 @@ public struct GridBackgroundView<
     }
     
     private var handleX: CGFloat {
-        configuration.handleOffset(at: 0, handleWidth: handleStyle.width).x
+        configuration.handleOffset(at: 0, handleStyle: handleStyle).x
             - configuration.size.width / 2 + handleStyle.width / 2
     }
     
     private var handleY: CGFloat {
-        configuration.handleOffset(at: 0, handleWidth: handleStyle.width).y
+        configuration.handleOffset(at: 0, handleStyle: handleStyle).y
             - configuration.size.height / 2 + handleStyle.width / 2
     }
     
