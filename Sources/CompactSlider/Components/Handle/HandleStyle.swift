@@ -16,7 +16,7 @@ public enum HandleProgressAlignment: Equatable {
 /// A handle style.
 public struct HandleStyle: Equatable {
     public let type: HandleType
-    public let visibility: Visibility
+    public let visibility: CompactSliderVisibility
     public let progressAlignment: HandleProgressAlignment
     public let color: Color
     public let width: CGFloat
@@ -25,7 +25,7 @@ public struct HandleStyle: Equatable {
     
     init(
         type: HandleType,
-        visibility: Visibility,
+        visibility: CompactSliderVisibility,
         progressAlignment: HandleProgressAlignment,
         color: Color,
         width: CGFloat,
@@ -44,7 +44,7 @@ public struct HandleStyle: Equatable {
 
 extension HandleStyle {
     public static func rectangle(
-        visibility: Visibility = .handleDefault,
+        visibility: CompactSliderVisibility = .handleDefault,
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
@@ -62,7 +62,7 @@ extension HandleStyle {
     }
     
     public static func roundedRectangle(
-        visibility: Visibility = .handleDefault,
+        visibility: CompactSliderVisibility = .handleDefault,
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
@@ -81,7 +81,7 @@ extension HandleStyle {
     }
     
     public static func circle(
-        visibility: Visibility = .handleDefault,
+        visibility: CompactSliderVisibility = .handleDefault,
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         radius: CGFloat = Defaults.circleHandleRadius,

@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public struct CircularScale: Shape {
+public struct CircularScaleShape: Shape {
     var step: Angle = .degrees(3)
     var minRadius: Double = 0.0
     var maxRadius: Double = 1.0
@@ -42,7 +42,7 @@ public struct CircularScale: Shape {
 }
 
 #Preview {
-    CircularScale(minRadius: 0.8)
+    CircularScaleShape(minRadius: 0.8)
         .stroke(style: .init(lineWidth: 1))
         .background(Defaults.backgroundColor)
         .padding(20)

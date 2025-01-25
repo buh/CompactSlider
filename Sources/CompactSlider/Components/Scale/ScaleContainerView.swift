@@ -8,24 +8,28 @@ import SwiftUI
 struct ScaleContainerView<V: View>: View {
     @Environment(\.compactSliderOptions) var sliderOptions
     @Environment(\.compactSliderStyleConfiguration) var configuration
-    @Environment(\.scaleStyle) var scaleStyle
-    let scaleView: (CompactSliderStyleConfiguration, ScaleStyle) -> V
+    let visibility: CompactSliderVisibility
+    let scaleView: (CompactSliderStyleConfiguration) -> V
     
-    init(scaleView: @escaping (CompactSliderStyleConfiguration, ScaleStyle) -> V) {
+    init(
+        visibility: CompactSliderVisibility = .handleDefault,
+        scaleView: @escaping (CompactSliderStyleConfiguration) -> V
+    ) {
+        self.visibility = visibility
         self.scaleView = scaleView
     }
     
     var body: some View {
-        if let scaleStyle {
+        if configuration.isScaleVisible(visibility: visibility) {
             let offset = configuration.scaleOffset()
             
             if configuration.type.isScrollable,
                sliderOptions.contains(.loopValues),
                configuration.type.isHorizontal {
                 HStack(spacing: 0) {
-                    scaleView(configuration, scaleStyle)
-                    scaleView(configuration, scaleStyle.skipedEdges(true))
-                    scaleView(configuration, scaleStyle)
+                    scaleView(configuration)
+                    scaleView(configuration)
+                    scaleView(configuration)
                 }
                 .offset(x: offset.x, y: offset.y)
                 .frame(width: configuration.size.width * 3)
@@ -35,16 +39,16 @@ struct ScaleContainerView<V: View>: View {
                       sliderOptions.contains(.loopValues),
                       configuration.type.isVertical {
                 VStack(spacing: 0) {
-                    scaleView(configuration, scaleStyle)
-                    scaleView(configuration, scaleStyle.skipedEdges(true))
-                    scaleView(configuration, scaleStyle)
+                    scaleView(configuration)
+                    scaleView(configuration)
+                    scaleView(configuration)
                 }
                 .offset(x: offset.x, y: offset.y)
                 .frame(height: configuration.size.height * 3)
                 .frame(height: configuration.size.height)
                 .allowsTightening(false)
             } else {
-                scaleView(configuration, scaleStyle)
+                scaleView(configuration)
                     .offset(x: offset.x, y: offset.y)
                     .allowsTightening(false)
             }

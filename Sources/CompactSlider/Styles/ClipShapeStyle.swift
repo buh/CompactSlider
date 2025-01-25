@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public enum ClipShapeType {
+public enum ClipShapeStyle {
     case none
     case circle
     case capsule
@@ -15,7 +15,7 @@ public enum ClipShapeType {
 
 extension View {
     @ViewBuilder
-    func clipShapeStyle(_ style: ClipShapeType) -> some View {
+    func clipShapeStyle(_ style: ClipShapeStyle) -> some View {
         switch style {
         case .none: self
         case .circle: clipShape(Circle())

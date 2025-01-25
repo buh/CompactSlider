@@ -29,10 +29,7 @@ struct CompactSliderSystemDemo: View {
         HStack {
             Text("Progress")
             CompactSlider(value: $progress)
-                .compactSliderStyle(default: .horizontal(
-                    scaleStyle: nil,
-                    clipShapeType: .none
-                ))
+                .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
                 .compactSliderBackground { _, _ in
                     Capsule()
                         .fill(Color.gray.opacity(0.2))
@@ -63,10 +60,7 @@ struct CompactSliderSystemDemo: View {
         }
         
         CompactSlider(value: $progress)
-            .compactSliderStyle(default: .horizontal(
-                scaleStyle: nil,
-                clipShapeType: .none
-            ))
+            .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
             .compactSliderBackground { _, _ in
                 Capsule()
                     .fill(Color.gray.opacity(0.2))

@@ -5,116 +5,160 @@
 
 import SwiftUI
 
-/// ScaleView shows the scale based on number of marks.
-///
-/// Scales are grouped and they need an additional help to layout.
-/// Usage case:
-/// ```
-/// ZStack {
-///     ScaleView()
-///         .frame(height: 50, alignment: .top)
-/// }
-/// ```
-public struct ScaleView: View {
-    let style: ScaleStyle
-    let alignment: Axis
-    let startFromCenter: Bool
-    let steps: Int
+public enum ScaleShapeStyle: Hashable {
+    case linear(
+        axis: Axis,
+        count: Int,
+        minSpacing: CGFloat,
+        skip: LinearScaleShape.Skip?,
+        skipFirst: Int,
+        skipLast: Int,
+        startFromCenter: Bool
+    )
     
-    public init(
-        style: ScaleStyle = .atSide(),
-        alignment: Axis = .horizontal,
-        startFromCenter: Bool = false,
-        steps: Int = 0
-    ) {
-        self.style = style
-        self.alignment = alignment
-        self.startFromCenter = startFromCenter
-        self.steps = steps == 0 ? 49 : steps
+    case circular(
+        step: Angle,
+        minRadius: Double,
+        maxRadius: Double
+    )
+    
+    var axis: Axis? {
+        if case .linear(let axis, _, _, _, _, _, _) = self {
+            return axis
+        }
+        
+        return nil
     }
+}
+
+public struct ScaleView: View {
+    let color: Color
+    let strokeStyle: StrokeStyle
+    let lineLength: CGFloat
+    let shapeStyle: ScaleShapeStyle
     
     public var body: some View {
-        ZStack(alignment: style.alignment) {
-            if let secondaryLine = style.secondaryLine, steps >= 22 {
-                Scale(
-                    alignment: alignment,
-                    count: steps,
-                    lineWidth: secondaryLine.thickness,
-                    minSpacing: style.minSpace,
-                    skip: .each(5),
-                    skipEdges: secondaryLine.skipEdges,
-                    startFromCenter: startFromCenter
-                )
-                .stroke(secondaryLine.color, lineWidth: secondaryLine.thickness)
-                .frame(
-                    width: (alignment == .vertical ? secondaryLine.length : nil),
-                    height: (alignment == .horizontal ? secondaryLine.length : nil)
-                )
-                .padding(secondaryLine.padding)
-            }
-            
-            Scale(
-                alignment: alignment,
-                count: steps,
-                lineWidth: style.line.thickness,
-                minSpacing: style.minSpace,
-                skip: steps >= 22 ? .except(5) : nil,
-                skipEdges: style.line.skipEdges,
+        switch shapeStyle {
+        case .linear(
+            let axis,
+            let count,
+            let minSpacing,
+            let skip,
+            let skipFirst,
+            let skipLast,
+            let startFromCenter
+        ):
+            LinearScaleShape(
+                axis: axis,
+                count: count,
+                thickness: strokeStyle.lineWidth,
+                minSpacing: minSpacing,
+                skip: skip,
+                skipFirst: skipFirst,
+                skipLast: skipLast,
                 startFromCenter: startFromCenter
             )
-            .stroke(style.line.color, lineWidth: style.line.thickness)
+            .stroke(color, style: strokeStyle)
             .frame(
-                width: (alignment == .vertical ? style.line.length : nil),
-                height: (alignment == .horizontal ? style.line.length : nil)
+                width: (shapeStyle.axis == .vertical ? lineLength : nil),
+                height: (shapeStyle.axis == .horizontal ? lineLength : nil)
             )
-            .padding(style.line.padding)
+        case .circular(let step, let minRadius, let maxRadius):
+            CircularScaleShape(step: step, minRadius: minRadius, maxRadius: maxRadius)
+                .stroke(color, style: strokeStyle)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: style.alignment)
+    }
+}
+
+extension ScaleView: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(color)
+        hasher.combine(lineLength)
+        hasher.combine(shapeStyle)
+        hasher.combine(strokeStyle.lineWidth)
+        hasher.combine(strokeStyle.lineCap)
+        hasher.combine(strokeStyle.lineJoin)
+        hasher.combine(strokeStyle.miterLimit)
+        hasher.combine(strokeStyle.dash)
+        hasher.combine(strokeStyle.dashPhase)
+    }
+}
+
+// MARK: - Constructors
+
+extension ScaleView {
+    public static func linear(
+        count: Int,
+        color: Color = Defaults.scaleLineColor,
+        strokeStyle: StrokeStyle = .init(lineWidth: 1),
+        lineLength: CGFloat,
+        axis: Axis = .horizontal,
+        skip: LinearScaleShape.Skip? = nil,
+        skipFirst: Int = 0,
+        skipLast: Int = 0,
+        startFromCenter: Bool = false
+    ) -> ScaleView {
+        ScaleView(
+            color: color,
+            strokeStyle: strokeStyle,
+            lineLength: lineLength,
+            shapeStyle: .linear(
+                axis: axis,
+                count: count,
+                minSpacing: 2,
+                skip: skip,
+                skipFirst: skipFirst,
+                skipLast: skipLast,
+                startFromCenter: startFromCenter
+            )
+        )
+    }
+    
+    public static func circular(
+        count: Int,
+        color: Color = Defaults.scaleLineColor,
+        strokeStyle: StrokeStyle = .init(lineWidth: 1),
+        minRadius: CGFloat = 0,
+        maxRadius: CGFloat = 1
+    ) -> ScaleView {
+        ScaleView(
+            color: color,
+            strokeStyle: strokeStyle,
+            lineLength: 0,
+            shapeStyle: .circular(
+                step: .init(degrees: 360 / count > 0 ? Double(count) : 8),
+                minRadius: minRadius,
+                maxRadius: maxRadius
+            )
+        )
+    }
+    
+    public static func circular(
+        step: Angle,
+        color: Color = Defaults.scaleLineColor,
+        strokeStyle: StrokeStyle = .init(lineWidth: 1),
+        minRadius: CGFloat = 0,
+        maxRadius: CGFloat = 1
+    ) -> ScaleView {
+        ScaleView(
+            color: color,
+            strokeStyle: strokeStyle,
+            lineLength: 0,
+            shapeStyle: .circular(
+                step: step > .zero ? step : .init(degrees: 360 / 8),
+                minRadius: minRadius,
+                maxRadius: maxRadius
+            )
+        )
     }
 }
 
 #Preview {
-    HStack {
-        VStack(spacing: 20) {
-            ZStack {
-                ScaleView()
-                    .frame(height: 50, alignment: .top)
-            }
-            .background(Defaults.label.opacity(0.1))
-            
-            ZStack {
-                ScaleView(style: .atSide(
-                    line: .init(length: 20, skipEdges: false),
-                    secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 10, skipEdges: false)
-                ))
-                .frame(height: 50, alignment: .top)
-            }
-            .background(Defaults.label.opacity(0.1))
-
-            ZStack {
-                ScaleView(style: .atSide(
-                    line: .init(length: 25, thickness: 2),
-                    secondaryLine: .init(length: 15, thickness: 2)
-                ))
-                .frame(height: 50, alignment: .top)
-            }
-            .background(Defaults.label.opacity(0.1))
-            
-            ZStack {
-                ScaleView(style: .atSide(line: .init(length: 10), secondaryLine: nil))
-                    .frame(height: 50, alignment: .top)
-            }
-            .background(Defaults.label.opacity(0.1))
-            
-            ScaleView(steps: 30)
-                .frame(height: 50, alignment: .top)
-                .background(Defaults.label.opacity(0.1))
-            
-            ScaleView(style: .atSide(line: .init(length: 25, thickness: 5)), steps: 10)
-                .frame(height: 50, alignment: .top)
-                .background(Defaults.label.opacity(0.1))
-        }
+    VStack {
+        ScaleView.linear(count: 20, lineLength: 20)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    .frame(width: 300)
-    .padding()
+    #if os(macOS)
+    .frame(width: 400, height: 800, alignment: .top)
+    #endif
 }

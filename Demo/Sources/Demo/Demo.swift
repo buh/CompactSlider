@@ -146,21 +146,25 @@ struct CompactSliderDemo: View {
     
     @ViewBuilder
     private func scrollableHorizontalSliders() -> some View {
-        CompactSlider(value: $progress)
+        CompactSlider(value: $progress, step: 0.02)
             .compactSliderStyle(default: .scrollable())
+            .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
+            .horizontalGradientMask()
             .frame(maxHeight: 20)
         
         VStack {
             Text("\(Int(degree))º")
+                .offset(x: 2)
             CompactSlider(value: $degree, in: 0 ... 360, step: 5)
                 .compactSliderStyle(default: .scrollable(
-                    scaleStyle: .atSide(
-                        alignment: .bottom,
-                        line: .init(length: 16, skipEdges: false),
-                        secondaryLine: .init(color: Defaults.secondaryScaleLineColor, length: 8, skipEdges: false)
-                    ),
-                    clipShapeType: .rectangle
+                    clipShapeStyle: .rectangle
                 ))
+                .compactSliderScale(
+                    visibility: .always,
+                    alignment: .bottom,
+                    .linear(count: 19, lineLength: 20),
+                    .linear(count: 73, lineLength: 10, skip: .each(4))
+                )
                 .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
                 .horizontalGradientMask()
         }
@@ -237,7 +241,7 @@ struct CompactSliderDemo: View {
     @ViewBuilder
     private func customHorizontalSliders() -> some View {
         CompactSlider(from: $fromProgress, to: $toProgress)
-            .compactSliderStyle(default: .horizontal(scaleStyle: nil, clipShapeType: .none))
+            .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
             .compactSliderHandleStyle(.rectangle(visibility: .always, width: 15))
             .compactSliderProgress { _ in
                 Capsule()
@@ -372,61 +376,17 @@ struct CompactSliderDemo: View {
     @ViewBuilder
     private func verticalSliders() -> some View {
         CompactSlider(value: $progress)
-            .compactSliderStyle(default: .scrollable(
-                .vertical,
-                scaleStyle: .centered(),
-                clipShapeType: .rectangle
-            ))
+            .compactSliderStyle(default: .scrollable(.vertical, clipShapeStyle: .rectangle))
             .compactSliderOptionsByAdding(.loopValues)
             .verticalGradientMask()
         
         CompactSlider(value: $value, in: -20 ... 20, step: 1)
-            .compactSliderStyle(default: .scrollable(
-                .vertical,
-                scaleStyle: .centered(
-                    line: .init(
-                        length: nil,
-                        padding: .horizontal(8)
-                    )
-                )
-            ))
+            .compactSliderStyle(default: .scrollable(.vertical))
             .verticalGradientMask()
         
-        CompactSlider(value: $progress)
-            .compactSliderStyle(default: .vertical(
-                .bottom,
-                scaleStyle: .centered(
-                    secondaryLine: .init(
-                        color: Defaults.secondaryScaleLineColor,
-                        length: nil,
-                        padding: .horizontal(4)
-                    )
-                )
-            ))
-        
-        CompactSlider(value: $progress)
-            .compactSliderStyle(default: .vertical(.center))
-        
-        CompactSlider(value: $value, in: -20 ... 20, step: 1)
-            .compactSliderStyle(default: .vertical(
-                .center,
-                scaleStyle: .centered()
-            ))
-        
-        CompactSlider(value: $progress)
-            .compactSliderStyle(default: .vertical(.top))
-            .compactSliderScale { _, _ in
-                Rectangle()
-                    .fill(Color.accentColor)
-                    .frame(maxWidth: 3)
-            }
-        
-        CompactSlider(from: $fromProgress, to: $toProgress, step: 0.05)
-            .compactSliderStyle(default: .vertical())
-        
         CompactSlider(from: $fromProgress, to: $toProgress)
-            .compactSliderStyle(default: .vertical(scaleStyle: nil, clipShapeType: .none))
-            .compactSliderHandleStyle(.rectangle(visibility: .always, width: 15))
+            .compactSliderStyle(default: .vertical(clipShapeStyle: .none))
+            .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: 30))
             .compactSliderProgress { _ in
                 Capsule()
                     .fill(
@@ -451,16 +411,7 @@ struct CompactSliderDemo: View {
             }
         
         CompactSlider(values: $progresses)
-            .compactSliderStyle(default: .vertical(
-                scaleStyle: .centered(
-                    line: .init(
-                        color: Defaults.label.opacity(0.2),
-                        length: nil,
-                        padding: .horizontal(4)
-                    ),
-                    secondaryLine: nil
-                )
-            ))
+            .compactSliderStyle(default: .vertical())
             .compactSliderHandle { _, style, progress, _ in
                 HandleView(
                     style: .rectangle(

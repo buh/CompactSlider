@@ -30,7 +30,7 @@ public struct GridView<GridShapeStyle: ShapeStyle>: View {
     }
     
     public var body: some View {
-        let gridSize: CGFloat = max(2, self.gridSize ?? (handleStyle.width / 3).roundedByPixel())
+        let gridSize: CGFloat = max(2, self.gridSize ?? (handleStyle.width / 3).pixelPerfect())
         let offset = (handleStyle.width - gridSize) / 2
         
         let padding = EdgeInsets(

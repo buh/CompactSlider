@@ -4,11 +4,11 @@
 //
 
 /// A scale visibility determines the rules for showing a component.
-public enum Visibility {
+public enum CompactSliderVisibility {
     case focused, always, hidden
     
     /// Default the handle visibility.
-    public static var handleDefault: Visibility {
+    public static var handleDefault: CompactSliderVisibility {
         #if os(macOS)
         .focused
         #else

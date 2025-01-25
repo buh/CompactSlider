@@ -300,14 +300,14 @@ extension CompactSliderStyleConfiguration {
         return false
     }
     
-    public func isScaleVisible(scaleStyle: ScaleStyle) -> Bool {
+    public func isScaleVisible(visibility: CompactSliderVisibility) -> Bool {
         if type.isScrollable {
             return true
         }
         
-        return scaleStyle.visibility != .hidden
+        return visibility != .hidden
             && (type.isHorizontal || type.isVertical || type.isCircularGrid)
-            && (scaleStyle.visibility == .always || focusState.isFocused)
+            && (visibility == .always || focusState.isFocused)
     }
 }
 

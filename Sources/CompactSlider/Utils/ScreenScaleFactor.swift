@@ -26,7 +26,7 @@ enum ScreenInfo {
 }
 
 extension CGFloat {
-    func roundedByPixel() -> Self {
+    func pixelPerfect() -> Self {
         (self * ScreenInfo.scale).rounded(.towardZero) / ScreenInfo.scale
     }
 }

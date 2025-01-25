@@ -128,9 +128,7 @@ struct CompactSliderCircularGridDemo: View {
             .frame(width: 150, height: 150)
             
             CompactSlider(value: $brightness)
-                .compactSliderStyle(
-                    default: .vertical(.bottom, scaleStyle: .centered(secondaryLine: nil))
-                )
+                .compactSliderStyle(default: .vertical(.bottom))
                 .frame(width: 30)
         }
         .frame(maxHeight: 150)

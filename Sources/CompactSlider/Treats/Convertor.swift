@@ -17,7 +17,7 @@ extension BinaryFloatingPoint {
     }
     
     /// Round this value to the given step.
-    public func rounded(_ rule: FloatingPointRoundingRule = .towardZero, step: Self) -> Self {
+    public func rounded(_ rule: FloatingPointRoundingRule = .toNearestOrAwayFromZero, step: Self) -> Self {
         guard step != 0 else { return self }
         
         return (self / step).rounded(rule) * step

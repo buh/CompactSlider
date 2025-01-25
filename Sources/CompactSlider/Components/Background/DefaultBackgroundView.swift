@@ -65,7 +65,7 @@ struct DefaultCircularGridBackgroundView: View {
                 )
             )
             .overlay(
-                CircularScale(
+                CircularScaleShape(
                     step: .degrees(
                         360 / Double(configuration.step?.polarPointSteps?.angle ?? 8).clamped(3, 120)
                     ),
