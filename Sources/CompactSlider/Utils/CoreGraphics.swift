@@ -5,18 +5,6 @@
 
 import SwiftUI
 
-public struct OptionalCGSize {
-    public let width: CGFloat?
-    public let height: CGFloat?
-    
-    public init(width: CGFloat? = nil, height: CGFloat? = nil) {
-        self.width = width
-        self.height = height
-    }
-}
-
-// MARK: - Internal
-
 extension CGSize {
     var minValue: CGFloat { Swift.min(width, height) }
     var min: CGSize { CGSize(width: minValue, height: minValue) }
