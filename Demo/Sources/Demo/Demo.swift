@@ -19,7 +19,7 @@ struct CompactSliderDemo: View {
     @State private var layoutDirection: LayoutDirection = .leftToRight
     @State private var progress: Double = 0.3
     @State private var stepProgresses: [Double] = [0.3, 0.3, 0.3]
-    @State private var degree: Double = 90
+    @State private var degree: Double = 0
     @State private var value: Double = 5
     @State private var fromProgress: Double = 0.2
     @State private var toProgress: Double = 0.7
@@ -163,7 +163,7 @@ struct CompactSliderDemo: View {
                     visibility: .always,
                     alignment: .bottom,
                     .linear(count: 19, lineLength: 20),
-                    .linear(count: 73, lineLength: 10, skip: .each(4)),
+                    .linear(count: 73, color: Defaults.secondaryScaleLineColor, lineLength: 10, skip: .each(4)),
                     .labels(
                         visibility: .hideNearCurrentValue(threshold: 0.03),
                         alignment: .top,
@@ -172,8 +172,10 @@ struct CompactSliderDemo: View {
                     )
                 )
                 .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
-                .horizontalGradientMask()
                 .frame(height: 40)
+                .padding(.horizontal, -50)
+                .clipShape(Rectangle())
+                .horizontalGradientMask()
         }
     }
     
