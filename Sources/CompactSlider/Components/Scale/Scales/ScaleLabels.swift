@@ -5,8 +5,15 @@
 
 import SwiftUI
 
+public enum ScaleLabelsVisibility: Hashable {
+    case always
+    case hideNearCurrentValue(threshold: Double)
+}
+
 struct ScaleLabels: View {
+    @Environment(\.compactSliderOptions) var compactSliderOptions
     let configuration: CompactSliderStyleConfiguration
+    var visibility: ScaleLabelsVisibility = .always
     let axis: Axis
     let alignment: Alignment
     var color: Color = Color.secondary
@@ -15,20 +22,42 @@ struct ScaleLabels: View {
     
     var body: some View {
         ZStack {
-            ForEach(Array(labels.keys), id: \.self) { key in
-                Text(labels[key] ?? "")
+            ForEach(Array(labels.keys), id: \.self) { progress in
+                Text(labels[progress] ?? "")
                     .offset(
                         x: axis == .horizontal
-                            ? configuration.size.width * key - configuration.size.width / 2 + offset.x
+                            ? configuration.size.width * progress - configuration.size.width / 2 + offset.x
                             : 0,
                         y: axis == .vertical
-                            ? configuration.size.height * key - configuration.size.width / 2 + offset.y
+                            ? configuration.size.height * progress - configuration.size.width / 2 + offset.y
                             : 0
                     )
+                    .opacity(isHidden(for: progress) ? 0 : 1)
             }
             .foregroundStyle(color)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
+    }
+    
+    private func isHidden(for progress: Double) -> Bool {
+        guard case .hideNearCurrentValue(let threshold) = visibility else { return false }
+        
+        let t = threshold.clamped()
+        
+        for currentProgress in configuration.progress.progresses {
+            let isNearProgress = abs(currentProgress - progress) < t
+            var isNearLoopProgress = false
+            
+            if compactSliderOptions.contains(.loopValues) {
+                isNearLoopProgress = abs((1 - currentProgress) - progress) < t
+            }
+            
+            if isNearProgress || isNearLoopProgress {
+                return true
+            }
+        }
+        
+        return false
     }
 }
 

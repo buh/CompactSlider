@@ -43,9 +43,10 @@ public struct ScaleView: View {
         ):
             CircularScaleShape(step: step, minRadius: minRadius, maxRadius: maxRadius)
                 .stroke(shapeStyle.color, style: strokeStyle)
-        case .labels(let axis, let alignment, let offset, let labels):
+        case .labels(let visibility, let axis, let alignment, let offset, let labels):
             ScaleLabels(
                 configuration: configuration,
+                visibility: visibility,
                 axis: axis,
                 alignment: alignment,
                 color: shapeStyle.color,

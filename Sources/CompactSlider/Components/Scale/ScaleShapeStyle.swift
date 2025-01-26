@@ -31,6 +31,7 @@ extension ScaleShapeStyle {
         )
         
         case labels(
+            visibility: ScaleLabelsVisibility,
             axis: Axis,
             alignment: Alignment,
             offset: CGPoint,
@@ -137,6 +138,7 @@ extension ScaleShapeStyle {
     }
     
     public static func labels(
+        visibility: ScaleLabelsVisibility = .always,
         axis: Axis = .horizontal,
         alignment: Alignment = .center,
         color: Color = .secondary,
@@ -146,6 +148,7 @@ extension ScaleShapeStyle {
         ScaleShapeStyle(
             color: color,
             style: .labels(
+                visibility: visibility,
                 axis: axis,
                 alignment: alignment,
                 offset: offset,
