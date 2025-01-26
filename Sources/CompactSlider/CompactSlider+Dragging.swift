@@ -276,7 +276,7 @@ extension CompactSlider {
         
         var progressAtLocation = progress(at: location, size: size, type: type)
         
-        if isRightToLeft || progress.isRangeValues || progress.isMultipleValues {
+        if isRightToLeft || progress.isMultipleValues || (progress.isRangeValues && type.isVertical) {
             progressAtLocation = 1 - progressAtLocation
         }
         

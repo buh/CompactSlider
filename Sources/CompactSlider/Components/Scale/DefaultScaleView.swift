@@ -17,12 +17,13 @@ struct DefaultScaleView: View {
                     .linear(
                         axis: configuration.type.isVertical ? .vertical : .horizontal,
                         count: 11,
-                        lineLength: 20
+                        lineLength: 16
                     ),
                     .linear(
                         axis: configuration.type.isVertical ? .vertical : .horizontal,
                         count: 51,
-                        lineLength: 10,
+                        color: Defaults.secondaryScaleLineColor,
+                        lineLength: 8,
                         skip: .each(5)
                     )
                 ]
