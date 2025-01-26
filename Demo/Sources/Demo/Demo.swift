@@ -73,7 +73,7 @@ struct CompactSliderDemo: View {
                 Group {
                     customHorizontalSliders()
                 }
-                .frame(height: 30)
+                .frame(height: 20)
             case .vertical:
                 HStack(spacing: 16) {
                     VStack(spacing: 16) {
@@ -255,7 +255,7 @@ struct CompactSliderDemo: View {
     private func customHorizontalSliders() -> some View {
         CompactSlider(from: $fromProgress, to: $toProgress)
             .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
-            .compactSliderHandleStyle(.rectangle(visibility: .always, width: 15))
+            .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: 20))
             .compactSliderProgress { _ in
                 Capsule()
                     .fill(
@@ -276,7 +276,7 @@ struct CompactSliderDemo: View {
             .compactSliderBackground { _, _ in
                 Capsule()
                     .fill(Defaults.backgroundColor)
-                    .frame(maxHeight: 10)
+                    .frame(maxHeight: 8)
             }
         
         CompactSlider(values: $progresses)

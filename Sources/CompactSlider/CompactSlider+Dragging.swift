@@ -62,9 +62,7 @@ extension CompactSlider {
         if type.isVertical {
             var translationY = translation.height
             
-            if progress.isRangeValues {
-                translationY = -translationY
-            } else if type.isScrollable {
+            if type.isScrollable || progress.isRangeValues || progress.isMultipleValues {
                 translationY = -translationY
             } else if case .vertical(.center) = type {
                 translationY = -translationY
@@ -276,7 +274,7 @@ extension CompactSlider {
         
         var progressAtLocation = progress(at: location, size: size, type: type)
         
-        if isRightToLeft || progress.isMultipleValues || (progress.isRangeValues && type.isVertical) {
+        if isRightToLeft || (type.isVertical && (progress.isMultipleValues || progress.isRangeValues)) {
             progressAtLocation = 1 - progressAtLocation
         }
         

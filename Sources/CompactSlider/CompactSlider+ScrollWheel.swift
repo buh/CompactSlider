@@ -168,19 +168,29 @@ extension CompactSlider {
         let newProgress: Double
         
         if let progressStep, options.contains(.snapToSteps) {
-            let deltaProgressStep = (event.delta.y.sign == .minus ? -1 : 1) * progressStep
+            var delta = (event.delta.y.sign == .minus ? -1 : 1) * progressStep
+            
+            if progress.isMultipleValues {
+                delta = -delta
+            }
             
             if case .vertical(.bottom) = type {
-                newProgress = currentProgress - deltaProgressStep
-            } else {
-                newProgress = currentProgress + deltaProgressStep
+                delta = -delta
             }
+            
+            newProgress = currentProgress + delta
         } else {
-            if case .vertical(.bottom) = type {
-                newProgress = currentProgress + event.delta.y / -size.height
-            } else {
-                newProgress = currentProgress + event.delta.y / size.height
+            var delta = event.delta.y
+            
+            if progress.isMultipleValues {
+                delta = -delta
             }
+            
+            if case .vertical(.bottom) = type {
+                delta = -delta
+            }
+            
+            newProgress = currentProgress + delta / size.height
         }
         
         return newProgress
