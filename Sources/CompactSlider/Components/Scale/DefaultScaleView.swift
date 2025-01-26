@@ -11,17 +11,18 @@ struct DefaultScaleView: View {
     var body: some View {
         if configuration.type.isScrollable {
             ScaleZStackView(
+                configuration: configuration,
                 alignment: .center,
-                scaleViews: [
+                shapeStyles: [
                     .linear(
+                        axis: configuration.type.isVertical ? .vertical : .horizontal,
                         count: 11,
-                        lineLength: 20,
-                        axis: configuration.type.isVertical ? .vertical : .horizontal
+                        lineLength: 20
                     ),
                     .linear(
+                        axis: configuration.type.isVertical ? .vertical : .horizontal,
                         count: 51,
                         lineLength: 10,
-                        axis: configuration.type.isVertical ? .vertical : .horizontal,
                         skip: .each(5)
                     )
                 ]

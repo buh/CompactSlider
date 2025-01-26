@@ -5,44 +5,17 @@
 
 import SwiftUI
 
-public enum ScaleShapeStyle: Hashable {
-    case linear(
-        axis: Axis,
-        count: Int,
-        minSpacing: CGFloat,
-        skip: LinearScaleShape.Skip?,
-        skipFirst: Int,
-        skipLast: Int,
-        startFromCenter: Bool
-    )
-    
-    case circular(
-        step: Angle,
-        minRadius: Double,
-        maxRadius: Double
-    )
-    
-    var axis: Axis? {
-        if case .linear(let axis, _, _, _, _, _, _) = self {
-            return axis
-        }
-        
-        return nil
-    }
-}
-
 public struct ScaleView: View {
-    let color: Color
-    let strokeStyle: StrokeStyle
-    let lineLength: CGFloat
+    let configuration: CompactSliderStyleConfiguration
     let shapeStyle: ScaleShapeStyle
     
     public var body: some View {
-        switch shapeStyle {
+        switch shapeStyle.style {
         case .linear(
+            let strokeStyle,
             let axis,
             let count,
-            let minSpacing,
+            let lineLength,
             let skip,
             let skipFirst,
             let skipLast,
@@ -52,110 +25,40 @@ public struct ScaleView: View {
                 axis: axis,
                 count: count,
                 thickness: strokeStyle.lineWidth,
-                minSpacing: minSpacing,
                 skip: skip,
                 skipFirst: skipFirst,
                 skipLast: skipLast,
                 startFromCenter: startFromCenter
             )
-            .stroke(color, style: strokeStyle)
+            .stroke(shapeStyle.color, style: strokeStyle)
             .frame(
-                width: (shapeStyle.axis == .vertical ? lineLength : nil),
-                height: (shapeStyle.axis == .horizontal ? lineLength : nil)
+                width: (axis == .vertical ? lineLength : nil),
+                height: (axis == .horizontal ? lineLength : nil)
             )
-        case .circular(let step, let minRadius, let maxRadius):
+        case .circular(
+            let strokeStyle,
+            let step,
+            let minRadius,
+            let maxRadius
+        ):
             CircularScaleShape(step: step, minRadius: minRadius, maxRadius: maxRadius)
-                .stroke(color, style: strokeStyle)
-        }
-    }
-}
-
-extension ScaleView: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(color)
-        hasher.combine(lineLength)
-        hasher.combine(shapeStyle)
-        hasher.combine(strokeStyle.lineWidth)
-        hasher.combine(strokeStyle.lineCap)
-        hasher.combine(strokeStyle.lineJoin)
-        hasher.combine(strokeStyle.miterLimit)
-        hasher.combine(strokeStyle.dash)
-        hasher.combine(strokeStyle.dashPhase)
-    }
-}
-
-// MARK: - Constructors
-
-extension ScaleView {
-    public static func linear(
-        count: Int,
-        color: Color = Defaults.scaleLineColor,
-        strokeStyle: StrokeStyle = .init(lineWidth: 1),
-        lineLength: CGFloat,
-        axis: Axis = .horizontal,
-        skip: LinearScaleShape.Skip? = nil,
-        skipFirst: Int = 0,
-        skipLast: Int = 0,
-        startFromCenter: Bool = false
-    ) -> ScaleView {
-        ScaleView(
-            color: color,
-            strokeStyle: strokeStyle,
-            lineLength: lineLength,
-            shapeStyle: .linear(
+                .stroke(shapeStyle.color, style: strokeStyle)
+        case .labels(let axis, let alignment, let offset, let labels):
+            ScaleLabels(
+                configuration: configuration,
                 axis: axis,
-                count: count,
-                minSpacing: 2,
-                skip: skip,
-                skipFirst: skipFirst,
-                skipLast: skipLast,
-                startFromCenter: startFromCenter
+                alignment: alignment,
+                color: shapeStyle.color,
+                offset: offset,
+                labels: labels
             )
-        )
-    }
-    
-    public static func circular(
-        count: Int,
-        color: Color = Defaults.scaleLineColor,
-        strokeStyle: StrokeStyle = .init(lineWidth: 1),
-        minRadius: CGFloat = 0,
-        maxRadius: CGFloat = 1
-    ) -> ScaleView {
-        ScaleView(
-            color: color,
-            strokeStyle: strokeStyle,
-            lineLength: 0,
-            shapeStyle: .circular(
-                step: .init(degrees: 360 / count > 0 ? Double(count) : 8),
-                minRadius: minRadius,
-                maxRadius: maxRadius
-            )
-        )
-    }
-    
-    public static func circular(
-        step: Angle,
-        color: Color = Defaults.scaleLineColor,
-        strokeStyle: StrokeStyle = .init(lineWidth: 1),
-        minRadius: CGFloat = 0,
-        maxRadius: CGFloat = 1
-    ) -> ScaleView {
-        ScaleView(
-            color: color,
-            strokeStyle: strokeStyle,
-            lineLength: 0,
-            shapeStyle: .circular(
-                step: step > .zero ? step : .init(degrees: 360 / 8),
-                minRadius: minRadius,
-                maxRadius: maxRadius
-            )
-        )
+        }
     }
 }
 
 #Preview {
     VStack {
-        ScaleView.linear(count: 20, lineLength: 20)
+        ScaleView(configuration: .preview(), shapeStyle: .linear(count: 20, lineLength: 20))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     #if os(macOS)

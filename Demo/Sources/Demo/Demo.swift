@@ -163,12 +163,13 @@ struct CompactSliderDemo: View {
                     visibility: .always,
                     alignment: .bottom,
                     .linear(count: 19, lineLength: 20),
-                    .linear(count: 73, lineLength: 10, skip: .each(4))
+                    .linear(count: 73, lineLength: 10, skip: .each(4)),
+                    .labels(alignment: .top, offset: CGPoint(x: 2, y: 0), labels: [0: "0º", 0.5: "180º"])
                 )
                 .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
                 .horizontalGradientMask()
+                .frame(height: 40)
         }
-        .frame(height: 48)
     }
     
     @ViewBuilder

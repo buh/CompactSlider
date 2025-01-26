@@ -23,16 +23,20 @@ extension EnvironmentValues {
 extension View {
     public func compactSliderScale(
         visibility: CompactSliderVisibility = .handleDefault,
-        alignment: Alignment,
-        _ scaleViews: ScaleView...
+        alignment: Alignment = .center,
+        _ scaleShapeStyles: ScaleShapeStyle...
     ) -> some View {
-        if scaleViews.isEmpty {
+        if scaleShapeStyles.isEmpty {
             environment(\.scaleView, nil)
         } else {
             environment(
                 \.scaleView,
                  ScaleContainerView(visibility: visibility) { configuration in
-                     ScaleZStackView(alignment: alignment, scaleViews: scaleViews)
+                     ScaleZStackView(
+                        configuration: configuration,
+                        alignment: alignment,
+                        shapeStyles: scaleShapeStyles
+                     )
                  }
                 .anyView()
             )

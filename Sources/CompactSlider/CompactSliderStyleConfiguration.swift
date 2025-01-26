@@ -355,3 +355,20 @@ extension EnvironmentValues {
         set { self[CompactSliderStyleConfigurationKey.self] = newValue }
     }
 }
+
+// MARK: - Preview
+
+#if DEBUG
+extension CompactSliderStyleConfiguration {
+    static func preview(size: CGSize = .zero) -> CompactSliderStyleConfiguration {
+        .init(
+            type: .horizontal(.leading),
+            size: size,
+            focusState: .none,
+            progress: .init(),
+            step: nil,
+            colorScheme: .light
+        )
+    }
+}
+#endif

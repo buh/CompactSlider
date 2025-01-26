@@ -10,7 +10,6 @@ public struct LinearScaleShape: Shape {
     let axis: Axis
     let count: Int
     let thickness: CGFloat
-    let minSpacing: CGFloat
     let skip: Skip?
     let skipFirst: Int
     let skipLast: Int
@@ -20,7 +19,6 @@ public struct LinearScaleShape: Shape {
         axis: Axis = .horizontal,
         count: Int,
         thickness: CGFloat = 1,
-        minSpacing: CGFloat = 3,
         skip: Skip? = nil,
         skipFirst: Int = 0,
         skipLast: Int = 0,
@@ -29,7 +27,6 @@ public struct LinearScaleShape: Shape {
         self.axis = axis
         self.count = count
         self.thickness = thickness
-        self.minSpacing = minSpacing
         self.skip = skip
         self.skipFirst = skipFirst
         self.skipLast = skipLast
@@ -38,13 +35,24 @@ public struct LinearScaleShape: Shape {
     
     public func path(in rect: CGRect) -> Path {
         Path { path in
-            guard count > 1, minSpacing > 1 else { return }
+            guard count > 1 else { return }
             
             let isHorizontal = axis == .horizontal
             let length = isHorizontal ? rect.width : rect.height
             let spacing = (length - max(0, thickness) * CGFloat(count - 1)) / CGFloat(count - 1)
             
-            guard spacing > minSpacing else { return }
+            guard spacing > 1 else {
+                path.addRect(
+                    CGRect(
+                        x: rect.origin.x,
+                        y: rect.origin.y,
+                        width: isHorizontal ? rect.width : thickness,
+                        height: isHorizontal ? thickness : rect.height
+                    )
+                )
+                
+                return
+            }
             
             let centerOffset: CGFloat = startFromCenter && count % 2 == 0 ? (spacing / 2 + thickness).pixelPerfect() : 0
             var offset = centerOffset

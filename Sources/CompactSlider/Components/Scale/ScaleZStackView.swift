@@ -6,12 +6,15 @@
 import SwiftUI
 
 struct ScaleZStackView: View {
+    let configuration: CompactSliderStyleConfiguration
     let alignment: Alignment
-    let scaleViews: [ScaleView]
+    let shapeStyles: [ScaleShapeStyle]
     
     var body: some View {
         ZStack(alignment: alignment) {
-            ForEach(scaleViews, id: \.self) { $0 }
+            ForEach(shapeStyles, id: \.self) {
+                ScaleView(configuration: configuration, shapeStyle: $0)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
     }
@@ -19,10 +22,14 @@ struct ScaleZStackView: View {
 
 #Preview {
     ScaleZStackView(
+        configuration: .preview(size: .init(width: 300, height: 300)),
         alignment: .center,
-        scaleViews: [
+        shapeStyles: [
             .linear(count: 11, lineLength: 20),
-            .linear(count: 51, lineLength: 10, skip: .each(5))
+            .linear(count: 51, lineLength: 10, skip: .each(5)),
+            .labels(alignment: .top, labels: [0: "0", 0.5: "50%", 1: "100%"])
         ]
     )
+    .frame(width: 300, height: 300)
+    .padding()
 }
