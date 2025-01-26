@@ -70,10 +70,7 @@ struct CompactSliderDemo: View {
             case .capsuleHorizontal:
                 capsuleHorizontalSliders()
             case .customHorizontal:
-                Group {
-                    customHorizontalSliders()
-                }
-                .frame(height: 20)
+                customHorizontalSliders()
             case .vertical:
                 HStack(spacing: 16) {
                     VStack(spacing: 16) {
@@ -151,32 +148,6 @@ struct CompactSliderDemo: View {
             .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
             .horizontalGradientMask()
             .frame(maxHeight: 20)
-        
-        VStack {
-            Text("\(Int(degree))º")
-                .offset(x: 2)
-            CompactSlider(value: $degree, in: 0 ... 360, step: 5)
-                .compactSliderStyle(default: .scrollable(
-                    clipShapeStyle: .rectangle
-                ))
-                .compactSliderScale(
-                    visibility: .always,
-                    alignment: .bottom,
-                    .linear(count: 19, lineLength: 20),
-                    .linear(count: 73, color: Defaults.secondaryScaleLineColor, lineLength: 10, skip: .each(4)),
-                    .labels(
-                        visibility: .hideNearCurrentValue(threshold: 0.03),
-                        alignment: .top,
-                        offset: CGPoint(x: 2, y: 0),
-                        labels: [0: "0º", 0.5: "180º"]
-                    )
-                )
-                .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
-                .frame(height: 40)
-                .padding(.horizontal, -50)
-                .clipShape(Rectangle())
-                .horizontalGradientMask()
-        }
     }
     
     @ViewBuilder
@@ -253,33 +224,41 @@ struct CompactSliderDemo: View {
     
     @ViewBuilder
     private func customHorizontalSliders() -> some View {
-        CompactSlider(from: $fromProgress, to: $toProgress)
-            .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
-            .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: 20))
-            .compactSliderProgress { _ in
-                Capsule()
-                    .fill(
-                        LinearGradient(
-                            stops: [
-                                .init(color: .blue.opacity(0.5), location: 0),
-                                .init(color: .purple.opacity(0.5), location: 1),
-                            ],
-                            startPoint: .leading,
-                            endPoint: .trailing
+        Group {
+            CompactSlider(from: $fromProgress, to: $toProgress)
+                .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
+                .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: 20))
+                .compactSliderProgress { _ in
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                stops: [
+                                    .init(color: .blue.opacity(0.5), location: 0),
+                                    .init(color: .purple.opacity(0.5), location: 1),
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                         )
+                }
+                .compactSliderHandle { _, _, _, index in
+                    Circle()
+                        .fill(index == 1 ? Color.purple : .blue)
+                }
+                .compactSliderBackground { _, _ in
+                    Capsule()
+                        .fill(Defaults.backgroundColor)
+                        .frame(maxHeight: 8)
+                }
+            
+            Group {
+                CompactSlider(values: $progresses)
+                CompactSlider(values: $progresses, step: 0.05)
+                    .compactSliderScale(
+                        visibility: .always,
+                        .linear(count: 21, lineLength: 8, skipFirst: 1, skipLast: 1)
                     )
             }
-            .compactSliderHandle { _, _, _, index in
-                Circle()
-                    .fill(index == 1 ? Color.purple : .blue)
-            }
-            .compactSliderBackground { _, _ in
-                Capsule()
-                    .fill(Defaults.backgroundColor)
-                    .frame(maxHeight: 8)
-            }
-        
-        CompactSlider(values: $progresses)
             .compactSliderHandle { _, style, progress, _ in
                 HandleView(
                     style: .rectangle(
@@ -308,6 +287,34 @@ struct CompactSliderDemo: View {
                     )
                     .opacity(config.colorScheme == .dark ? 0.1 : 0.2)
             }
+        }
+        .frame(height: 20)
+        
+        VStack {
+            Text("\(Int(degree))º")
+                .offset(x: 2)
+            CompactSlider(value: $degree, in: 0 ... 360, step: 5)
+                .compactSliderStyle(default: .scrollable(
+                    clipShapeStyle: .rectangle
+                ))
+                .compactSliderScale(
+                    visibility: .always,
+                    alignment: .bottom,
+                    .linear(count: 19, lineLength: 20),
+                    .linear(count: 73, color: Defaults.secondaryScaleLineColor, lineLength: 10, skip: .each(4)),
+                    .labels(
+                        visibility: .hideNearCurrentValue(threshold: 0.03),
+                        alignment: .top,
+                        offset: CGPoint(x: 2, y: 0),
+                        labels: [0: "0º", 0.5: "180º"]
+                    )
+                )
+                .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
+                .frame(height: 40)
+                .padding(.horizontal, -50)
+                .clipShape(Rectangle())
+                .horizontalGradientMask()
+        }
     }
     
     @ViewBuilder
@@ -428,36 +435,43 @@ struct CompactSliderDemo: View {
                     .frame(maxWidth: 10)
             }
         
-        CompactSlider(values: $progresses)
-            .compactSliderStyle(default: .vertical())
-            .compactSliderHandle { _, style, progress, _ in
-                HandleView(
-                    style: .rectangle(
-                        visibility: .always,
-                        color: Color(hue: progress, saturation: 0.8, brightness: 0.8),
-                        width: style.width
+        Group {
+            CompactSlider(values: $progresses)
+            CompactSlider(values: $progresses, step: 0.05)
+                .compactSliderScale(
+                    visibility: .always,
+                    .linear(axis: .vertical, count: 21, lineLength: 8, skipFirst: 1, skipLast: 1)
+                )
+        }
+        .compactSliderStyle(default: .vertical())
+        .compactSliderHandle { _, style, progress, _ in
+            HandleView(
+                style: .rectangle(
+                    visibility: .always,
+                    color: Color(hue: progress, saturation: 0.8, brightness: 0.8),
+                    width: style.width
+                )
+            )
+            .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
+        }
+        .compactSliderBackground { config, _ in
+            RoundedRectangle(cornerRadius: Defaults.cornerRadius)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(hue: 0, saturation: 0.8, brightness: 0.8),
+                            Color(hue: 0.2, saturation: 0.8, brightness: 0.8),
+                            Color(hue: 0.4, saturation: 0.8, brightness: 0.8),
+                            Color(hue: 0.6, saturation: 0.8, brightness: 0.8),
+                            Color(hue: 0.8, saturation: 0.8, brightness: 0.8),
+                            Color(hue: 1, saturation: 0.8, brightness: 0.8),
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
                     )
                 )
-                .shadow(color: Color(hue: progress, saturation: 0.8, brightness: 1), radius: 5)
-            }
-            .compactSliderBackground { config, _ in
-                RoundedRectangle(cornerRadius: Defaults.cornerRadius)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(hue: 0, saturation: 0.8, brightness: 0.8),
-                                Color(hue: 0.2, saturation: 0.8, brightness: 0.8),
-                                Color(hue: 0.4, saturation: 0.8, brightness: 0.8),
-                                Color(hue: 0.6, saturation: 0.8, brightness: 0.8),
-                                Color(hue: 0.8, saturation: 0.8, brightness: 0.8),
-                                Color(hue: 1, saturation: 0.8, brightness: 0.8),
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .opacity(config.colorScheme == .dark ? 0.2 : 0.2)
-            }
+                .opacity(config.colorScheme == .dark ? 0.2 : 0.2)
+        }
     }
 }
 
