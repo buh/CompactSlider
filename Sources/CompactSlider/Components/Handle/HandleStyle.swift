@@ -6,7 +6,7 @@
 import SwiftUI
 
 public enum HandleType: Equatable {
-    case rectangle, roundedRectangle, circle
+    case rectangle, roundedRectangle, circle, capsule
 }
 
 public enum HandleProgressAlignment: Equatable {
@@ -20,8 +20,8 @@ public struct HandleStyle: Equatable {
     public let progressAlignment: HandleProgressAlignment
     public let color: Color
     public let width: CGFloat
-    public let lineWidth: CGFloat
     public let cornerRadius: CGFloat
+    public let strokeStyle: StrokeStyle?
     
     init(
         type: HandleType,
@@ -29,15 +29,15 @@ public struct HandleStyle: Equatable {
         progressAlignment: HandleProgressAlignment,
         color: Color,
         width: CGFloat,
-        lineWidth: CGFloat,
-        cornerRadius: CGFloat
+        cornerRadius: CGFloat,
+        strokeStyle: StrokeStyle?
     ) {
         self.type = type
         self.visibility = visibility
         self.progressAlignment = progressAlignment
         self.color = color
         self.width = width
-        self.lineWidth = lineWidth
+        self.strokeStyle = strokeStyle
         self.cornerRadius = cornerRadius
     }
 }
@@ -48,7 +48,7 @@ extension HandleStyle {
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
-        lineWidth: CGFloat = Defaults.handleLineWidth
+        strokeStyle: StrokeStyle? = nil
     ) -> HandleStyle {
         .init(
             type: .rectangle,
@@ -56,8 +56,8 @@ extension HandleStyle {
             progressAlignment: progressAlignment,
             color: color,
             width: width,
-            lineWidth: lineWidth,
-            cornerRadius: 0
+            cornerRadius: 0,
+            strokeStyle: strokeStyle
         )
     }
     
@@ -66,8 +66,8 @@ extension HandleStyle {
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
-        lineWidth: CGFloat = Defaults.handleLineWidth,
-        cornerRadius: CGFloat = Defaults.handleCornerRadius
+        cornerRadius: CGFloat = Defaults.handleCornerRadius,
+        strokeStyle: StrokeStyle? = nil
     ) -> HandleStyle {
         .init(
             type: .roundedRectangle,
@@ -75,8 +75,8 @@ extension HandleStyle {
             progressAlignment: progressAlignment,
             color: color,
             width: width,
-            lineWidth: lineWidth,
-            cornerRadius: cornerRadius
+            cornerRadius: cornerRadius,
+            strokeStyle: strokeStyle
         )
     }
     
@@ -85,7 +85,7 @@ extension HandleStyle {
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         radius: CGFloat = Defaults.circleHandleRadius,
-        lineWidth: CGFloat = 0
+        strokeStyle: StrokeStyle? = nil
     ) -> HandleStyle {
         .init(
             type: .circle,
@@ -93,8 +93,26 @@ extension HandleStyle {
             progressAlignment: progressAlignment,
             color: color,
             width: 2 * radius,
-            lineWidth: lineWidth,
-            cornerRadius: 0
+            cornerRadius: 0,
+            strokeStyle: strokeStyle
+        )
+    }
+    
+    public static func capsule(
+        visibility: CompactSliderVisibility = .handleDefault,
+        progressAlignment: HandleProgressAlignment = .center,
+        color: Color = .accentColor,
+        width: CGFloat = Defaults.handleWidth,
+        strokeStyle: StrokeStyle? = nil
+    ) -> HandleStyle {
+        .init(
+            type: .capsule,
+            visibility: visibility,
+            progressAlignment: progressAlignment,
+            color: color,
+            width: width,
+            cornerRadius: 0,
+            strokeStyle: strokeStyle
         )
     }
 }

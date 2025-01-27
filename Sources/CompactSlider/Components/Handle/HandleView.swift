@@ -13,21 +13,39 @@ public struct HandleView: View {
     }
     
     public var body: some View {
+        if let strokeStyle = style.strokeStyle {
+            strokeShape(strokeStyle)
+        } else {
+            fillShape()
+        }
+    }
+    
+    @ViewBuilder
+    private func fillShape() -> some View {
         switch style.type {
         case .rectangle:
-            Rectangle()
-                .fill(style.color)
+            Rectangle().fill(style.color)
+        case .roundedRectangle:
+            RoundedRectangle(cornerRadius: style.cornerRadius).fill(style.color)
+        case .circle:
+            Circle().fill(style.color)
+        case .capsule:
+            Capsule().fill(style.color)
+        }
+    }
+    
+    @ViewBuilder
+    private func strokeShape(_ strokeStyle: StrokeStyle) -> some View {
+        switch style.type {
+        case .rectangle:
+            Rectangle().stroke(style.color, style: strokeStyle)
         case .roundedRectangle:
             RoundedRectangle(cornerRadius: style.cornerRadius)
-                .fill(style.color)
+                .stroke(style.color, style: strokeStyle)
         case .circle:
-            if style.lineWidth > 0 {
-                Circle()
-                    .stroke(style.color, lineWidth: style.lineWidth)
-            } else {
-                Circle()
-                    .fill(style.color)
-            }
+            Circle().stroke(style.color, style: strokeStyle)
+        case .capsule:
+            Capsule().stroke(style.color, style: strokeStyle)
         }
     }
 }
