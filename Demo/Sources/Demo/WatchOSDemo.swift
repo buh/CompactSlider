@@ -22,21 +22,15 @@ struct WatchOSDemo: View {
     var body: some View {
         switch style {
         case .horizontal:
-            VStack {
-                Group {
-                    CompactSlider(value: $value)
-                    CompactSlider(values: $values)
-                }
-                .frame(height: 40)
+            VStack(spacing: 16) {
+                linearSliders()
+                    .frame(height: 30)
             }
         case .vertical:
-            HStack {
-                Group {
-                    CompactSlider(value: $value)
-                    CompactSlider(values: $values)
-                }
-                .compactSliderStyle(default: .vertical())
-                .frame(width: 40)
+            HStack(spacing: 16) {
+                linearSliders(isVertical: true)
+                    .compactSliderStyle(default: .vertical())
+                    .frame(width: 30)
             }
         case .grid:
             CompactSlider(
@@ -49,24 +43,52 @@ struct WatchOSDemo: View {
             CompactSlider(polarPoint: $polarPoint)
         }
     }
+    
+    func linearSliders(isVertical: Bool = false) -> some View {
+        Group {
+            CompactSlider(value: $value)
+            CompactSlider(values: $values)
+            CompactSlider(value: $value)
+                .compactSliderStyle(
+                    default: isVertical ? .vertical(clipShapeStyle: .none) : .horizontal(clipShapeStyle: .none)
+                )
+                .compactSliderHandleStyle(.circle(progressAlignment: .inside, color: .gray, radius: 15, strokeStyle: .init(lineWidth: 2)))
+                .compactSliderProgress { _ in
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                colors: [.accentColor.opacity(0.2), .accentColor.opacity(0.8)],
+                                startPoint: isVertical ? .bottom : .leading,
+                                endPoint: isVertical ? .top : .trailing
+                            )
+                        )
+                }
+                .compactSliderBackground { configuration, padding in
+                    Capsule()
+                        .fill(Defaults.backgroundColor)
+                }
+        }
+    }
 }
 
-#Preview("Horizontal") {
+#Preview("Watch Horizontal") {
     WatchOSDemo(style: .horizontal)
+        .padding()
         .accentColor(.pink)
 }
 
-#Preview("Vertical") {
+#Preview("Watch Vertical") {
     WatchOSDemo(style: .vertical)
+        .padding()
         .accentColor(.pink)
 }
 
-#Preview("Grid") {
+#Preview("Watch Grid") {
     WatchOSDemo(style: .grid)
         .accentColor(.pink)
 }
 
-#Preview("Circular Grid") {
+#Preview("Watch Circular Grid") {
     WatchOSDemo(style: .circularGrid)
         .accentColor(.pink)
 }
