@@ -6,7 +6,7 @@
 import SwiftUI
 
 public enum HandleType: Equatable {
-    case rectangle, roundedRectangle, circle, capsule
+    case rectangle, roundedRectangle, circle, capsule, symbol(String)
 }
 
 public enum HandleProgressAlignment: Equatable {
@@ -113,6 +113,24 @@ extension HandleStyle {
             width: width,
             cornerRadius: 0,
             strokeStyle: strokeStyle
+        )
+    }
+    
+    public static func symbol(
+        _ name: String,
+        visibility: CompactSliderVisibility = .handleDefault,
+        progressAlignment: HandleProgressAlignment = .center,
+        color: Color = .accentColor,
+        width: CGFloat = 20
+    ) -> HandleStyle {
+        .init(
+            type: .symbol(name),
+            visibility: visibility,
+            progressAlignment: progressAlignment,
+            color: color,
+            width: width,
+            cornerRadius: 0,
+            strokeStyle: nil
         )
     }
 }

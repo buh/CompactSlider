@@ -18,6 +18,10 @@ struct HandleViewContainerView<V: View>: View {
         ))
     }
     
+    var width: CGFloat? {
+        handleStyle.width > 0 ? handleStyle.width : nil
+    }
+    
     init(handleView: @escaping (CompactSliderStyleConfiguration, HandleStyle, Double, Int) -> V) {
         self.handleView = handleView
     }
@@ -28,7 +32,7 @@ struct HandleViewContainerView<V: View>: View {
                 let offset = configuration.handleOffset(at: 0, handleStyle: handleStyle)
                 
                 handleView(configuration, handleStyle, configuration.progress(at: 0), 0)
-                    .frame(width: handleStyle.width, height: handleStyle.width)
+                    .frame(width: width, height: width)
                     .offset(x: offset.x, y: offset.y)
                     .frame(
                         maxWidth: .infinity,
@@ -41,8 +45,8 @@ struct HandleViewContainerView<V: View>: View {
                     
                     handleView(configuration, handleStyle, configuration.progress(at: index), index)
                         .frame(
-                            width: configuration.type.isHorizontal || configuration.type == .grid ? handleStyle.width : nil,
-                            height: configuration.type.isVertical || configuration.type == .grid ? handleStyle.width : nil
+                            width: configuration.type.isHorizontal || configuration.type == .grid ? width : nil,
+                            height: configuration.type.isVertical || configuration.type == .grid ? width : nil
                         )
                         .offset(x: offset.x, y: offset.y)
                         .frame(

@@ -31,6 +31,8 @@ public struct HandleView: View {
             Circle().fill(style.color)
         case .capsule:
             Capsule().fill(style.color)
+        case .symbol(let name):
+            symbol(name)
         }
     }
     
@@ -46,6 +48,13 @@ public struct HandleView: View {
             Circle().stroke(style.color, style: strokeStyle)
         case .capsule:
             Capsule().stroke(style.color, style: strokeStyle)
+        case .symbol(let name):
+            symbol(name)
         }
+    }
+    
+    func symbol(_ name: String) -> some View {
+        Image(systemName: name)
+            .foregroundStyle(style.color)
     }
 }

@@ -294,9 +294,9 @@ struct CompactSliderDemo: View {
             Text("\(Int(degree))º")
                 .offset(x: 2)
             CompactSlider(value: $degree, in: 0 ... 360, step: 5)
-                .compactSliderStyle(default: .scrollable(
-                    clipShapeStyle: .rectangle
-                ))
+                .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
+                .compactSliderHandleStyle(.rectangle(width: 1))
+                .compactSliderStyle(default: .scrollable())
                 .compactSliderScale(
                     visibility: .always,
                     alignment: .bottom,
@@ -309,12 +309,29 @@ struct CompactSliderDemo: View {
                         labels: [0: "0º", 0.5: "180º"]
                     )
                 )
-                .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
                 .frame(height: 40)
                 .padding(.horizontal, -50)
                 .clipShape(Rectangle())
                 .horizontalGradientMask()
         }
+        .padding(.bottom)
+        
+        CompactSlider(value: $progress)
+            .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
+            .compactSliderHandleStyle(.symbol("heart.fill", width: 20))
+            .compactSliderProgress { configuration in
+                Capsule()
+                    .fill(Color.pink.opacity(0.5))
+                    .frame(height: 6)
+            }
+            .compactSliderBackground { configuration, padding in
+                Capsule()
+                    .fill(Defaults.backgroundColor)
+                    .frame(height: 6)
+            }
+            .frame(height: 30)
+            .font(.system(size: 30))
+            .accentColor(.pink)
     }
     
     @ViewBuilder
