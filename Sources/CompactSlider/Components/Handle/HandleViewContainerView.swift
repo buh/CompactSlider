@@ -7,7 +7,8 @@ import SwiftUI
 
 struct HandleViewContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
-    @Environment(\.handleStyle) var handleStyle
+    @Environment(\.handleStyle) var environmentHandleStyle
+    var handleStyle: HandleStyle { environmentHandleStyle.byType(configuration.type) }
     let handleView: (CompactSliderStyleConfiguration, HandleStyle, Double, Int) -> V
     
     var indices: [Int] {

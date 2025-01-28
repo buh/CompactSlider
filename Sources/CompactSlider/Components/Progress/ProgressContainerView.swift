@@ -7,7 +7,8 @@ import SwiftUI
 
 struct ProgressContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
-    @Environment(\.handleStyle) var handleStyle
+    @Environment(\.handleStyle) var environmentHandleStyle
+    var handleStyle: HandleStyle { environmentHandleStyle.byType(configuration.type) }
     let progressView: (CompactSliderStyleConfiguration) -> V
     
     var alignment: Alignment {

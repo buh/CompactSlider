@@ -72,13 +72,23 @@ struct CompactSliderCircularGridDemo: View {
                 polarPoint: $point,
                 step: .init(angle: .degrees(5), normalizedRadius: 0.05)
             )
-            .compactSliderHandle(handleView: { _, handleStyle, _, _ in
-                ZStack {
-                    HandleView(style: handleStyle)
-                    Circle()
-                        .stroke(Defaults.label, lineWidth: 1)
+            .compactSliderHandle { configuration, handleStyle, _, _ in
+                HandleView(
+                    configuration: configuration,
+                    style: .circle(
+                        color: point.normalizedRadius == 0
+                            ? Color(white: brightness)
+                            : Color(
+                                hue: point.angle.degrees / 360,
+                                saturation: 1,
+                                brightness: 0.8
+                            )
+                    )
+                )
+                .overlay {
+                    Circle().stroke(Defaults.label, lineWidth: 1)
                 }
-            })
+            }
             .compactSliderBackground { configuration, padding in
                 ZStack {
                     Circle()

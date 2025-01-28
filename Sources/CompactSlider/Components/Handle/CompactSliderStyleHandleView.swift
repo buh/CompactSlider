@@ -18,8 +18,8 @@ public struct CompactSliderStyleHandleView: View {
 
 struct HandleViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
-        HandleViewContainerView { _, style, _, _ in
-            HandleView(style: style)
+        HandleViewContainerView { configuration, style, _, _ in
+            HandleView(configuration: configuration, style: style)
         }
         .anyView()
 }

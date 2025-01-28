@@ -24,23 +24,31 @@ struct WatchOSDemo: View {
         case .horizontal:
             VStack(spacing: 16) {
                 linearSliders()
-                    .frame(height: 30)
+                    .frame(height: 40)
             }
         case .vertical:
             HStack(spacing: 16) {
                 linearSliders(isVertical: true)
                     .compactSliderStyle(default: .vertical())
-                    .frame(width: 30)
+                    .frame(width: 40)
             }
         case .grid:
-            CompactSlider(
-                point: $point,
-                in: .zero ... CGPoint(x: 100, y: 100),
-                step: .init(x: 10, y: 10)
-            )
-            .aspectRatio(1, contentMode: .fit)
+            VStack {
+                Text("\(Int(point.x)) x \(Int(point.y))")
+                CompactSlider(
+                    point: $point,
+                    in: .zero ... CGPoint(x: 100, y: 100),
+                    step: .init(x: 10, y: 10)
+                )
+                .aspectRatio(1, contentMode: .fit)
+            }
+            .monospacedDigit()
         case .circularGrid:
-            CompactSlider(polarPoint: $polarPoint)
+            VStack {
+                Text("A = \(Int(polarPoint.angle.degrees))º R = \(polarPoint.normalizedRadius, format: .percent.precision(.fractionLength(0)))")
+                CompactSlider(polarPoint: $polarPoint)
+            }
+            .monospacedDigit()
         }
     }
     
@@ -52,12 +60,14 @@ struct WatchOSDemo: View {
                 .compactSliderStyle(
                     default: isVertical ? .vertical(clipShapeStyle: .none) : .horizontal(clipShapeStyle: .none)
                 )
-                .compactSliderHandleStyle(.circle(progressAlignment: .inside, color: .gray, radius: 15, strokeStyle: .init(lineWidth: 2)))
+                .compactSliderHandleStyle(
+                    .circle(progressAlignment: .inside, color: .gray, radius: 20, strokeStyle: .init(lineWidth: 2))
+                )
                 .compactSliderProgress { _ in
                     Capsule()
                         .fill(
                             LinearGradient(
-                                colors: [.accentColor.opacity(0.2), .accentColor.opacity(0.8)],
+                                colors: [.pink.opacity(0.2), .pink.opacity(0.8)],
                                 startPoint: isVertical ? .bottom : .leading,
                                 endPoint: isVertical ? .top : .trailing
                             )
@@ -73,22 +83,16 @@ struct WatchOSDemo: View {
 
 #Preview("Watch Horizontal") {
     WatchOSDemo(style: .horizontal)
-        .padding()
-        .accentColor(.pink)
 }
 
 #Preview("Watch Vertical") {
     WatchOSDemo(style: .vertical)
-        .padding()
-        .accentColor(.pink)
 }
 
 #Preview("Watch Grid") {
     WatchOSDemo(style: .grid)
-        .accentColor(.pink)
 }
 
 #Preview("Watch Circular Grid") {
     WatchOSDemo(style: .circularGrid)
-        .accentColor(.pink)
 }

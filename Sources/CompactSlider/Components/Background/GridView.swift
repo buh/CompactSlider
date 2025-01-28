@@ -7,7 +7,9 @@ import SwiftUI
 
 public struct GridView<GridShapeStyle: ShapeStyle>: View {
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.handleStyle) var handleStyle
+    
+    @Environment(\.handleStyle) var environmentHandleStyle
+    var handleStyle: HandleStyle { environmentHandleStyle.byType(configuration.type) }
     
     let configuration: CompactSliderStyleConfiguration
     let padding: EdgeInsets

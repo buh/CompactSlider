@@ -61,11 +61,13 @@ struct CompactSliderSystemDemo: View {
     
     private var progressView: some View {
         CompactSlider(value: $progress)
-            .compactSliderHandleStyle(.circle(visibility: .always, progressAlignment: .center, radius: 0))
-            .compactSliderHandle { config, handleStyle, _, _ in
+            .compactSliderHandleStyle(
+                .circle(visibility: .always, progressAlignment: .center, radius: 0))
+            .compactSliderHandle { configuration, _, _, _ in
                 HandleView(
+                    configuration: configuration,
                     style: .circle(
-                        color: config.colorScheme == .light ? .white : .gray
+                        color: configuration.colorScheme == .light ? .white : .gray
                     )
                 )
                 .shadow(radius: 1, y: 0.5)
@@ -91,10 +93,11 @@ struct CompactSliderSystemDemo: View {
                     .frame(maxHeight: 4)
             }
             .compactSliderHandleStyle(.circle(visibility: .always, radius: 13.5))
-            .compactSliderHandle { config, handleStyle, _, _ in
+            .compactSliderHandle { configuration, handleStyle, _, _ in
                 HandleView(
+                    configuration: configuration,
                     style: .circle(
-                        color: config.colorScheme == .light ? .white : .gray
+                        color: configuration.colorScheme == .light ? .white : .gray
                     )
                 )
                 .shadow(color: .black.opacity(0.25), radius: 4, y: 2)

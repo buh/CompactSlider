@@ -6,7 +6,12 @@
 import SwiftUI
 
 public enum HandleType: Equatable {
-    case rectangle, roundedRectangle, circle, capsule, symbol(String)
+    case rectangle
+    case roundedRectangle
+    case circle
+    case capsule
+    case symbol(String)
+    case `default`
 }
 
 public enum HandleProgressAlignment: Equatable {
@@ -41,6 +46,8 @@ public struct HandleStyle: Equatable {
         self.cornerRadius = cornerRadius
     }
 }
+
+// MARK: - Constructors
 
 extension HandleStyle {
     public static func rectangle(
@@ -133,23 +140,16 @@ extension HandleStyle {
             strokeStyle: nil
         )
     }
-}
-
-// MARK: - Environment
-
-struct HandleStyleKey: EnvironmentKey {
-    static var defaultValue: HandleStyle = .rectangle()
-}
-
-extension EnvironmentValues {
-    var handleStyle: HandleStyle {
-        get { self[HandleStyleKey.self] }
-        set { self[HandleStyleKey.self] = newValue }
-    }
-}
-
-extension View {
-    public func compactSliderHandleStyle(_ style: HandleStyle) -> some View {
-        environment(\.handleStyle, style)
+    
+    static func `default`() -> HandleStyle {
+        HandleStyle(
+            type: .default,
+            visibility: .handleDefault,
+            progressAlignment: .center,
+            color: .accentColor,
+            width: 0,
+            cornerRadius: 0,
+            strokeStyle: nil
+        )
     }
 }

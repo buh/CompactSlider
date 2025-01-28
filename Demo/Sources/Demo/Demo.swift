@@ -259,8 +259,9 @@ struct CompactSliderDemo: View {
                         .linear(count: 21, lineLength: 8, skipFirst: 1, skipLast: 1)
                     )
             }
-            .compactSliderHandle { _, style, progress, _ in
+            .compactSliderHandle { configuration, style, progress, _ in
                 HandleView(
+                    configuration: configuration,
                     style: .rectangle(
                         visibility: .always,
                         color: Color(hue: progress, saturation: 0.8, brightness: 0.8),
@@ -342,6 +343,15 @@ struct CompactSliderDemo: View {
             .compactSliderStyle(default: .vertical(.center))
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .vertical(.top))
+        
+        Divider()
+        
+        CompactSlider(from: $fromProgress, to: $toProgress)
+            .compactSliderStyle(default: .vertical(.top))
+        CompactSlider(from: $fromProgress, to: $toProgress)
+            .compactSliderStyle(default: .vertical(.center))
+        CompactSlider(from: $fromProgress, to: $toProgress)
+            .compactSliderStyle(default: .vertical(.bottom))
     }
     
     @ViewBuilder
@@ -461,8 +471,9 @@ struct CompactSliderDemo: View {
                 )
         }
         .compactSliderStyle(default: .vertical())
-        .compactSliderHandle { _, style, progress, _ in
+        .compactSliderHandle { configuration, style, progress, _ in
             HandleView(
+                configuration: configuration,
                 style: .rectangle(
                     visibility: .always,
                     color: Color(hue: progress, saturation: 0.8, brightness: 0.8),

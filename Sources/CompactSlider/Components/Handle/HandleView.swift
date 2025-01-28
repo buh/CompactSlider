@@ -8,8 +8,8 @@ import SwiftUI
 public struct HandleView: View {
     let style: HandleStyle
     
-    public init(style: HandleStyle) {
-        self.style = style
+    public init(configuration: CompactSliderStyleConfiguration, style: HandleStyle) {
+        self.style = style.byType(configuration.type)
     }
     
     public var body: some View {
@@ -33,6 +33,8 @@ public struct HandleView: View {
             Capsule().fill(style.color)
         case .symbol(let name):
             symbol(name)
+        case .default:
+            EmptyView()
         }
     }
     
@@ -50,6 +52,8 @@ public struct HandleView: View {
             Capsule().stroke(style.color, style: strokeStyle)
         case .symbol(let name):
             symbol(name)
+        case .default:
+            EmptyView()
         }
     }
     
