@@ -27,9 +27,13 @@ struct CompactSliderDemo: View {
     
     let type: `Type`
     
-    init(type: `Type`) {
-        self.type = type
-    }
+    var defaultSize: CGFloat = {
+        #if os(macOS)
+        20
+        #else
+        28
+        #endif
+    }()
     
     var body: some View {
         VStack(spacing: 8) {
@@ -72,20 +76,20 @@ struct CompactSliderDemo: View {
             case .customHorizontal:
                 customHorizontalSliders()
             case .vertical:
-                HStack(spacing: 16) {
+                HStack {
                     VStack(spacing: 16) {
                         Text("Base")
-                        HStack(spacing: 16) {
+                        HStack {
                             baseVerticalSliders()
-                                .frame(maxWidth: 30)
+                                .frame(maxWidth: defaultSize)
                         }
                     }
                     Divider()
                     VStack(spacing: 16) {
                         Text("Advanced")
-                        HStack(spacing: 16) {
+                        HStack {
                             verticalSliders()
-                                .frame(maxWidth: 30)
+                                .frame(maxWidth: defaultSize)
                         }
                     }
                 }
@@ -94,6 +98,8 @@ struct CompactSliderDemo: View {
                     capsuleVerticalSliders()
                 }
             }
+            
+            Spacer()
         }
         .padding()
         .monospacedDigit()
@@ -126,7 +132,7 @@ struct CompactSliderDemo: View {
             }
             .font(.footnote).foregroundStyle(.secondary)
         }
-        .frame(maxHeight: 30)
+        .frame(maxHeight: defaultSize)
     }
     
     private func rangeHorizontalSliders() -> some View {
@@ -138,7 +144,7 @@ struct CompactSliderDemo: View {
             CompactSlider(from: $fromProgress, to: $toProgress)
                 .compactSliderStyle(default: .horizontal(.trailing))
         }
-        .frame(maxHeight: 20)
+        .frame(maxHeight: defaultSize)
     }
     
     @ViewBuilder
@@ -147,7 +153,7 @@ struct CompactSliderDemo: View {
             .compactSliderStyle(default: .scrollable())
             .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
             .horizontalGradientMask()
-            .frame(maxHeight: 20)
+            .frame(maxHeight: defaultSize)
     }
     
     @ViewBuilder
@@ -289,14 +295,14 @@ struct CompactSliderDemo: View {
                     .opacity(config.colorScheme == .dark ? 0.1 : 0.2)
             }
         }
-        .frame(height: 20)
+        .frame(height: defaultSize)
         
         VStack {
             Text("\(Int(degree))º")
                 .offset(x: 2)
             CompactSlider(value: $degree, in: 0 ... 360, step: 5)
                 .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
-                .compactSliderHandleStyle(.rectangle(color: Color.white, width: 1))
+                .compactSliderHandleStyle(.rectangle(color: Defaults.label, width: 1))
                 .compactSliderStyle(default: .scrollable())
                 .compactSliderScale(
                     visibility: .always,
@@ -343,8 +349,6 @@ struct CompactSliderDemo: View {
             .compactSliderStyle(default: .vertical(.center))
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .vertical(.top))
-        
-        Divider()
         
         CompactSlider(from: $fromProgress, to: $toProgress)
             .compactSliderStyle(default: .vertical(.top))

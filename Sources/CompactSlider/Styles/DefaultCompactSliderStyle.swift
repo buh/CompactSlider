@@ -13,7 +13,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     
     public let type: CompactSliderType
     public let padding: EdgeInsets
-    let clipShapeStyle: ClipShapeStyle
+    var clipShapeStyle: ClipShapeStyle
     
     public init(
         type: CompactSliderType = .horizontal(.leading),
@@ -46,5 +46,13 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         #if os(macOS)
         .saturation(appearsActive ? 1 : 0)
         #endif
+    }
+}
+
+extension DefaultCompactSliderStyle {
+    func withClipShapeStyle(_ clipShapeStyle: ClipShapeStyle) -> Self {
+        var style = self
+        style.clipShapeStyle = clipShapeStyle
+        return style
     }
 }

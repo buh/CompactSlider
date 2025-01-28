@@ -11,98 +11,19 @@ struct CompactSliderSystemDemo: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            #if os(macOS)
-            macOS()
-            #else
-            iOS()
-            #endif
+            Slider(value:  $progress) {
+                Text("Progress")
+            }
+            
+            Text("\"System\" Progress")
+            SystemSlider(value: $progress)
+            
+            Text("Vertical \"System\" Progress")
+            SystemSlider(value: $progress)
+                .systemSliderStyle(.vertical())
+                .frame(maxHeight: 250)
         }
         .padding()
-    }
-    
-    @ViewBuilder
-    func macOS() -> some View {
-        Slider(value:  $progress) {
-            Text("Progress")
-        }
-        
-        HStack {
-            Text("Progress")
-            progressView
-                .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
-                .compactSliderBackground { _, _ in
-                    Capsule()
-                        .fill(Color.gray.opacity(0.2))
-                        .frame(height: 4)
-                }
-                .compactSliderProgress { _ in
-                    Capsule()
-                        .fill(Color.accentColor)
-                        .frame(height: 4)
-                }
-                .frame(height: 20)
-        }
-        
-        Text("Progress")
-        progressView
-            .compactSliderStyle(default: .vertical(clipShapeStyle: .none))
-            .compactSliderBackground { _, _ in
-                Capsule()
-                    .fill(Color.gray.opacity(0.2))
-                    .frame(width: 4)
-            }
-            .compactSliderProgress { _ in
-                Capsule()
-                    .fill(Color.accentColor)
-                    .frame(width: 4)
-            }
-            .frame(width: 20, height: 200)
-    }
-    
-    private var progressView: some View {
-        CompactSlider(value: $progress)
-            .compactSliderHandleStyle(
-                .circle(visibility: .always, progressAlignment: .center, radius: 0))
-            .compactSliderHandle { configuration, _, _, _ in
-                HandleView(
-                    configuration: configuration,
-                    style: .circle(
-                        color: configuration.colorScheme == .light ? .white : .gray
-                    )
-                )
-                .shadow(radius: 1, y: 0.5)
-            }
-    }
-    
-    @ViewBuilder
-    func iOS() -> some View {
-        Slider(value:  $progress) {
-            Text("Progress")
-        }
-        
-        CompactSlider(value: $progress)
-            .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
-            .compactSliderBackground { _, _ in
-                Capsule()
-                    .fill(Color.gray.opacity(0.2))
-                    .frame(maxHeight: 4)
-            }
-            .compactSliderProgress { _ in
-                Capsule()
-                    .fill(Color.accentColor)
-                    .frame(maxHeight: 4)
-            }
-            .compactSliderHandleStyle(.circle(visibility: .always, radius: 13.5))
-            .compactSliderHandle { configuration, handleStyle, _, _ in
-                HandleView(
-                    configuration: configuration,
-                    style: .circle(
-                        color: configuration.colorScheme == .light ? .white : .gray
-                    )
-                )
-                .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
-            }
-            .frame(maxHeight: 27)
     }
 }
 

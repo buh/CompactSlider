@@ -28,14 +28,7 @@ extension Defaults {
     
     // MARK: - Handle
     
-    public static let handleWidth: CGFloat = {
-        #if os(macOS)
-        3
-        #else
-        8
-        #endif
-    }()
-    
+    public static let handleWidth: CGFloat = 3
     public static let circleHandleRadius: CGFloat = 5
     public static let handleLineWidth: CGFloat = 2
     
