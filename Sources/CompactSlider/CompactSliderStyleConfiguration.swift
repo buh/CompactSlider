@@ -227,7 +227,13 @@ extension CompactSliderStyleConfiguration {
     public func handleOffset(at index: Int, handleStyle: HandleStyle) -> CGPoint {
         guard index < progress.progresses.count else { return .zero }
         
-        let handleWidth = handleStyle.width
+        var handleWidth = handleStyle.width
+        
+        if type.isHorizontal {
+            handleWidth = handleWidth == 0 ? size.height : handleWidth
+        } else if type.isVertical {
+            handleWidth = handleWidth == 0 ? size.width : handleWidth
+        }
         
         let type = progress.isRangeValues || progress.isMultipleValues ? type.normalizedRangeValuesType : type
         

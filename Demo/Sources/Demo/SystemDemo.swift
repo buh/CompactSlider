@@ -28,29 +28,48 @@ struct CompactSliderSystemDemo: View {
         
         HStack {
             Text("Progress")
-            CompactSlider(value: $progress)
+            progressView
                 .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
                 .compactSliderBackground { _, _ in
                     Capsule()
                         .fill(Color.gray.opacity(0.2))
-                        .frame(maxHeight: 4)
+                        .frame(height: 4)
                 }
                 .compactSliderProgress { _ in
                     Capsule()
                         .fill(Color.accentColor)
-                        .frame(maxHeight: 4)
+                        .frame(height: 4)
                 }
-                .compactSliderHandleStyle(.circle(visibility: .always, radius: 10))
-                .compactSliderHandle { config, handleStyle, _, _ in
-                    HandleView(
-                        style: .circle(
-                            color: config.colorScheme == .light ? .white : .gray
-                        )
-                    )
-                    .shadow(radius: 1, y: 0.5)
-                }
-                .frame(maxHeight: 20)
+                .frame(height: 20)
         }
+        
+        Text("Progress")
+        progressView
+            .compactSliderStyle(default: .vertical(clipShapeStyle: .none))
+            .compactSliderBackground { _, _ in
+                Capsule()
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(width: 4)
+            }
+            .compactSliderProgress { _ in
+                Capsule()
+                    .fill(Color.accentColor)
+                    .frame(width: 4)
+            }
+            .frame(width: 20, height: 200)
+    }
+    
+    private var progressView: some View {
+        CompactSlider(value: $progress)
+            .compactSliderHandleStyle(.circle(visibility: .always, progressAlignment: .center, radius: 0))
+            .compactSliderHandle { config, handleStyle, _, _ in
+                HandleView(
+                    style: .circle(
+                        color: config.colorScheme == .light ? .white : .gray
+                    )
+                )
+                .shadow(radius: 1, y: 0.5)
+            }
     }
     
     @ViewBuilder
