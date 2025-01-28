@@ -6,6 +6,7 @@
 import SwiftUI
 
 public struct ScaleView: View {
+    @Environment(\.compactSliderOptions) var compactSliderOptions
     let configuration: CompactSliderStyleConfiguration
     let shapeStyle: ScaleShapeStyle
     
@@ -19,6 +20,7 @@ public struct ScaleView: View {
             let skip,
             let skipFirst,
             let skipLast,
+            let skipCurrentValue,
             let startFromCenter
         ):
             LinearScaleShape(
@@ -28,6 +30,7 @@ public struct ScaleView: View {
                 skip: skip,
                 skipFirst: skipFirst,
                 skipLast: skipLast,
+                skipOne: skipCurrentValue ? linearSkipOne : nil,
                 startFromCenter: startFromCenter
             )
             .stroke(shapeStyle.color, style: strokeStyle)
@@ -54,6 +57,41 @@ public struct ScaleView: View {
                 labels: labels
             )
         }
+    }
+    
+    private var linearSkipOne: Int? {
+        guard case .linear(_, let axis, let count, _, _, _, _, _, _) = shapeStyle.style, count > 1 else {
+            return nil
+        }
+        
+        for p in configuration.progress.progresses {
+            if let skipOne = checkLinearSkipOneForProgress(p, axis: axis, count: count) {
+                return skipOne
+            }
+        }
+        
+        return nil
+    }
+    
+    private func checkLinearSkipOneForProgress(_ progress: Double, axis: Axis, count: Int) -> Int? {
+        let currentOffset: CGFloat
+        let spacer: CGFloat
+        
+        switch axis {
+        case .horizontal:
+            currentOffset = configuration.size.width * progress
+            spacer = configuration.size.width / CGFloat(count - 1)
+        case .vertical:
+            currentOffset = configuration.size.height * progress
+            spacer = configuration.size.height / CGFloat(count - 1)
+        }
+        
+        if spacer > 0, count > 1 {
+            let index = currentOffset / spacer
+            return abs(index.rounded() - index) < 0.01 ? Int(index.rounded()) : nil
+        }
+        
+        return nil
     }
 }
 

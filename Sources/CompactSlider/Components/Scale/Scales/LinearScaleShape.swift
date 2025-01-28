@@ -13,6 +13,7 @@ public struct LinearScaleShape: Shape {
     let skip: Skip?
     let skipFirst: Int
     let skipLast: Int
+    let skipOne: Int?
     let startFromCenter: Bool
     
     public init(
@@ -22,6 +23,7 @@ public struct LinearScaleShape: Shape {
         skip: Skip? = nil,
         skipFirst: Int = 0,
         skipLast: Int = 0,
+        skipOne: Int? = nil,
         startFromCenter: Bool = false
     ) {
         self.axis = axis
@@ -30,6 +32,7 @@ public struct LinearScaleShape: Shape {
         self.skip = skip
         self.skipFirst = skipFirst
         self.skipLast = skipLast
+        self.skipOne = skipOne
         self.startFromCenter = startFromCenter
     }
     
@@ -76,6 +79,10 @@ public struct LinearScaleShape: Shape {
     }
     
     private func needsToDraw(_ index: Int) -> Bool {
+        if let skipOne, skipOne == (index - 1) {
+            return false
+        }
+        
         if skipFirst > 0, (index < (skipFirst + 1)) {
             return false
         }

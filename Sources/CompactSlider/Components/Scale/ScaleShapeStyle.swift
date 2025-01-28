@@ -20,6 +20,7 @@ extension ScaleShapeStyle {
             skip: LinearScaleShape.Skip?,
             skipFirst: Int,
             skipLast: Int,
+            skipCurrentValue: Bool,
             startFromCenter: Bool
         )
         
@@ -86,6 +87,7 @@ extension ScaleShapeStyle {
         skip: LinearScaleShape.Skip? = nil,
         skipFirst: Int = 0,
         skipLast: Int = 0,
+        skipCurrentValue: Bool = false,
         startFromCenter: Bool = false
     ) -> ScaleShapeStyle {
         .init(
@@ -98,6 +100,7 @@ extension ScaleShapeStyle {
                 skip: skip,
                 skipFirst: skipFirst,
                 skipLast: skipLast,
+                skipCurrentValue: skipCurrentValue,
                 startFromCenter: startFromCenter
             )
         )

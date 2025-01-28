@@ -295,7 +295,7 @@ struct CompactSliderDemo: View {
                 .offset(x: 2)
             CompactSlider(value: $degree, in: 0 ... 360, step: 5)
                 .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
-                .compactSliderHandleStyle(.rectangle(width: 1))
+                .compactSliderHandleStyle(.rectangle(color: Color.white, width: 1))
                 .compactSliderStyle(default: .scrollable())
                 .compactSliderScale(
                     visibility: .always,
@@ -318,7 +318,7 @@ struct CompactSliderDemo: View {
         
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
-            .compactSliderHandleStyle(.symbol("heart.fill", width: 20))
+            .compactSliderHandleStyle(.symbol("heart.fill", visibility: .always, width: 20))
             .compactSliderProgress { configuration in
                 Capsule()
                     .fill(Color.pink.opacity(0.5))
