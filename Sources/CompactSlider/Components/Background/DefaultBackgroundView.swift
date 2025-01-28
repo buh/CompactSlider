@@ -13,16 +13,32 @@ struct DefaultBackgroundView: View {
     
     var body: some View {
         if configuration.type.isGrid {
-            GridBackgroundView(configuration: configuration, padding: padding)
-                .saturation(configuration.focusState.isFocused ? 1 : 0)
-                .overlay(
-                    RoundedRectangle(cornerRadius: Defaults.gridCornerRadius)
-                        .stroke(
-                            colorScheme == .dark ? Color.white.opacity(0.03) : .black.opacity(0.03),
-                            lineWidth: 1
-                        )
-                        .padding(1)
-                )
+            #if os(watchOS)
+            let backgroundColor: Color? = Color(white: 0.05)
+            #else
+            let backgroundColor: Color? = nil
+            #endif
+            
+            GridBackgroundView(
+                configuration: configuration,
+                padding: padding,
+                backgroundColor: backgroundColor
+            )
+            .saturation(configuration.focusState.isFocused ? 1 : 0)
+            .overlay(
+                RoundedRectangle(cornerRadius: Defaults.gridCornerRadius)
+                    #if os(watchOS)
+                    .stroke(Color.white.opacity(0.08))
+                    #else
+                    .stroke(
+                        colorScheme == .dark
+                            ? Color.white.opacity(0.03)
+                            : .black.opacity(0.03),
+                        lineWidth: 1
+                    )
+                    #endif
+                    .padding(1)
+            )
         } else if configuration.type.isCircularGrid {
             DefaultCircularGridBackgroundView(configuration: configuration)
         } else {
@@ -35,6 +51,24 @@ struct DefaultCircularGridBackgroundView: View {
     @Environment(\.colorScheme) var colorScheme
     let configuration: CompactSliderStyleConfiguration
     
+    var gradientColors: [Color] {
+        #if os(watchOS)
+        [
+            Defaults.label.opacity(0),
+            Defaults.label.opacity(0.05),
+            Defaults.label.opacity(0.15),
+            Defaults.label.opacity(0.5)
+        ]
+        #else
+        [
+            Defaults.label.opacity(0),
+            Defaults.label.opacity(0.01),
+            Defaults.label.opacity(0.1),
+            Defaults.label.opacity(0.3)
+        ]
+        #endif
+    }
+    
     var defaultScaleColor: Color {
         colorScheme == .dark ? Color.white.opacity(0.1) : .black.opacity(0.1)
     }
@@ -44,21 +78,20 @@ struct DefaultCircularGridBackgroundView: View {
     }
     
     var centerCircleColor: Color {
+        #if os(watchOS)
+        configuration.progress.polarPoint.normalizedRadius == 0 ? .accentColor : .white.opacity(0.5)
+        #else
         configuration.progress.polarPoint.normalizedRadius == 0
             ? .accentColor
             : (colorScheme == .dark ? Color.white.opacity(0.3) : .black.opacity(0.3))
+        #endif
     }
     
     var body: some View {
         Circle()
             .fill(
                 RadialGradient(
-                    colors: [
-                        Defaults.label.opacity(0),
-                        Defaults.label.opacity(0.01),
-                        Defaults.label.opacity(0.1),
-                        Defaults.label.opacity(0.3)
-                    ],
+                    colors: gradientColors,
                     center: .center,
                     startRadius: 0,
                     endRadius: configuration.size.minValue
