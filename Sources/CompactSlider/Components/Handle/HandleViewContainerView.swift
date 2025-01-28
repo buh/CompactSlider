@@ -37,7 +37,9 @@ struct HandleViewContainerView<V: View>: View {
                     .frame(
                         maxWidth: .infinity,
                         maxHeight: .infinity,
-                        alignment: configuration.type.isHorizontal ? .leading : .top
+                        alignment: configuration.type.isGrid || configuration.type.isCircularGrid
+                            ? .topLeading
+                            : configuration.type.isHorizontal ? .leading : .top
                     )
             } else {
                 ForEach(indices, id: \.self) { index in
