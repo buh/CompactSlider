@@ -5,7 +5,16 @@
 
 import SwiftUI
 
-/// Configuration for creating a style for the slider.
+/// Configuration informs components about the current state of the slider.
+///
+/// Configuration is the most important part of the slider, because it defines the current state of the slider.
+/// The slider defines the configuration by itself and passes it to the style and components.
+///
+/// - The size defines the width and height of the slider.
+/// - The focusState defines the dragging or hovering state of the slider.
+/// - The progress values represent the position of the selected value within bounds, mapped into 0...1.
+/// - The step defines the step for the slider values.
+/// - The colorScheme defines the possible color schemes, corresponding to the light and dark appearances.
 public struct CompactSliderStyleConfiguration: Equatable {
     /// A slider type in which the slider will indicate the selected value.
     public let type: CompactSliderType
@@ -15,6 +24,7 @@ public struct CompactSliderStyleConfiguration: Equatable {
     public let focusState: FocusState
     /// Progress values represents the position of the selected value within bounds, mapped into 0...1.
     public let progress: Progress
+    /// The step for the values.
     public let step: CompactSliderStep?
     /// The possible color schemes, corresponding to the light and dark appearances.
     public let colorScheme: ColorScheme
@@ -41,7 +51,7 @@ public struct CompactSliderStyleConfiguration: Equatable {
 }
 
 extension CompactSliderStyleConfiguration {
-    /// A dragging or hovering state of the slider.
+    /// A focus state is used to define the dragging or hovering state of the slider.
     public struct FocusState: Equatable {
         /// True, when hovering the slider.
         public var isHovering: Bool
@@ -50,16 +60,18 @@ extension CompactSliderStyleConfiguration {
         /// True, when dragging or hovering the slider.
         public var isFocused: Bool { isHovering || isDragging }
         
-        public init(isHovering: Bool, isDragging: Bool) {
+        /// Create a focus state.
+        init(isHovering: Bool, isDragging: Bool) {
             self.isHovering = isHovering
             self.isDragging = isDragging
         }
         
-        public static var none = FocusState(isHovering: false, isDragging: false)
+        static var none = FocusState(isHovering: false, isDragging: false)
     }
 }
 
 extension CompactSliderStyleConfiguration {
+    /// A helper to define the size of the slider depending on the slider type.
     public func sliderSize() -> OptionalCGSize {
         switch type {
         case .horizontal, .scrollableHorizontal:
@@ -75,20 +87,24 @@ extension CompactSliderStyleConfiguration {
 // MARK: - Progress
 
 extension CompactSliderStyleConfiguration {
-    func handleWidth(handleStyle: HandleStyle) -> CGFloat {
+    /// A handle width depending on the handle style visibility and focus state.
+    public func handleWidth(handleStyle: HandleStyle) -> CGFloat {
         switch handleStyle.visibility {
         case .always:
             break
         case .hidden:
             return 0
         case .focused:
-            guard focusState.isFocused else { return 0 }
-            break
+            if focusState.isFocused {
+                return 0
+            }
         }
         
         return handleStyle.width
     }
     
+    /// A progress size depending on the handle style.
+    /// - Parameter handleStyle: a handle style. It defines the handle width and alignment.
     public func progressSize(handleStyle: HandleStyle) -> OptionalCGSize {
         if progress.isMultipleValues || type.isScrollable {
             return OptionalCGSize()
@@ -148,6 +164,8 @@ extension CompactSliderStyleConfiguration {
         }
     }
     
+    /// A progress offset depending on the handle style.
+    /// - Parameter handleStyle: a handle style. It defines the handle width and alignment.
     public func progressOffset(handleStyle: HandleStyle) -> CGPoint {
         if progress.isMultipleValues || type.isScrollable {
             return .zero
@@ -224,6 +242,7 @@ extension CompactSliderStyleConfiguration {
 // MARK: - Handle
 
 extension CompactSliderStyleConfiguration {
+    /// A handle offset depending on the handle style. The index is used for multiple values.
     public func handleOffset(at index: Int, handleStyle: HandleStyle) -> CGPoint {
         guard index < progress.progresses.count else { return .zero }
         
@@ -267,6 +286,7 @@ extension CompactSliderStyleConfiguration {
         }
     }
     
+    /// A handle visibility depending on the slider type, progress values and focus state.
     public func isHandleVisible(handleStyle: HandleStyle) -> Bool {
         if progress.isMultipleValues
             || progress.isGridValues
@@ -305,21 +325,12 @@ extension CompactSliderStyleConfiguration {
         
         return false
     }
-    
-    public func isScaleVisible(visibility: CompactSliderVisibility) -> Bool {
-        if type.isScrollable {
-            return true
-        }
-        
-        return visibility != .hidden
-            && (type.isHorizontal || type.isVertical || type.isCircularGrid)
-            && (visibility == .always || focusState.isFocused)
-    }
 }
 
 // MARK: - Scale
 
 extension CompactSliderStyleConfiguration {
+    /// A scale offset depending on the slider type and progress values.
     public func scaleOffset() -> CGPoint {
         guard type.isScrollable, progress.isSingularValue else { return .zero }
         
@@ -332,11 +343,23 @@ extension CompactSliderStyleConfiguration {
             return .zero
         }
     }
+    
+    /// A scale visibility depending on the slider type and focus state.
+    public func isScaleVisible(visibility: CompactSliderVisibility) -> Bool {
+        if type.isScrollable {
+            return true
+        }
+        
+        return visibility != .hidden
+            && (type.isHorizontal || type.isVertical || type.isCircularGrid)
+            && (visibility == .always || focusState.isFocused)
+    }
 }
 
 // MARK: - Grid
 
 extension CompactSliderStyleConfiguration {
+    /// A grid step depending on the slider step. By default, it is 11x11, which is for a grid of 10x10.
     public var pointSteps: CompactSliderStep.PointSteps {
         step?.pointSteps ?? .init(x: 11, y: 11)
     }

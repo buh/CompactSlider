@@ -15,8 +15,7 @@ struct CompactSliderStyleBackgroundView: View {
     }
     
     var body: some View {
-        if !sliderOptions.contains(.moveBackgroundToScale),
-           !sliderOptions.contains(.withoutBackground) {
+        if !sliderOptions.contains(.withoutBackground) {
             backgroundView(padding)
         }
     }

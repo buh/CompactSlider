@@ -5,8 +5,11 @@
 
 import SwiftUI
 
+/// A scale marks visibility determines the rules for showing the scale.
 public enum ScaleLabelsVisibility: Hashable {
+    /// Show the scale marks always.
     case always
+    /// Hide a specific mark near the current value by the given threshold. Recommended value is 0.03.
     case hideNearCurrentValue(threshold: Double)
 }
 

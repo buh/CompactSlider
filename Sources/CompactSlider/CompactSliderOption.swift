@@ -5,35 +5,37 @@
 
 import SwiftUI
 
+/// A set of options for the `CompactSlider`. The options are used to configure the slider behavior.
 public enum CompactSliderOption: Hashable {
+    /// Enable haptic feedback. Enabled by default.
     case enabledHapticFeedback
-    /// Creates a dragging gesture with the minimum dragging distance before the gesture succeeds.
-    /// Default values 1 and 0 for iOS and macOS respectively.
+    /// The minimum distance a drag gesture must move before it's considered a drag.
+    /// Default value is 1 and 0 for macOS.
     case dragGestureMinimumDistance(CGFloat)
-    /// Attaches a gesture to the slider with a higher precedence than gestures defined by the view.
+    /// Attaches a high priority gesture to the slider.
     case highPriorityGesture
-    /// Enables delay when sliders inside ``ScrollView`` or ``Form``. Enabled by default for iOS.
+    /// Delays the touch gesture. Enabled by default for iOS.
+    /// It's useful for sliders in a scroll view or forms.
     case delayedGesture
-    /// Enables the scroll wheel.
+    /// The slider can be scrolled with a scroll wheel.
     case scrollWheel
-    /// Enables the snapping on steps.
+    /// The slider can be scrolled with a snap to each step.
     case snapToSteps
-    /// Move background view to Scale.
-    case moveBackgroundToScale
-    /// Remove background view.
+    /// Removes the background.
     case withoutBackground
-    /// Rotate values in loop.
+    /// Allows the slider to loop values.
     case loopValues
 }
 
 /// A set of drag gesture options: minimum drag distance, delayed touch, and high priority.
 extension Set<CompactSliderOption> {
-    /// Default values for the drag gesture.
-    /// For iOS: minimum drag distance 1 with touch delay.
-    /// For macOS: minimum drag distance 0.
+    /// Defines the default options for the slider.
+    ///
+    /// - For iOS: minimum drag distance 1 with touch delay and enabled haptic feedback.
+    /// - For macOS: minimum drag distance 0 with enabled haptic feedback
     public static var `default`: Self {
         #if os(macOS)
-        [.enabledHapticFeedback, .dragGestureMinimumDistance(0), .scrollWheel]
+        [.enabledHapticFeedback, .dragGestureMinimumDistance(0)]
         #else
         [.enabledHapticFeedback, .dragGestureMinimumDistance(1), .delayedGesture]
         #endif
@@ -94,6 +96,7 @@ struct CompactSliderOptionKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
+    /// The environment value for the compact slider options.
     public var compactSliderOptions: Set<CompactSliderOption> {
         get { self[CompactSliderOptionKey.self] }
         set { self[CompactSliderOptionKey.self] = newValue }
@@ -101,12 +104,12 @@ extension EnvironmentValues {
 }
 
 extension View {
-    /// Sets the default options for compact sliders.
+    /// Sets the slider options.
     public func compactSliderOptions(_ options: CompactSliderOption...) -> some View {
         environment(\.compactSliderOptions, Set(options))
     }
     
-    /// Sets the default options for compact sliders.
+    /// Adds slider options to the existing ones.
     public func compactSliderOptionsByAdding(_ options: CompactSliderOption...) -> some View {
         environment(
             \.compactSliderOptions,

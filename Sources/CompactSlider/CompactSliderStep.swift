@@ -5,33 +5,38 @@
 
 import SwiftUI
 
-/// A step for a compact slider. It can be linear, point or polar point.
+/// Defines the step for a slider. It can be linear, point, or polar point, depending on the slider type.
 ///
-/// The `linear` step is used for a linear value for horizontal or vertical (scrollable) sliders.
-/// The `point` step is used for a grid slider.
-/// The `polarPoint` step is used for a circular grid.
+/// Linear slider:
+/// - The `linear` step is used for a linear value for horizontal or vertical (scrollable) sliders.
+/// - The `point` step is used for a grid slider.
+/// - The `polarPoint` step is used for a circular grid.
+/// - The `linearStep` is used for the step value.
+/// - The `linearProgressStep` is used for the progress step for a linear step.
+/// - The `linearSteps` is used for the number of steps for a linear step.
 ///
-/// The `linearStep` is used for the step value.
-/// The `linearProgressStep` is used for the progress step for a linear step.
-/// The `linearSteps` is used for the number of steps for a linear step.
-///
-/// The `pointStep` is used for the step value for a point.
+/// Grid slider:
+/// - The `pointStep` is used for the step value for a point.
 /// The `pointProgressStep` is used for the progress step for a point step.
 /// The `pointSteps` is used for the number of steps for a point step.
 ///
-/// The `polarPointProgressStep` is used for the progress step for a polar point step.
-/// The `polarPointSteps` is used for the number of steps for a polar point step.
+/// Circular Grid slider:
+/// - The `polarPointProgressStep` is used for the progress step for a polar point step.
+/// - The `polarPointSteps` is used for the number of steps for a polar point step.
 public enum CompactSliderStep: Equatable {
+    /// A point progress step for a grid slider.
     public struct PointValue: Equatable {
         public let x: Double
         public let y: Double
     }
     
+    /// A point steps for a grid slider.
     public struct PointSteps: Equatable {
         public let x: Int
         public let y: Int
     }
     
+    /// A polar point steps for a circular grid slider.
     public struct PolarPointSteps: Equatable {
         public let angle: Int
         public let radius: Int
@@ -41,6 +46,7 @@ public enum CompactSliderStep: Equatable {
     case point(valueStep: PointValue, progressStep: PointValue, steps: PointSteps)
     case polarPoint(valueStep: CompactSliderPolarPoint, progressStep: CompactSliderPolarPoint, steps: PolarPointSteps)
     
+    /// A linear slider step value.
     public func linearStep<Value: BinaryFloatingPoint>() -> Value {
         if case .linear(let step, _, _) = self {
             return Value(step)
@@ -49,6 +55,7 @@ public enum CompactSliderStep: Equatable {
         return 0
     }
     
+    /// A linear slider progress step value.
     public var linearProgressStep: Double? {
         if case .linear(_, let step, _) = self {
             return step
@@ -57,6 +64,7 @@ public enum CompactSliderStep: Equatable {
         return nil
     }
     
+    /// A linear slider number of steps.
     public var linearSteps: Int? {
         if case .linear(_, _, let steps) = self {
             return steps
@@ -65,6 +73,7 @@ public enum CompactSliderStep: Equatable {
         return nil
     }
     
+    /// A point step value for a grid slider.
     public func pointStep<Value: BinaryFloatingPoint>() -> (x: Value, y: Value)? {
         if case .point(let step, _, _) = self {
             return (x: Value(step.x), y: Value(step.y))
@@ -73,6 +82,7 @@ public enum CompactSliderStep: Equatable {
         return nil
     }
     
+    /// A point progress step for a grid slider.
     public var pointProgressStep: PointValue? {
         if case .point(_, let progressStep, _) = self {
             return progressStep
@@ -81,6 +91,7 @@ public enum CompactSliderStep: Equatable {
         return nil
     }
     
+    /// A number of steps for a grid slider.
     public var pointSteps: PointSteps? {
         if case .point(_, _, let steps) = self {
             return steps
@@ -89,6 +100,7 @@ public enum CompactSliderStep: Equatable {
         return nil
     }
     
+    /// A polar point progress step for a circular grid slider.
     public var polarPointProgressStep: CompactSliderPolarPoint? {
         if case .polarPoint(_, let progressStep, _) = self {
             return progressStep
@@ -97,6 +109,7 @@ public enum CompactSliderStep: Equatable {
         return nil
     }
     
+    /// A number of steps for a circular grid.
     public var polarPointSteps: PolarPointSteps? {
         if case .polarPoint(_, _, let steps) = self {
             return steps

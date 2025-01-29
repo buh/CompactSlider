@@ -5,11 +5,21 @@
 
 import SwiftUI
 
+/// A polar point for a circular grid type.
+///
+/// The angle is in degrees from 0 to 360. The radius is a normalized value from 0 to 1.
+/// The center of the circle is in the center of the view.
+/// The radius is a half of the min size of the view.
 public struct CompactSliderPolarPoint: Hashable {
+    /// An angle.
     public let angle: Angle
-    /// A related radius in 0...1.
+    /// A normalized radius from 0 to 1.
     public let normalizedRadius: Double
     
+    /// Create a polar point.
+    /// - Parameters:
+    ///  - angle: an angle.
+    ///  - normalizedRadius: a normalized radius from 0 to 1.
     public init(angle: Angle, normalizedRadius: Double) {
         self.angle = angle
         self.normalizedRadius = normalizedRadius
@@ -37,6 +47,8 @@ extension CompactSliderPolarPoint: Comparable {
 // MARK: - Defaults
 
 extension CompactSliderPolarPoint {
+    /// A zero angle and zero radius.
     public static let zero = CompactSliderPolarPoint(angle: .zero, normalizedRadius: 0)
-    public static let full = CompactSliderPolarPoint(angle: .degrees(360), normalizedRadius: 1)
+    /// A zero angle and radius is 1.
+    public static let full = CompactSliderPolarPoint(angle: .zero, normalizedRadius: 1)
 }
