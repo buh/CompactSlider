@@ -46,6 +46,24 @@ extension Defaults {
         8
         #endif
     }()
+    
+    // MARK: - Scale
+    
+    public static let scaleLineLength: CGFloat = {
+        #if os(macOS)
+        10
+        #else
+        16
+        #endif
+    }()
+    
+    public static let secondaryScaleLineLength: CGFloat = {
+        #if os(macOS)
+        5
+        #else
+        8
+        #endif
+    }()
 }
 
 // MARK: - Colors
@@ -53,23 +71,23 @@ extension Defaults {
 extension Defaults {
     #if os(macOS)
     /// The default label color. Usually, it is the same as the text color.
-    public static let label = Color(NSColor.labelColor)
+    public static let labelColor = Color(NSColor.labelColor)
     #elseif os(watchOS)
     /// The default label color. Usually, it is the same as the text color.
-    public static let label = Color.white
+    public static let labelColor = Color.white
     #else
     /// The default label color. Usually, it is the same as the text color.
-    public static let label = Color(UIColor.label)
+    public static let labelColor = Color(UIColor.label)
     #endif
     
     /// The default background color.
-    public static let backgroundColor: Color = label.opacity(0.075)
+    public static let backgroundColor: Color = labelColor.opacity(0.075)
     /// The default progress color.
-    public static let progressColor: Color = label.opacity(0.1)
+    public static let progressColor: Color = labelColor.opacity(0.1)
     /// The default focused progress color.
-    public static let focusedProgressColor: Color = label.opacity(0.125)
+    public static let focusedProgressColor: Color = labelColor.opacity(0.125)
     /// The default scale line color.
-    public static let scaleLineColor: Color = label.opacity(0.4)
+    public static let scaleLineColor: Color = labelColor.opacity(0.4)
     /// The default secondary scale line color.
-    public static let secondaryScaleLineColor: Color = label.opacity(0.2)
+    public static let secondaryScaleLineColor: Color = labelColor.opacity(0.2)
 }

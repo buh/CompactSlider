@@ -5,9 +5,10 @@
 
 import SwiftUI
 
-/// A "system" slider with a style based on the system slider. The slider can have a single value,
-/// multiple values, or a range of values. The slider is based on the `CompactSlider` and
-/// supports horizontal and vertical styles. The slider uses the default accent color.
+/// A "system" slider with a style inspired by the system slider.
+///
+/// The slider can have a single value, multiple values, or a range of values.
+/// The slider is based on the `CompactSlider` and supports horizontal and vertical styles.
 ///
 /// Example:
 /// ```swift
@@ -25,9 +26,12 @@ import SwiftUI
 ///    .systemSliderStyle(.vertical())
 /// ```
 ///
+/// - Note: The "system" slider has predefined sizes for macOS and iOS.
+///
 /// - See also: `CompactSlider`, `DefaultCompactSliderStyle`.
 /// - Note: The `.systemSliderStyle()` modifier is used to set the default style.
 public struct SystemSlider<Value: BinaryFloatingPoint>: View {
+    @Environment(\.colorScheme) var colorScheme
     @Environment(\.systemSliderStyle) var systemSliderStyle
     
     @Binding var lowerValue: Value
@@ -46,25 +50,13 @@ public struct SystemSlider<Value: BinaryFloatingPoint>: View {
             .compactSliderProgress { _ in
                 Capsule().fill(Color.accentColor.opacity(0.8))
             }
-            #if os(macOS)
-            .compactSliderHandleStyle(.circle(visibility: .always, progressAlignment: .inside, radius: 10))
-            #else
-            .compactSliderHandleStyle(.circle(visibility: .always, progressAlignment: .inside, radius: 13.5))
-            #endif
-            .compactSliderHandle { configuration, _, _, _ in
-                #if os(macOS)
-                HandleView(
-                    configuration: configuration,
-                    style: .circle(color: configuration.colorScheme == .light ? .white : Color(white: 0.8))
-                )
-                .shadow(radius: 1, y: 0.5)
-                #else
-                HandleView(
-                    configuration: configuration,
-                    style: .circle(color: .white)
-                )
-                .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
-                #endif
+            .compactSliderHandleStyle(handleStyle())
+            .compactSliderHandle { configuration, handleStyle, _, _ in
+                if systemSliderStyle.type.isScrollable {
+                    HandleView(configuration: configuration, style: handleStyle)
+                } else {
+                    handleView(configuration, handleStyle)
+                }
             }
             #if os(macOS)
             .frame(
@@ -85,6 +77,41 @@ public struct SystemSlider<Value: BinaryFloatingPoint>: View {
         case .multipleValues: CompactSlider(values: $values, in: bounds, step: step)
         case .rangeValues: CompactSlider(from: $lowerValue, to: $upperValue, in: bounds, step: step)
         }
+    }
+    
+    private func handleStyle() -> HandleStyle {
+        guard !systemSliderStyle.type.isScrollable else {
+            return .rectangle(visibility: .always, color: .accentColor, width: 3)
+        }
+        
+        #if os(macOS)
+        return .circle(
+            visibility: .always,
+            progressAlignment: .inside,
+            color: colorScheme == .light ? .white : Color(white: 0.8),
+            radius: 10
+        )
+        #else
+        return .circle(
+            visibility: .always,
+            progressAlignment: .inside,
+            color: .white,
+            radius: 13.5
+        )
+        #endif
+    }
+    
+    private func handleView(
+        _ configuration: CompactSliderStyleConfiguration,
+        _ handleStyle: HandleStyle
+    ) -> some View {
+        #if os(macOS)
+        HandleView(configuration: configuration, style: handleStyle)
+            .shadow(radius: 1, y: 0.5)
+        #else
+        HandleView(configuration: configuration, style: handleStyle)
+            .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+        #endif
     }
 }
 
@@ -152,7 +179,31 @@ extension SystemSlider {
     }
 }
 
-// MARK: - Environment Style
+// MARK: - System Style
+
+/// A type of the "system" slider.
+public enum SystemSliderType {
+    case horizontal(HorizontalAlignment)
+    case vertical(VerticalAlignment)
+    case scrollableHorizontal
+    case scrollableVertical
+    
+    /// A horizontal slider with the leading alignment.
+    public static var horizontal: SystemSliderType { .horizontal(.leading) }
+    /// A vertical slider with the bottom alignment.
+    public static var vertical: SystemSliderType { .vertical(.bottom) }
+    
+    var compactSliderType: CompactSliderType {
+        switch self {
+        case .horizontal(let alignment): .horizontal(alignment)
+        case .vertical(let alignment): .vertical(alignment)
+        case .scrollableHorizontal: .scrollableHorizontal
+        case .scrollableVertical: .scrollableVertical
+        }
+    }
+}
+
+// MARK: - Environment
 
 struct SystemSliderStyleKey: EnvironmentKey {
     static var defaultValue = DefaultCompactSliderStyle.horizontal(clipShapeStyle: .none)
@@ -166,8 +217,19 @@ extension EnvironmentValues {
 }
 
 extension View {
-    /// Sets the default style for the system slider. The style supports horizontal and vertical sliders.
-    public func systemSliderStyle(_ style: DefaultCompactSliderStyle) -> some View {
-        environment(\.systemSliderStyle, style.withClipShapeStyle(.none))
+    /// Sets a style for the "system" slider. The style supports horizontal and vertical sliders.
+    /// - Parameters:
+    /// - type: The type of the "system" slider.
+    /// - padding: The padding of the slider. Default is `.zero`.
+    public func systemSliderStyle(_ type: SystemSliderType, padding: EdgeInsets = .zero) -> some View {
+        environment(
+            \.systemSliderStyle,
+             DefaultCompactSliderStyle(
+                type: type.compactSliderType,
+                clipShapeStyle: .capsule,
+                clipShapeOptionSet: [.background, .progress, .scale],
+                padding: padding
+             )
+        )
     }
 }

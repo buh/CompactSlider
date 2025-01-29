@@ -37,6 +37,7 @@ struct CompactSliderCircularGridDemo: View {
         .padding()
         .accentColor(.purple)
         .environment(\.layoutDirection, layoutDirection)
+        .compactSliderOptionsByAdding(.scrollWheel)
     }
     
     @ViewBuilder
@@ -86,7 +87,7 @@ struct CompactSliderCircularGridDemo: View {
                     )
                 )
                 .overlay {
-                    Circle().stroke(Defaults.label, lineWidth: 1)
+                    Circle().stroke(Defaults.labelColor, lineWidth: 1)
                 }
             }
             .compactSliderBackground { configuration, padding in

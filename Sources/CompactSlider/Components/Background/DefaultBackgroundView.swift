@@ -54,17 +54,17 @@ struct DefaultCircularGridBackgroundView: View {
     var gradientColors: [Color] {
         #if os(watchOS)
         [
-            Defaults.label.opacity(0),
-            Defaults.label.opacity(0.05),
-            Defaults.label.opacity(0.15),
-            Defaults.label.opacity(0.5)
+            Defaults.labelColor.opacity(0),
+            Defaults.labelColor.opacity(0.05),
+            Defaults.labelColor.opacity(0.15),
+            Defaults.labelColor.opacity(0.5)
         ]
         #else
         [
-            Defaults.label.opacity(0),
-            Defaults.label.opacity(0.01),
-            Defaults.label.opacity(0.1),
-            Defaults.label.opacity(0.3)
+            Defaults.labelColor.opacity(0),
+            Defaults.labelColor.opacity(0.01),
+            Defaults.labelColor.opacity(0.1),
+            Defaults.labelColor.opacity(0.3)
         ]
         #endif
     }

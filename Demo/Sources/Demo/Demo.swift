@@ -105,6 +105,7 @@ struct CompactSliderDemo: View {
         .monospacedDigit()
         .accentColor(.purple)
         .environment(\.layoutDirection, layoutDirection)
+        .compactSliderOptionsByAdding(.scrollWheel)
     }
     
     private func baseHorizontalSliders() -> some View {
@@ -302,7 +303,7 @@ struct CompactSliderDemo: View {
                 .offset(x: 2)
             CompactSlider(value: $degree, in: 0 ... 360, step: 5)
                 .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
-                .compactSliderHandleStyle(.rectangle(color: Defaults.label, width: 1))
+                .compactSliderHandleStyle(.rectangle(color: Defaults.labelColor, width: 1))
                 .compactSliderStyle(default: .scrollable())
                 .compactSliderScale(
                     visibility: .always,

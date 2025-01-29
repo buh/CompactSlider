@@ -7,6 +7,7 @@ import SwiftUI
 
 public struct ScaleView: View {
     @Environment(\.compactSliderOptions) var compactSliderOptions
+    @Environment(\.handleStyle) var handleStyle
     let configuration: CompactSliderStyleConfiguration
     let shapeStyle: ScaleShapeStyle
     
@@ -34,6 +35,12 @@ public struct ScaleView: View {
                 startFromCenter: startFromCenter
             )
             .stroke(shapeStyle.color, style: strokeStyle)
+            .padding(
+                axis == .horizontal ? .horizontal : .vertical,
+                compactSliderOptions.contains(.loopValues) || configuration.type.isScrollable
+                    ? 0
+                    : handleStyle.width / 2
+            )
             .frame(
                 width: (axis == .vertical ? lineLength : nil),
                 height: (axis == .horizontal ? lineLength : nil)

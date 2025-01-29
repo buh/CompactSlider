@@ -10,21 +10,33 @@ struct DefaultScaleView: View {
     
     var body: some View {
         if configuration.type.isScrollable {
+            let axis: Axis = configuration.type.isVertical ? .vertical : .horizontal
+            
+            ScaleZStackView(
+                configuration: configuration,
+                alignment: .center,
+                shapeStyles: [
+                    .linear(axis: axis, count: 11, lineLength: Defaults.scaleLineLength),
+                    .linear(
+                        axis: axis,
+                        count: 51,
+                        color: Defaults.secondaryScaleLineColor,
+                        lineLength: Defaults.secondaryScaleLineLength,
+                        skip: .each(5)
+                    )
+                ]
+            )
+        } else if let linearSteps = configuration.step?.linearSteps, linearSteps > 1 {
             ScaleZStackView(
                 configuration: configuration,
                 alignment: .center,
                 shapeStyles: [
                     .linear(
                         axis: configuration.type.isVertical ? .vertical : .horizontal,
-                        count: 11,
-                        lineLength: 16
-                    ),
-                    .linear(
-                        axis: configuration.type.isVertical ? .vertical : .horizontal,
-                        count: 51,
-                        color: Defaults.secondaryScaleLineColor,
-                        lineLength: 8,
-                        skip: .each(5)
+                        count: linearSteps,
+                        lineLength: Defaults.scaleLineLength,
+                        skipFirst: 1,
+                        skipLast: 1
                     )
                 ]
             )

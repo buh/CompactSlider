@@ -7,23 +7,36 @@ import SwiftUI
 import CompactSlider
 
 struct CompactSliderSystemDemo: View {
-    @State private var progress: Double = 0.3
+    @State private var progress: Double = 0.1
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 20) {
+            Text("System Slider")
             Slider(value:  $progress) {
                 Text("Progress")
             }
             
-            Text("\"System\" Progress")
+            Text("\"System\" Sliders")
             SystemSlider(value: $progress)
+            SystemSlider(value: $progress, step: 0.1)
+
+            SystemSlider(value: $progress, step: 0.1)
+                .systemSliderStyle(.scrollableHorizontal)
             
-            Text("Vertical \"System\" Progress")
-            SystemSlider(value: $progress)
-                .systemSliderStyle(.vertical())
-                .frame(maxHeight: 250)
+            Text("Vertical \"System\" Sliders")
+            
+            HStack(spacing: 20) {
+                SystemSlider(value: $progress)
+                    .systemSliderStyle(.vertical)
+                
+                SystemSlider(value: $progress)
+                    .systemSliderStyle(.scrollableVertical)
+                    .compactSliderOptionsByAdding(.loopValues)
+            }
+            .frame(maxHeight: 250)
         }
         .padding()
+        .compactSliderOptionsByAdding(.scrollWheel)
     }
 }
 

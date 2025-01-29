@@ -6,6 +6,19 @@
 import SwiftUI
 
 extension View {
+    /// A linear gradient mask.
+    @ViewBuilder
+    public func gradientMask(
+        axis: Axis,
+        _ maskColors: [Color] = [.clear, .white, .white, .white, .clear]
+    ) -> some View {
+        if axis == .horizontal {
+            horizontalGradientMask(maskColors)
+        } else {
+            verticalGradientMask(maskColors)
+        }
+    }
+    
     /// A linear horizontal gradient mask.
     public func horizontalGradientMask(
         _ maskColors: [Color] = [.clear, .white, .white, .white, .clear]

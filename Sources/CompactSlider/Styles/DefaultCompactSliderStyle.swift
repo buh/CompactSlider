@@ -33,15 +33,18 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     /// The internal padding of the slider from background to handle.
     public let padding: EdgeInsets
     
-    private var clipShapeStyle: ClipShapeStyle
+    private let clipShapeStyle: ClipShapeStyle
+    private let clipShapeOptionSet: ClipShapeOptionSet
     
     init(
         type: CompactSliderType = .horizontal(.leading),
         clipShapeStyle: ClipShapeStyle = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
+        clipShapeOptionSet: ClipShapeOptionSet = .all,
         padding: EdgeInsets = .zero
     ) {
         self.type = type
         self.clipShapeStyle = clipShapeStyle
+        self.clipShapeOptionSet = clipShapeOptionSet
         self.padding = padding
     }
     
@@ -52,29 +55,34 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                !configuration.progress.isCircularGridValues,
                !configuration.type.isScrollable {
                 CompactSliderStyleProgressView()
+                    .clipShapeStyleIf(
+                        !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.progress),
+                        style: clipShapeStyle
+                    )
             }
             
             DefaultCompactSliderStyleScaleView(configuration: configuration)
+                .clipShapeStyleIf(
+                    !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.scale),
+                    style: clipShapeStyle
+                )
+            
             DefaultCompactSliderStyleHandleView(configuration: configuration)
         }
         .padding(padding)
-        .background(CompactSliderStyleBackgroundView(padding: padding))
+        .background(
+            CompactSliderStyleBackgroundView(padding: padding)
+                .clipShapeStyleIf(
+                    !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.background),
+                    style: clipShapeStyle
+                )
+        )
         .compositingGroup()
-        .contentShape(Rectangle())
-        .clipShapeStyle(clipShapeStyle)
+        .contentShape(clipShapeStyle)
+        .clipShapeStyleIf(clipShapeOptionSet.contains(.all), style: clipShapeStyle)
         .environment(\.compactSliderStyleConfiguration, configuration)
         #if os(macOS)
         .saturation(appearsActive ? 1 : 0)
         #endif
-    }
-}
-
-// MARK: - Clip Shape Style
-
-extension DefaultCompactSliderStyle {
-    func withClipShapeStyle(_ clipShapeStyle: ClipShapeStyle) -> Self {
-        var style = self
-        style.clipShapeStyle = clipShapeStyle
-        return style
     }
 }

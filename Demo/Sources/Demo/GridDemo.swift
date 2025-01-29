@@ -45,6 +45,7 @@ struct CompactSliderGridDemo: View {
         .padding()
         .accentColor(.purple)
         .environment(\.layoutDirection, layoutDirection)
+        .compactSliderOptionsByAdding(.scrollWheel)
     }
     
     @ViewBuilder

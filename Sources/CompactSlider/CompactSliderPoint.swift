@@ -7,6 +7,9 @@ import Foundation
 import CoreGraphics
 
 /// A point value protocol for the grid slider. It's a pair of x and y values.
+///
+/// In most cases you'll use `CGPoint` as a point value.
+/// - Note: `CGPoint` is already conforms to this protocol.
 public protocol CompactSliderPoint: Equatable, Comparable {
     associatedtype Value: BinaryFloatingPoint
     var x: Value { get }
