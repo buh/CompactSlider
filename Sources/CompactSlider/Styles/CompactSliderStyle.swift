@@ -8,14 +8,24 @@ import SwiftUI
 /// A type that applies standard interaction behavior and a custom appearance to all sliders within a view hierarchy.
 ///
 /// To configure the current slider style for a view hierarchy, use the `compactSliderStyle(_:)` modifier.
+///
+/// The following example sets the slider style for a view hierarchy to a custom slider style:
+/// ```swift
+/// CompactSlider(value: $value)
+///    .compactSliderStyle(CustomCompactSliderStyle())
+/// ```
+///
+/// - SeeAlso: `DefaultCompactSliderStyle`.
 public protocol CompactSliderStyle {
     associatedtype Body: View
     typealias Configuration = CompactSliderStyleConfiguration
     
-    /// A slider type in which the slider will indicate the selected value.
+    /// The type of slider this style applies to.
     var type: CompactSliderType { get }
+    /// The padding of the slider.
     var padding: EdgeInsets { get }
     
+    /// Creates a view representing the body of a slider.
     func makeBody(configuration: Self.Configuration) -> Self.Body
 }
 

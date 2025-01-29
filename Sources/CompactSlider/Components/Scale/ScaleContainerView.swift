@@ -12,7 +12,7 @@ struct ScaleContainerView<V: View>: View {
     let scaleView: (CompactSliderStyleConfiguration) -> V
     
     init(
-        visibility: CompactSliderVisibility = .handleDefault,
+        visibility: CompactSliderVisibility = .default,
         scaleView: @escaping (CompactSliderStyleConfiguration) -> V
     ) {
         self.visibility = visibility

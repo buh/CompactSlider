@@ -16,6 +16,8 @@ public enum VerticalAlignment {
 }
 
 /// A slider type in which the slider will indicate the selected value.
+/// It can be horizontal, vertical, scrollable, grid or circular grid.
+/// The scrollable type can be horizontal or vertical.
 public enum CompactSliderType: Equatable {
     case horizontal(HorizontalAlignment)
     case vertical(VerticalAlignment)
@@ -24,8 +26,10 @@ public enum CompactSliderType: Equatable {
     case grid
     case circularGrid
     
+    /// Returns true if the slider type is linear (horizontal or vertical). The scrollable type is linear too.
     public var isLinear: Bool { isHorizontal || isVertical }
     
+    /// Returns true if the slider type is horizontal. The scrollable type could be horizontal as well.
     public var isHorizontal: Bool {
         switch self {
         case .horizontal, .scrollableHorizontal: return true
@@ -33,6 +37,7 @@ public enum CompactSliderType: Equatable {
         }
     }
     
+    /// Returns true if the slider type is vertical. The scrollable type could be vertical as well.
     public var isVertical: Bool {
         switch self {
         case .vertical, .scrollableVertical: return true
@@ -40,6 +45,7 @@ public enum CompactSliderType: Equatable {
         }
     }
     
+    /// Returns true if the slider type is horizontal or vertical and the alignment is center.
     public var isCenter: Bool {
         switch self {
         case .horizontal(let alignment): return alignment == .center
@@ -48,6 +54,7 @@ public enum CompactSliderType: Equatable {
         }
     }
     
+    /// Returns the horizontal alignment if the slider type is horizontal.
     public var horizontalAlignment: HorizontalAlignment? {
         if case .horizontal(let alignment) = self {
             return alignment
@@ -56,6 +63,7 @@ public enum CompactSliderType: Equatable {
         return nil
     }
     
+    /// Returns the vertical alignment if the slider type is vertical.
     public var verticalAlignment: VerticalAlignment? {
         if case .vertical(let alignment) = self {
             return alignment
@@ -64,6 +72,7 @@ public enum CompactSliderType: Equatable {
         return nil
     }
     
+    /// Returns true if the slider type is scrollable (horizontal or vertical).
     public var isScrollable: Bool {
         switch self {
         case .scrollableHorizontal, .scrollableVertical: return true
@@ -71,6 +80,7 @@ public enum CompactSliderType: Equatable {
         }
     }
     
+    /// Returns true if the slider type is grid.
     public var isGrid: Bool {
         switch self {
         case .grid: return true
@@ -78,6 +88,7 @@ public enum CompactSliderType: Equatable {
         }
     }
     
+    /// Returns true if the slider type is circular grid.
     public var isCircularGrid: Bool {
         switch self {
         case .circularGrid: return true

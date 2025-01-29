@@ -8,7 +8,7 @@ public enum CompactSliderVisibility {
     case focused, always, hidden
     
     /// Default the handle visibility.
-    public static var handleDefault: CompactSliderVisibility {
+    public static var `default`: CompactSliderVisibility {
         #if os(macOS)
         .focused
         #else

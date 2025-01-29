@@ -51,7 +51,7 @@ public struct HandleStyle: Equatable {
 
 extension HandleStyle {
     public static func rectangle(
-        visibility: CompactSliderVisibility = .handleDefault,
+        visibility: CompactSliderVisibility = .default,
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
@@ -69,7 +69,7 @@ extension HandleStyle {
     }
     
     public static func roundedRectangle(
-        visibility: CompactSliderVisibility = .handleDefault,
+        visibility: CompactSliderVisibility = .default,
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
@@ -88,7 +88,7 @@ extension HandleStyle {
     }
     
     public static func circle(
-        visibility: CompactSliderVisibility = .handleDefault,
+        visibility: CompactSliderVisibility = .default,
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         radius: CGFloat = Defaults.circleHandleRadius,
@@ -106,7 +106,7 @@ extension HandleStyle {
     }
     
     public static func capsule(
-        visibility: CompactSliderVisibility = .handleDefault,
+        visibility: CompactSliderVisibility = .default,
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         width: CGFloat = Defaults.handleWidth,
@@ -125,7 +125,7 @@ extension HandleStyle {
     
     public static func symbol(
         _ name: String,
-        visibility: CompactSliderVisibility = .handleDefault,
+        visibility: CompactSliderVisibility = .default,
         progressAlignment: HandleProgressAlignment = .center,
         color: Color = .accentColor,
         width: CGFloat = 20
@@ -144,7 +144,7 @@ extension HandleStyle {
     static func `default`() -> HandleStyle {
         HandleStyle(
             type: .default,
-            visibility: .handleDefault,
+            visibility: .default,
             progressAlignment: .center,
             color: .accentColor,
             width: 0,

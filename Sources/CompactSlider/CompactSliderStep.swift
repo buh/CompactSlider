@@ -5,6 +5,22 @@
 
 import SwiftUI
 
+/// A step for a compact slider. It can be linear, point or polar point.
+///
+/// The `linear` step is used for a linear value for horizontal or vertical (scrollable) sliders.
+/// The `point` step is used for a grid slider.
+/// The `polarPoint` step is used for a circular grid.
+///
+/// The `linearStep` is used for the step value.
+/// The `linearProgressStep` is used for the progress step for a linear step.
+/// The `linearSteps` is used for the number of steps for a linear step.
+///
+/// The `pointStep` is used for the step value for a point.
+/// The `pointProgressStep` is used for the progress step for a point step.
+/// The `pointSteps` is used for the number of steps for a point step.
+///
+/// The `polarPointProgressStep` is used for the progress step for a polar point step.
+/// The `polarPointSteps` is used for the number of steps for a polar point step.
 public enum CompactSliderStep: Equatable {
     public struct PointValue: Equatable {
         public let x: Double

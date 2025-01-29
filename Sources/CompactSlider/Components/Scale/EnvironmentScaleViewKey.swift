@@ -22,7 +22,7 @@ extension EnvironmentValues {
 
 extension View {
     public func compactSliderScale(
-        visibility: CompactSliderVisibility = .handleDefault,
+        visibility: CompactSliderVisibility = .default,
         alignment: Alignment = .center,
         _ scaleShapeStyles: ScaleShapeStyle...
     ) -> some View {
@@ -44,7 +44,7 @@ extension View {
     }
     
     public func compactSliderScale<ScaleView: View>(
-        visibility: CompactSliderVisibility = .handleDefault,
+        visibility: CompactSliderVisibility = .default,
         @ViewBuilder scaleView: @escaping (_ configuration: CompactSliderStyleConfiguration) -> ScaleView
     ) -> some View {
         environment(
