@@ -88,7 +88,7 @@ struct CompactSliderDemo: View {
                     VStack(spacing: 16) {
                         Text("Advanced")
                         HStack {
-                            verticalSliders()
+                            customVerticalSliders()
                                 .frame(maxWidth: defaultSize)
                         }
                     }
@@ -161,18 +161,15 @@ struct CompactSliderDemo: View {
     private func capsuleHorizontalSliders() -> some View {
         Group {
             horizontalSlidersSet()
-                .compactSliderHandleStyle(.circle(visibility: .always, radius: 10))
-            Divider()
-            CompactSlider(value: $progress)
-                .compactSliderStyle(default: .scrollable())
-                .compactSliderHandleStyle(.circle(visibility: .always, radius: 10))
-                .compactSliderOptionsByAdding(.withoutBackground)
-            Divider()
+                .compactSliderHandleStyle(.circle(visibility: .always, radius: defaultSize / 2))
             horizontalSlidersSet()
-                .compactSliderHandleStyle(.circle(visibility: .always, progressAlignment: .inside, radius: 10))
-            Divider()
+                .compactSliderHandleStyle(
+                    .circle(visibility: .always, progressAlignment: .inside, radius: defaultSize / 2)
+                )
             horizontalSlidersSet()
-                .compactSliderHandleStyle(.circle(visibility: .always, progressAlignment: .outside, radius: 10))
+                .compactSliderHandleStyle(
+                    .circle(visibility: .always, progressAlignment: .outside, radius: defaultSize / 2)
+                )
         }
         .compactSliderProgress { _ in
             Capsule()
@@ -191,19 +188,24 @@ struct CompactSliderDemo: View {
             Capsule()
                 .fill(Defaults.backgroundColor)
         }
+        .frame(height: defaultSize)
         .accentColor(.yellow.opacity(0.5))
         
         Divider()
         
         Group {
             horizontalSlidersSet()
-                .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .center, width: 20))
-            Divider()
+                .compactSliderHandleStyle(
+                    .rectangle(visibility: .always, progressAlignment: .center, width: defaultSize)
+                )
             horizontalSlidersSet()
-                .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: 20))
-            Divider()
+                .compactSliderHandleStyle(
+                    .rectangle(visibility: .always, progressAlignment: .inside, width: defaultSize)
+                )
             horizontalSlidersSet()
-                .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .outside, width: 20))
+                .compactSliderHandleStyle(
+                    .rectangle(visibility: .always, progressAlignment: .outside, width: defaultSize)
+                )
         }
         .compactSliderProgress { _ in
             Rectangle()
@@ -218,6 +220,7 @@ struct CompactSliderDemo: View {
                     )
                 )
         }
+        .frame(height: defaultSize)
         .accentColor(.yellow.opacity(0.5))
     }
     
@@ -234,7 +237,9 @@ struct CompactSliderDemo: View {
         Group {
             CompactSlider(from: $fromProgress, to: $toProgress)
                 .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
-                .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: 20))
+                .compactSliderHandleStyle(
+                    .rectangle(visibility: .always, progressAlignment: .inside, width: defaultSize)
+                )
                 .compactSliderProgress { _ in
                     Capsule()
                         .fill(
@@ -326,7 +331,7 @@ struct CompactSliderDemo: View {
         
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .horizontal(clipShapeStyle: .none))
-            .compactSliderHandleStyle(.symbol("heart.fill", visibility: .always, width: 20))
+            .compactSliderHandleStyle(.symbol("heart.fill", visibility: .always, width: defaultSize))
             .compactSliderProgress { configuration in
                 Capsule()
                     .fill(Color.pink.opacity(0.5))
@@ -363,18 +368,15 @@ struct CompactSliderDemo: View {
     private func capsuleVerticalSliders() -> some View {
         Group {
             verticalSlidersSet()
-                .compactSliderHandleStyle(.circle(visibility: .always, radius: 10))
-            Divider()
-            CompactSlider(value: $progress)
-                .compactSliderStyle(default: .scrollable(.vertical))
-                .compactSliderHandleStyle(.circle(visibility: .always, radius: 10))
-                .compactSliderOptionsByAdding(.withoutBackground)
-            Divider()
+                .compactSliderHandleStyle(.circle(visibility: .always, radius: defaultSize / 2))
             verticalSlidersSet()
-                .compactSliderHandleStyle(.circle(visibility: .always, progressAlignment: .inside, radius: 10))
-            Divider()
+                .compactSliderHandleStyle(
+                    .circle(visibility: .always, progressAlignment: .inside, radius: defaultSize / 2)
+                )
             verticalSlidersSet()
-                .compactSliderHandleStyle(.circle(visibility: .always, progressAlignment: .outside, radius: 10))
+                .compactSliderHandleStyle(
+                    .circle(visibility: .always, progressAlignment: .outside, radius: defaultSize / 2)
+                )
         }
         .compactSliderProgress { _ in
             Capsule()
@@ -392,19 +394,24 @@ struct CompactSliderDemo: View {
         .compactSliderBackground { _, _ in
             Capsule().fill(Defaults.backgroundColor)
         }
+        .frame(width: defaultSize)
         .accentColor(.yellow.opacity(0.5))
         
         Divider()
         
         Group {
             verticalSlidersSet()
-                .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .center, width: 20))
-            Divider()
+                .compactSliderHandleStyle(
+                    .rectangle(visibility: .always, progressAlignment: .center, width: defaultSize)
+                )
             verticalSlidersSet()
-                .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: 20))
-            Divider()
+                .compactSliderHandleStyle(
+                    .rectangle(visibility: .always, progressAlignment: .inside, width: defaultSize)
+                )
             verticalSlidersSet()
-                .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .outside, width: 20))
+                .compactSliderHandleStyle(
+                    .rectangle(visibility: .always, progressAlignment: .outside, width: defaultSize)
+                )
         }
         .compactSliderProgress { _ in
             Rectangle()
@@ -419,6 +426,7 @@ struct CompactSliderDemo: View {
                     )
                 )
         }
+        .frame(width: defaultSize)
         .accentColor(.yellow.opacity(0.5))
     }
     
@@ -431,7 +439,7 @@ struct CompactSliderDemo: View {
     }
     
     @ViewBuilder
-    private func verticalSliders() -> some View {
+    private func customVerticalSliders() -> some View {
         CompactSlider(value: $progress)
             .compactSliderStyle(default: .scrollable(.vertical, clipShapeStyle: .rectangle))
             .compactSliderOptionsByAdding(.loopValues)
@@ -443,7 +451,7 @@ struct CompactSliderDemo: View {
         
         CompactSlider(from: $fromProgress, to: $toProgress)
             .compactSliderStyle(default: .vertical(clipShapeStyle: .none))
-            .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: 30))
+            .compactSliderHandleStyle(.rectangle(visibility: .always, progressAlignment: .inside, width: defaultSize))
             .compactSliderProgress { _ in
                 Capsule()
                     .fill(
