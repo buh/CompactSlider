@@ -111,9 +111,26 @@ extension View {
     
     /// Adds slider options to the existing ones.
     public func compactSliderOptionsByAdding(_ options: CompactSliderOption...) -> some View {
-        environment(
-            \.compactSliderOptions,
-             CompactSliderOptionKey.defaultValue.union(options)
-        )
+        modifier(CompactSliderOptionsModifier(addOptions: options))
+    }
+    
+    /// Removes slider options from the existing ones.
+    public func compactSliderOptionsByRemoving(_ options: CompactSliderOption...) -> some View {
+        modifier(CompactSliderOptionsModifier(removeOptions: options))
+    }
+}
+
+struct CompactSliderOptionsModifier: ViewModifier {
+    @Environment(\.compactSliderOptions) var compactSliderOptions
+    
+    var addOptions: [CompactSliderOption] = []
+    var removeOptions: [CompactSliderOption] = []
+    
+    func body(content: Content) -> some View {
+        if addOptions.isEmpty {
+            content.environment(\.compactSliderOptions, compactSliderOptions.subtracting(removeOptions))
+        } else {
+            content.environment(\.compactSliderOptions, compactSliderOptions.union(addOptions))
+        }
     }
 }
