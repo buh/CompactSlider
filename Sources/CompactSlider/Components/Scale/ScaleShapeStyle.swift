@@ -114,7 +114,7 @@ extension ScaleShapeStyle {
         maxRadius: CGFloat = 1
     ) -> ScaleShapeStyle {
         circular(
-            step: .init(degrees: 360 / count > 0 ? Double(count) : 8),
+            step: .init(degrees: 360 / (count > 0 ? Double(count) : 8)),
             color: color,
             strokeStyle: strokeStyle,
             minRadius: minRadius,

@@ -5,6 +5,13 @@
 
 import SwiftUI
 
+/// A view for the scale.
+///
+/// The scale can be linear, circular or with labels. Labels can be useful to show the value for a specific percentage.
+/// ```
+///       50%
+/// |------•------|
+/// ```
 public struct ScaleView: View {
     @Environment(\.compactSliderOptions) var compactSliderOptions
     @Environment(\.handleStyle) var handleStyle
@@ -103,10 +110,30 @@ public struct ScaleView: View {
 }
 
 #Preview {
-    VStack {
+    VStack(spacing: 16) {
+        ScaleView(
+            configuration: .preview(size: .init(width: 200, height: 50)),
+            shapeStyle: .labels(alignment: .bottom, labels: [0: "0", 0.5: "50%", 1: "100%"])
+        )
+        .frame(width: 200, height: 50)
+        
         ScaleView(configuration: .preview(), shapeStyle: .linear(count: 20, lineLength: 20))
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        
+        HStack {
+            ScaleView(configuration: .preview(), shapeStyle: .linear(axis: .vertical, count: 20, lineLength: 20))
+            ScaleView(configuration: .preview(), shapeStyle: .circular(step: .degrees(45)))
+            ScaleView(configuration: .preview(), shapeStyle: .circular(step: .degrees(45), minRadius: 0.5))
+        }
+        .frame(maxHeight: 150)
+        
+        ZStack {
+            ScaleView(configuration: .preview(), shapeStyle: .circular(count: 4, minRadius: 0.2, maxRadius: 0.4))
+            ScaleView(configuration: .preview(), shapeStyle: .circular(count: 8, minRadius: 0.5, maxRadius: 0.7))
+            ScaleView(configuration: .preview(), shapeStyle: .circular(count: 16, minRadius: 0.8))
+        }
+        .frame(maxHeight: 150)
     }
+    .padding()
     #if os(macOS)
     .frame(width: 400, height: 800, alignment: .top)
     #endif
