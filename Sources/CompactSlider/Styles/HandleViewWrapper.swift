@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct DefaultCompactSliderStyleHandleView: View {
+struct HandleViewWrapper: View {
     @Environment(\.handleStyle) var environmentHandleStyle
     var handleStyle: HandleStyle { environmentHandleStyle.byType(configuration.type) }
     let configuration: CompactSliderStyleConfiguration

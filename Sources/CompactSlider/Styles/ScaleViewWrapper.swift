@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-struct DefaultCompactSliderStyleScaleView: View {
+struct ScaleViewWrapper: View {
     @Environment(\.scaleView) var scaleView
     let configuration: CompactSliderStyleConfiguration
     

@@ -54,20 +54,20 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                !configuration.progress.isGridValues,
                !configuration.progress.isCircularGridValues,
                !configuration.type.isScrollable {
-                CompactSliderStyleProgressView()
+                ProgressViewWrapper()
                     .clipShapeStyleIf(
                         !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.progress),
                         style: clipShapeStyle
                     )
             }
             
-            DefaultCompactSliderStyleScaleView(configuration: configuration)
+            ScaleViewWrapper(configuration: configuration)
                 .clipShapeStyleIf(
                     !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.scale),
                     style: clipShapeStyle
                 )
             
-            DefaultCompactSliderStyleHandleView(configuration: configuration)
+            HandleViewWrapper(configuration: configuration)
         }
         .padding(padding)
         .background(

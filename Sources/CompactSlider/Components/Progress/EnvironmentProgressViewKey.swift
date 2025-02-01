@@ -5,16 +5,6 @@
 
 import SwiftUI
 
-public struct CompactSliderStyleProgressView: View {
-    @Environment(\.compactSliderProgressView) var progressView
-    
-    public var body: some View {
-        progressView
-    }
-}
-
-// MARK: - Environment
-
 struct ProgressViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
         ProgressContainerView { configuration in
