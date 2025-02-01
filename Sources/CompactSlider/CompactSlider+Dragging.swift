@@ -259,8 +259,8 @@ extension CompactSlider {
     ) -> CGPoint {
         guard type != .grid else {
             return CGPoint(
-                x: progressLocation(progress.progresses[0], size: size, type: .scrollableHorizontal).x,
-                y: progressLocation(1 - progress.progresses[1], size: size, type: .scrollableVertical).y
+                x: progressLocation(progress.pointProgress.x, size: size, type: .scrollableHorizontal).x,
+                y: progressLocation(1 - progress.pointProgress.y, size: size, type: .scrollableVertical).y
             )
         }
         

@@ -277,8 +277,8 @@ extension CompactSliderStyleConfiguration {
             return CGPoint(x: 0, y: (size.height - handleWidth) / 2)
         case .grid:
             return CGPoint(
-                x: (size.width - handleWidth) * progress.progresses[0],
-                y: (size.height - handleWidth) * progress.progresses[1]
+                x: (size.width - handleWidth) * progress.pointProgress.x,
+                y: (size.height - handleWidth) * progress.pointProgress.y
             )
         case .circularGrid:
             let location = progress.polarPoint.toCartesian(size: size)

@@ -5,18 +5,32 @@
 
 import Foundation
 
-/// Progress values.
+/// A progress of a slider. Progress contains the current percentage of the progress
+/// and provides a value from the progress.
+///
+/// Progress can be a single value, a range of values, or a grid, or a circular grid.
+/// The progress is a value between 0 and 1.
 public struct Progress: Equatable {
     /// All progress values.
     public internal(set) var progresses: [Double]
+    
     /// The progress represents the position of the selected value within bounds, mapped into 0...1.
+    ///
+    /// Use case: a single value.
     public var progress: Double { progresses.first ?? 0 }
+    
     /// The progress represents the position of the selected value within bounds, mapped into 0...1.
     /// This progress should be used to track a single value or a lower value for a range of values.
+    ///
+    /// Use case: a range of values. The lower value.
     public var lowerProgress: Double { progresses.first ?? 0 }
+    
     /// The progress represents the position of the selected value within bounds, mapped into 0...1.
     /// This progress should only be used to track the upper value for the range of values.
+    ///
+    /// Use case: a range of values. The upper value.
     public var upperProgress: Double { isRangeValues ? progresses.last ?? 0 : 0 }
+    
     /// True if the slider uses a single value.
     public var isSingularValue: Bool { progresses.count == 1 }
     /// True if the slider uses a range of values.
@@ -28,6 +42,16 @@ public struct Progress: Equatable {
     /// True if the slider uses circular grid values.
     public let isCircularGridValues: Bool
     
+    /// The point progress. It's used for a grid slider.
+    public var pointProgress: CompactSliderPointValue<Double> {
+        guard progresses.count == 2 else {
+            return .zero
+        }
+        
+        return .init(x: progresses[0], y: progresses[1])
+    }
+    
+    /// The polar point of the progress. It's used for a circular grid slider.
     public var polarPoint: CompactSliderPolarPoint {
         guard progresses.count == 2 else {
             return .zero
@@ -38,7 +62,7 @@ public struct Progress: Equatable {
             normalizedRadius: progresses[1]
         )
     }
-
+    
     init(
         _ progresses: [Double] = [],
         isMultipleValues: Bool = false,

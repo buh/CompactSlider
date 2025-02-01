@@ -21,6 +21,12 @@ extension EnvironmentValues {
 // MARK: - View
 
 extension View {
+    /// Compose a scale view for the compact slider, using a set of scale shape styles.
+    ///
+    /// - Parameters:
+    ///  - visibility: The visibility of the scale view.
+    ///  - alignment: The alignment of the scale view.
+    ///  - scaleShapeStyles: The list of scale shape styles.
     public func compactSliderScale(
         visibility: CompactSliderVisibility = .default,
         alignment: Alignment = .center,
@@ -43,6 +49,11 @@ extension View {
         }
     }
     
+    /// Sets a custom scale view for the slider.
+    ///
+    /// - Parameters:
+    ///  - visibility: The visibility of the scale view.
+    ///  - scaleView: The custom scale view.
     public func compactSliderScale<ScaleView: View>(
         visibility: CompactSliderVisibility = .default,
         @ViewBuilder scaleView: @escaping (_ configuration: CompactSliderStyleConfiguration) -> ScaleView

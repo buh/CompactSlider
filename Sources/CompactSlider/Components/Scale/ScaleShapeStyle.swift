@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+/// A style for drawing a scale.
 public struct ScaleShapeStyle: Hashable {
     let color: Color
     let style: Style
@@ -78,6 +79,19 @@ extension StrokeStyle: @retroactive Hashable {
 // MARK: - Constructors
 
 extension ScaleShapeStyle {
+    /// Creates a linear scale shape style.
+    ///
+    /// - Parameters:
+    ///  - axis: an axis of the scale.
+    ///  - count: a count of the scale lines.
+    ///  - color: a color of the scale lines.
+    ///  - strokeStyle: a stroke style of the scale lines.
+    ///  - lineLength: a length of the scale lines.
+    ///  - skip: a `LinearScaleShape.Skip` type for skipping each or some scale lines.
+    ///  - skipFirst: a number of the first skipped scale lines.
+    ///  - skipLast: a number of the last skipped scale lines.
+    ///  - skipCurrentValue: a flag to skip a scale line for the current value.
+    ///  - startFromCenter: a flag to start drawing scale lines from the center.
     public static func linear(
         axis: Axis = .horizontal,
         count: Int,
@@ -106,6 +120,14 @@ extension ScaleShapeStyle {
         )
     }
     
+    /// Creates a circular scale shape style.
+    ///
+    /// - Parameters:
+    ///   - count: a count of the scale lines.
+    ///   - color: a color of the scale lines.
+    ///   - strokeStyle: a stroke style of the scale lines.
+    ///   - minRadius: a minimum radius of the scale lines. The value is normalized from 0 to 1.
+    ///   - maxRadius: a maximum radius of the scale lines. The value is normalized from 0 to 1.
     public static func circular(
         count: Int,
         color: Color = Defaults.scaleLineColor,
@@ -122,6 +144,14 @@ extension ScaleShapeStyle {
         )
     }
     
+    /// Creates a circular scale shape style.
+    ///
+    /// - Parameters:
+    ///  - step: an angle step between the scale lines.
+    ///  - color: a color of the scale lines.
+    ///  - strokeStyle: a stroke style of the scale lines.
+    ///  - minRadius: a minimum radius of the scale lines. The value is normalized from 0 to 1.
+    ///  - maxRadius: a maximum radius of the scale lines. The value is normalized from 0 to 1.
     public static func circular(
         step: Angle,
         color: Color = Defaults.scaleLineColor,
@@ -140,6 +170,15 @@ extension ScaleShapeStyle {
         )
     }
     
+    /// Creates a scale shape style with labels.
+    ///
+    /// - Parameters:
+    ///  - visibility: a visibility style of the scale labels.
+    ///  - axis: an axis of the scale.
+    ///  - alignment: an alignment of the scale labels.
+    ///  - color: a color of the scale labels.
+    ///  - offset: an offset of the scale labels.
+    ///  - labels: a dictionary of the scale labels. The key is a percentage of the scale and the value is a label.
     public static func labels(
         visibility: ScaleLabelsVisibility = .always,
         axis: Axis = .horizontal,
