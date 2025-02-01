@@ -3,12 +3,15 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
+#if DEBUG
 import SwiftUI
 
-public struct GaugeView: View {
+// Note: Gauge Type is potentially a good candidate for a new slider type.
+
+struct GaugeView: View {
     let gaugeStyle: GaugeStyle
     
-    public var body: some View {
+    var body: some View {
         Circle()
             .trim(
                 from: gaugeStyle.fromAngle.degrees / 360,
@@ -42,3 +45,4 @@ public struct GaugeView: View {
     .frame(width: 100, height: 100)
     .padding()
 }
+#endif

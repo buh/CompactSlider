@@ -3,15 +3,18 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
+#if DEBUG
 import SwiftUI
 
-public struct GaugeStyle {
-    public let fromAngle: Angle
-    public let toAngle: Angle
-    public let fillStyle: AnyShapeStyle
-    public let strokeStyle: StrokeStyle
+// Note: Gauge Type is potentially a good candidate for a new slider type.
+
+struct GaugeStyle {
+    let fromAngle: Angle
+    let toAngle: Angle
+    let fillStyle: AnyShapeStyle
+    let strokeStyle: StrokeStyle
         
-    public init<Fill: ShapeStyle>(
+    init<Fill: ShapeStyle>(
         fromAngle: Angle = .degrees(50),
         toAngle: Angle = .degrees(50),
         fillStyle: Fill,
@@ -34,7 +37,7 @@ public struct GaugeStyle {
 }
 
 extension GaugeStyle {
-    public init<Fill: ShapeStyle>(
+    init<Fill: ShapeStyle>(
         fromAngle: Angle = .degrees(50),
         toAngle: Angle = .degrees(-50),
         fillStyle: Fill,
@@ -48,7 +51,7 @@ extension GaugeStyle {
         )
     }
     
-    public init(
+    init(
         fromAngle: Angle = .degrees(50),
         toAngle: Angle = .degrees(-50),
         color: Color = Defaults.backgroundColor,
@@ -62,3 +65,4 @@ extension GaugeStyle {
         )
     }
 }
+#endif
