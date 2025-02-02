@@ -13,37 +13,43 @@ struct DefaultBackgroundView: View {
     
     var body: some View {
         if configuration.type.isGrid {
-            #if os(watchOS)
-            let backgroundColor: Color? = Color(white: 0.05)
-            #else
-            let backgroundColor: Color? = nil
-            #endif
-            
-            GridBackgroundView(
-                configuration: configuration,
-                padding: padding,
-                backgroundColor: backgroundColor
-            )
-            .saturation(configuration.focusState.isFocused ? 1 : 0)
-            .overlay(
-                RoundedRectangle(cornerRadius: Defaults.gridCornerRadius)
-                    #if os(watchOS)
-                    .stroke(Color.white.opacity(0.08))
-                    #else
-                    .stroke(
-                        colorScheme == .dark
+            gridBackgroundView
+                .saturation(configuration.focusState.isFocused ? 1 : 0.5)
+                .overlay(
+                    RoundedRectangle(cornerRadius: Defaults.gridCornerRadius)
+                        #if os(watchOS)
+                        .stroke(Color.white.opacity(0.08))
+                        #else
+                        .stroke(
+                            colorScheme == .dark
                             ? Color.white.opacity(0.03)
                             : .black.opacity(0.03),
-                        lineWidth: 1
-                    )
-                    #endif
-                    .padding(1)
-            )
+                            lineWidth: 1
+                        )
+                        #endif
+                        .padding(1)
+                )
         } else if configuration.type.isCircularGrid {
             DefaultCircularGridBackgroundView(configuration: configuration)
         } else {
             Defaults.backgroundColor
         }
+    }
+    
+    private var gridBackgroundView: some View {
+        #if os(watchOS)
+        GridBackgroundView(
+            configuration: configuration,
+            padding: padding,
+            backgroundColor: Color(white: 0.05)
+        )
+        #else
+        GridBackgroundView(
+            configuration: configuration,
+            padding: padding,
+            backgroundFill: .ultraThinMaterial
+        )
+        #endif
     }
 }
 

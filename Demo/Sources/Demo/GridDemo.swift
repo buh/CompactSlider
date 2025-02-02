@@ -85,7 +85,8 @@ struct CompactSliderGridDemo: View {
             GridBackgroundView(
                 configuration: $0,
                 padding: $1,
-                gridSize: 5, invertedGrid: false,
+                gridSize: 5,
+                invertedGrid: false,
                 gridFill: Color.accentColor.opacity(0.5)
             )
             .overlay(
