@@ -71,7 +71,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         }
         .padding(padding)
         .background(
-            CompactSliderStyleBackgroundView(padding: padding)
+            BackgroundViewWrapper(padding: padding)
                 .clipShapeStyleIf(
                     !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.background),
                     style: clipShapeStyle

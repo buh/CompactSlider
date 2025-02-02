@@ -87,7 +87,15 @@ extension Defaults {
     /// The default focused progress color.
     public static let focusedProgressColor: Color = labelColor.opacity(0.125)
     /// The default scale line color.
+    #if os(visionOS)
+    public static let scaleLineColor: Color = labelColor
+    #else
     public static let scaleLineColor: Color = labelColor.opacity(0.4)
+    #endif
     /// The default secondary scale line color.
+    #if os(visionOS)
+    public static let secondaryScaleLineColor: Color = labelColor.opacity(0.75)
+    #else
     public static let secondaryScaleLineColor: Color = labelColor.opacity(0.2)
+    #endif
 }

@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
-#if os(macOS) || os(iOS) || targetEnvironment(macCatalyst)
+#if os(macOS) || os(iOS) || os(visionOS) || targetEnvironment(macCatalyst)
 import SwiftUI
 import CompactSlider
 
@@ -54,6 +54,12 @@ struct CompactSliderCircularGridDemo: View {
                 step: .init(angle: .degrees(5), normalizedRadius: 0.05)
             )
             .frame(width: 100, height: 100)
+            .background(
+                HStack(spacing: 0) {
+                    Rectangle().fill(Color.blue)
+                    Rectangle().fill(Color.purple)
+                }
+            )
         }
         
         Divider()

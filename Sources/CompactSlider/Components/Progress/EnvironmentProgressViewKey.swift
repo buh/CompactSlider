@@ -18,7 +18,7 @@ struct ProgressViewKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    public var compactSliderProgressView: AnyView {
+    var compactSliderProgressView: AnyView {
         get { self[ProgressViewKey.self] }
         set { self[ProgressViewKey.self] = newValue }
     }
@@ -27,6 +27,10 @@ extension EnvironmentValues {
 // MARK: - View
 
 extension View {
+    /// Sets a custom progress view for the slider.
+    ///
+    /// - Parameters:
+    ///  - progressView: a custom progress view.
     public func compactSliderProgress<V: View>(
         @ViewBuilder progressView: @escaping (_ configuration: CompactSliderStyleConfiguration) -> V
     ) -> some View {

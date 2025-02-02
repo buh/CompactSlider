@@ -97,6 +97,9 @@ struct DefaultCircularGridBackgroundView: View {
                     endRadius: configuration.size.minValue
                 )
             )
+            .background(
+                Circle().fillUltraThinMaterial()
+            )
             .overlay(
                 CircularScaleShape(
                     step: .degrees(

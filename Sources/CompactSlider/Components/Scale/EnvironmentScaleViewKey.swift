@@ -51,6 +51,8 @@ extension View {
     
     /// Sets a custom scale view for the slider.
     ///
+    /// - Note: The scale will be duplicated if the `loopValues` option is enabled.
+    /// 
     /// - Parameters:
     ///  - visibility: The visibility of the scale view.
     ///  - scaleView: The custom scale view.

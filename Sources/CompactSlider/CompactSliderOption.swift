@@ -34,7 +34,7 @@ extension Set<CompactSliderOption> {
     /// - For iOS: minimum drag distance 1 with touch delay and enabled haptic feedback.
     /// - For macOS: minimum drag distance 0 with enabled haptic feedback
     public static var `default`: Self {
-        #if os(macOS)
+        #if os(macOS) || os(visionOS)
         [.enabledHapticFeedback, .dragGestureMinimumDistance(0)]
         #else
         [.enabledHapticFeedback, .dragGestureMinimumDistance(1), .delayedGesture]

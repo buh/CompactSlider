@@ -5,6 +5,9 @@
 
 import SwiftUI
 
+/// A simple handle view. It can be a rectangle, rounded rectangle, circle, capsule, or a system symbol.
+///
+/// - SeeAlso: `HandleStyle`.
 public struct HandleView: View {
     let style: HandleStyle
     

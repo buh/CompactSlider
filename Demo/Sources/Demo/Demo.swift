@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
-#if os(macOS) || os(iOS) || targetEnvironment(macCatalyst)
+#if os(macOS) || os(iOS) || os(visionOS) || targetEnvironment(macCatalyst)
 import SwiftUI
 import CompactSlider
 

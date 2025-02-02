@@ -17,7 +17,7 @@ enum ScreenInfo {
     #if os(watchOS)
     static let scale = WKInterfaceDevice.current().screenScale
     #else
-        #if canImport(UIKit)
+        #if canImport(UIKit) && !os(visionOS)
         static let scale = UIScreen.main.scale
         #else
         static let scale: Double = 2

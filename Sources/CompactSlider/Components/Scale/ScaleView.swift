@@ -12,6 +12,7 @@ import SwiftUI
 ///       50%
 /// |------•------|
 /// ```
+/// - Note: The scale will be duplicated if the `loopValues` option is enabled.
 public struct ScaleView: View {
     @Environment(\.compactSliderOptions) var compactSliderOptions
     @Environment(\.handleStyle) var handleStyle

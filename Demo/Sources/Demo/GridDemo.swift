@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
-#if os(macOS) || os(iOS) || targetEnvironment(macCatalyst)
+#if os(macOS) || os(iOS) || os(visionOS) || targetEnvironment(macCatalyst)
 import SwiftUI
 import CompactSlider
 
@@ -64,6 +64,13 @@ struct CompactSliderGridDemo: View {
                 step: CGPoint(x: 10, y: 10)
             )
             .frame(width: 100, height: 100)
+            .padding()
+            .background(
+                HStack(spacing: 0) {
+                    Rectangle().fill(Color.blue)
+                    Rectangle().fill(Color.purple)
+                }
+            )
         }
         
         Divider()
@@ -102,7 +109,7 @@ struct CompactSliderGridDemo: View {
             step: CGPoint(x: 10, y: 10)
         )
         .compactSliderBackground { configuration, padding in
-            if #available(macOS 15.0, iOS 18, *) {
+            if #available(macOS 15.0, iOS 18, visionOS 2.0, *) {
                 GridBackgroundView(
                     configuration: configuration,
                     padding: padding,

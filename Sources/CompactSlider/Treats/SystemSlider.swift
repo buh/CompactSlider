@@ -37,6 +37,7 @@ public struct SystemSlider<Value: BinaryFloatingPoint>: View {
     @Binding var lowerValue: Value
     @Binding var upperValue: Value
     @Binding var values: [Value]
+    @State private var visionOSHandleScaleEffect: CGFloat = 0.8
     let bounds: ClosedRange<Value>
     let step: Value
     let type: `Type`
@@ -44,24 +45,63 @@ public struct SystemSlider<Value: BinaryFloatingPoint>: View {
     public var body: some View {
         slider
             .compactSliderStyle(systemSliderStyle)
-            .compactSliderBackground { _, _ in
-                Capsule().fill(Color.gray.opacity(0.15))
+            .compactSliderBackground { configuration, _ in
+                #if os(visionOS)
+                Capsule()
+                    .fill(
+                        LinearGradient(
+                            colors: [.black.opacity(0.5), .black.opacity(0.1)],
+                            startPoint: configuration.type.isHorizontal ? .top : .leading,
+                            endPoint: configuration.type.isHorizontal ? .bottom : .trailing
+                        )
+                    )
+                    .background {
+                        Capsule()
+                            .strokeBorder(.white.opacity(0.2), lineWidth: 1)
+                            .padding(.top, 1)
+                    }
+                #else
+                Capsule().fill(
+                    Defaults.labelColor.opacity(colorScheme == .dark ? 0.15 : 0.07)
+                )
+                #endif
             }
             .compactSliderProgress { _ in
-                Capsule().fill(Color.accentColor.opacity(0.8))
+                if #available(macOS 13.0, iOS 16.0, visionOS 1.0, watchOS 9.0, *) {
+                    Capsule().fill(Color.accentColor.gradient.opacity(0.8))
+                } else {
+                    Capsule().fill(Color.accentColor.opacity(0.8))
+                }
             }
             .compactSliderHandleStyle(handleStyle())
             .compactSliderHandle { configuration, handleStyle, _, _ in
                 if systemSliderStyle.type.isScrollable {
                     HandleView(configuration: configuration, style: handleStyle)
                 } else {
+                    #if os(visionOS)
                     handleView(configuration, handleStyle)
+                        .scaleEffect(visionOSHandleScaleEffect)
+                        .contentShape(.hoverEffect, Rectangle())
+                        .hoverEffect()
+                        .onChange(of: configuration.focusState.isFocused) { _, newValue in
+                            withAnimation(.bouncy(duration: 0.2, extraBounce: 0.25)) {
+                                visionOSHandleScaleEffect = newValue ? 0.5 : 0.8
+                            }
+                        }
+                    #else
+                    handleView(configuration, handleStyle)
+                    #endif
                 }
             }
             #if os(macOS)
             .frame(
                 width: systemSliderStyle.type.isVertical ? 20 : nil,
                 height: systemSliderStyle.type.isHorizontal ? 20 : nil
+            )
+            #elseif os(visionOS)
+            .frame(
+                width: systemSliderStyle.type.isVertical ? 32 : nil,
+                height: systemSliderStyle.type.isHorizontal ? 32 : nil
             )
             #else
             .frame(
@@ -91,13 +131,10 @@ public struct SystemSlider<Value: BinaryFloatingPoint>: View {
             color: colorScheme == .light ? .white : Color(white: 0.8),
             radius: 10
         )
+        #elseif os(visionOS)
+        return .circle(visibility: .always, progressAlignment: .inside, color: .white.opacity(0.9), radius: 16)
         #else
-        return .circle(
-            visibility: .always,
-            progressAlignment: .inside,
-            color: .white,
-            radius: 13.5
-        )
+        return .circle(visibility: .always, progressAlignment: .inside, color: .white, radius: 13.5)
         #endif
     }
     

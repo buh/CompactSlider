@@ -59,11 +59,7 @@ public struct GridView<GridShapeStyle: ShapeStyle>: View {
                 padding: padding,
                 inverse: inverted
             )
-            #if os(macOS) || os(iOS) || targetEnvironment(macCatalyst)
-            .fill(.ultraThinMaterial, style: .init(eoFill: inverted))
-            #else
-            .fillMaterial(inverted: inverted)
-            #endif
+            .fillUltraThinMaterial(inverted: inverted)
         }
     }
 }
@@ -82,16 +78,3 @@ extension GridView where GridShapeStyle == Color {
         self.inverted = inverted
     }
 }
-
-#if os(watchOS)
-extension Shape {
-    @ViewBuilder
-    fileprivate func fillMaterial(inverted: Bool) -> some View {
-        if #available(watchOS 10.0, *) {
-            fill(.ultraThinMaterial, style: .init(eoFill: inverted))
-        } else {
-            fill(Defaults.backgroundColor, style: .init(eoFill: inverted))
-        }
-    }
-}
-#endif
