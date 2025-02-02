@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="640" alt="cover3" src="https://user-images.githubusercontent.com/284922/166153877-97536d02-1feb-4018-961a-c3646faffdc0.png">
+  <img width="640" alt="CompactSlider" src="https://github.com/user-attachments/assets/1b4fb8d0-45ab-4c6c-923f-4a4c6813aaf8">
 </p>
 
 <p align="center">
@@ -48,7 +48,7 @@ https://github.com/buh/CompactSlider.git
 ```
 3. Select to which target you want to add it and select `Add Package`.
 
-## Version 1.0
+## Version 1.0 (deprecated)
 
 Version 1.0 is deprecated and no longer supported. You can find the documentation for version 1.0 in the file: [README v1](https://github.com/buh/CompactSlider/blob/main/README_v1.md).
 
