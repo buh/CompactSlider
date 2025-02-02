@@ -15,7 +15,7 @@ extension DefaultCompactSliderStyle {
     ///  - padding: an edge insets.
     public static func horizontal(
         _ alignment: HorizontalAlignment = .leading,
-        clipShapeStyle: ClipShapeStyle = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
+        clipShapeStyle: ClipShapeStyle = .default(for: .horizontal(.leading)),
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
         .init(
@@ -34,7 +34,7 @@ extension DefaultCompactSliderStyle {
     /// - padding: an edge insets.
     public static func vertical(
         _ alignment: VerticalAlignment = .bottom,
-        clipShapeStyle: ClipShapeStyle = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
+        clipShapeStyle: ClipShapeStyle = .default(for: .vertical(.bottom)),
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
         .init(
@@ -53,7 +53,7 @@ extension DefaultCompactSliderStyle {
     /// - padding: an edge insets.
     public static func scrollable(
         _ axis: Axis = .horizontal,
-        clipShapeStyle: ClipShapeStyle = .rectangle,
+        clipShapeStyle: ClipShapeStyle = .default(for: .scrollableHorizontal),
         padding: EdgeInsets = .zero
     ) -> DefaultCompactSliderStyle {
         .init(
@@ -70,7 +70,7 @@ extension DefaultCompactSliderStyle {
     /// - clipShapeStyle: a clip shape style.
     /// - padding: an edge insets.
     public static func grid(
-        clipShapeStyle: ClipShapeStyle = .roundedRectangle(cornerRadius: Defaults.gridCornerRadius),
+        clipShapeStyle: ClipShapeStyle = .default(for: .grid),
         padding: EdgeInsets = Defaults.gridPadding
     ) -> DefaultCompactSliderStyle {
         .init(
@@ -87,7 +87,7 @@ extension DefaultCompactSliderStyle {
     public static func circularGrid(padding: EdgeInsets = .zero) -> DefaultCompactSliderStyle {
         .init(
             type: .circularGrid,
-            clipShapeStyle: .none,
+            clipShapeStyle: .default(for: .circularGrid),
             padding: padding
         )
     }

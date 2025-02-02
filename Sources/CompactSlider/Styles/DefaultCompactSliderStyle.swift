@@ -32,19 +32,15 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     public let type: CompactSliderType
     /// The internal padding of the slider from background to handle.
     public let padding: EdgeInsets
-    
     private let clipShapeStyle: ClipShapeStyle
-    private let clipShapeOptionSet: ClipShapeOptionSet
     
     init(
         type: CompactSliderType = .horizontal(.leading),
-        clipShapeStyle: ClipShapeStyle = .roundedRectangle(cornerRadius: Defaults.cornerRadius),
-        clipShapeOptionSet: ClipShapeOptionSet = .all,
+        clipShapeStyle: ClipShapeStyle = .default(for: .horizontal(.leading)),
         padding: EdgeInsets = .zero
     ) {
         self.type = type
         self.clipShapeStyle = clipShapeStyle
-        self.clipShapeOptionSet = clipShapeOptionSet
         self.padding = padding
     }
     
@@ -56,15 +52,15 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                !configuration.type.isScrollable {
                 ProgressViewWrapper()
                     .clipShapeStyleIf(
-                        !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.progress),
-                        style: clipShapeStyle
+                        !clipShapeStyle.options.contains(.all) && clipShapeStyle.options.contains(.progress),
+                        shape: clipShapeStyle.shape
                     )
             }
             
             ScaleViewWrapper(configuration: configuration)
                 .clipShapeStyleIf(
-                    !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.scale),
-                    style: clipShapeStyle
+                    !clipShapeStyle.options.contains(.all) && clipShapeStyle.options.contains(.scale),
+                    shape: clipShapeStyle.shape
                 )
             
             HandleViewWrapper(configuration: configuration)
@@ -73,13 +69,13 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         .background(
             BackgroundViewWrapper(padding: padding)
                 .clipShapeStyleIf(
-                    !clipShapeOptionSet.contains(.all) && clipShapeOptionSet.contains(.background),
-                    style: clipShapeStyle
+                    !clipShapeStyle.options.contains(.all) && clipShapeStyle.options.contains(.background),
+                    shape: clipShapeStyle.shape
                 )
         )
         .compositingGroup()
-        .contentShape(clipShapeStyle)
-        .clipShapeStyleIf(clipShapeOptionSet.contains(.all), style: clipShapeStyle)
+        .contentShape(clipShapeStyle.shape)
+        .clipShapeStyleIf(clipShapeStyle.options.contains(.all), shape: clipShapeStyle.shape)
         .environment(\.compactSliderStyleConfiguration, configuration)
         #if os(macOS)
         .saturation(appearsActive ? 1 : 0)

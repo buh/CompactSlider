@@ -263,8 +263,7 @@ extension View {
             \.systemSliderStyle,
              DefaultCompactSliderStyle(
                 type: type.compactSliderType,
-                clipShapeStyle: .capsule,
-                clipShapeOptionSet: [.background, .progress, .scale],
+                clipShapeStyle: .init(shape: .capsule, options: [.background, .progress, .scale]),
                 padding: padding
              )
         )

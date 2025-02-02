@@ -441,7 +441,7 @@ struct CompactSliderDemo: View {
     @ViewBuilder
     private func customVerticalSliders() -> some View {
         CompactSlider(value: $progress)
-            .compactSliderStyle(default: .scrollable(.vertical, clipShapeStyle: .rectangle))
+            .compactSliderStyle(default: .scrollable(.vertical, clipShapeStyle: .rectangle()))
             .compactSliderOptionsByAdding(.loopValues)
             .verticalGradientMask()
         
