@@ -48,6 +48,11 @@ https://github.com/buh/CompactSlider.git
 ```
 3. Select to which target you want to add it and select `Add Package`.
 
+# Documentation
+
+- [CompactSlider](https://swiftpackageindex.com/buh/compactslider/2.0.0/documentation/compactslider/compactslider)
+- [SystemSlider](https://swiftpackageindex.com/buh/compactslider/2.0.0/documentation/compactslider/systemslider)
+
 ## Version 1.0 (deprecated)
 
 Version 1.0 is deprecated and no longer supported. You can find the documentation for version 1.0 in the file: [README v1](https://github.com/buh/CompactSlider/blob/main/README_v1.md).
