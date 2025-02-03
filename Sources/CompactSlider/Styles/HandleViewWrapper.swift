@@ -7,15 +7,19 @@ import SwiftUI
 
 struct HandleViewWrapper: View {
     @Environment(\.handleStyle) var environmentHandleStyle
+    @Environment(\.compactSliderHandleView) var handleView
     var handleStyle: HandleStyle { environmentHandleStyle.byType(configuration.type) }
     let configuration: CompactSliderStyleConfiguration
     
     var body: some View {
         if configuration.isHandleVisible(handleStyle: handleStyle) {
             if configuration.progress.isMultipleValues, configuration.progress.progresses.count == 0 {
-                Rectangle().fill(Color.clear)
+                Rectangle()
+                    .fill(Color.clear)
+                    .allowsTightening(false)
             } else {
-                CompactSliderStyleHandleView()
+                handleView
+                    .allowsTightening(false)
             }
         }
     }

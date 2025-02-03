@@ -5,17 +5,6 @@
 
 import SwiftUI
 
-public struct CompactSliderStyleHandleView: View {
-    @Environment(\.compactSliderHandleView) var handleView
-    
-    public var body: some View {
-        handleView
-            .allowsTightening(false)
-    }
-}
-
-// MARK: - Environment
-
 struct HandleViewKey: EnvironmentKey {
     static var defaultValue: AnyView =
         HandleViewContainerView { configuration, style, _, _ in
@@ -25,7 +14,7 @@ struct HandleViewKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    public var compactSliderHandleView: AnyView {
+    var compactSliderHandleView: AnyView {
         get { self[HandleViewKey.self] }
         set { self[HandleViewKey.self] = newValue }
     }
@@ -34,6 +23,10 @@ extension EnvironmentValues {
 // MARK: - View
 
 extension View {
+    /// Set a custom handle view for the slider.
+    ///
+    /// - Parameter handleView: a custom handle view. The view builder provides the configuration,
+    ///                         style, progress, and index. The index is the index of the handle for multiple handles.
     public func compactSliderHandle<V: View>(
         @ViewBuilder handleView: @escaping (
             _ configuration: CompactSliderStyleConfiguration,

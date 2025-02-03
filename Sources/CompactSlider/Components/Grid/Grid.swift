@@ -5,19 +5,42 @@
 
 import SwiftUI
 
+/// A grid shape type.
 public enum GridType: Equatable, Sendable {
     case square
     case circle
 }
 
+/// A grid shape. It can be a square or a circle.
+///
+/// If it needs to to render in reverse order, set `inverse` to `true` and make `eoFill` to `true`.
+/// For example:
+/// ```swift
+/// Grid(countX: 10, countY: 10, size: 10, inverse: true)
+///    .fill(Color.blue, style: .init(eoFill: true))
+/// ```
 public struct Grid: Shape {
+    /// A grid shape type.
     let type: GridType
+    /// The number of shapes in the X-axis.
     let countX: Int
+    /// The number of shapes in the Y-axis.
     let countY: Int
+    /// The size of grid shapes.
     let size: CGFloat
+    /// The padding from the edges.
     let padding: EdgeInsets
+    /// Enable to render in reverse order, using `eoFill`.
     let inverse: Bool
     
+    /// Create a grid shape.
+    ///
+    /// - Parameters:
+    ///   - type: a grid shape type (default is `.circle`).
+    ///   - countX: the number of shapes in the X-axis.
+    ///   - countY: the number of shapes in the Y-axis.
+    ///   - size: the size of grid shapes.
+    ///   - padding: the padding from the edges (default is `.zero`).
     public init(
         type: GridType = .circle,
         countX: Int,

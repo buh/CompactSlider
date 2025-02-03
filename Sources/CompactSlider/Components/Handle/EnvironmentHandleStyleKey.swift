@@ -17,6 +17,9 @@ extension EnvironmentValues {
 }
 
 extension View {
+    /// Set a handle style for a compact slider.
+    ///
+    /// - Parameter style: a handle style.
     public func compactSliderHandleStyle(_ style: HandleStyle) -> some View {
         environment(\.handleStyle, style)
     }

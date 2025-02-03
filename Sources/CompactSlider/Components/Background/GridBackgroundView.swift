@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+/// A background view for a grid slider.
 public struct GridBackgroundView<
         BackgroundShapeStyle: ShapeStyle,
         GridShapeStyle: ShapeStyle

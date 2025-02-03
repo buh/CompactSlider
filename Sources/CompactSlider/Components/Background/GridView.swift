@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+/// A grid view. It renders a grid with a specified size and padding, using the `Grid` shape.
 public struct GridView<GridShapeStyle: ShapeStyle>: View {
     @Environment(\.colorScheme) var colorScheme
     

@@ -24,6 +24,9 @@ extension EnvironmentValues {
 // MARK: - View
 
 extension View {
+    /// Set a custom background view for the slider.
+    ///
+    /// - Parameter backgroundView: a custom background view. The view builder provides the configuration and padding.
     public func compactSliderBackground<V: View>(
         @ViewBuilder backgroundView: @escaping (
             _ configuration: CompactSliderStyleConfiguration,

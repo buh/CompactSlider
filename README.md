@@ -50,8 +50,8 @@ https://github.com/buh/CompactSlider.git
 
 # Documentation
 
-- [CompactSlider](https://swiftpackageindex.com/buh/compactslider/2.0.0/documentation/compactslider/compactslider)
-- [SystemSlider](https://swiftpackageindex.com/buh/compactslider/2.0.0/documentation/compactslider/systemslider)
+- [CompactSlider](https://swiftpackageindex.com/buh/compactslider/2.0.1/documentation/compactslider/compactslider)
+- [SystemSlider](https://swiftpackageindex.com/buh/compactslider/2.0.1/documentation/compactslider/systemslider)
 
 ## Version 1.0 (deprecated)
 
