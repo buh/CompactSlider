@@ -44,33 +44,20 @@ public struct SystemSlider<Value: BinaryFloatingPoint>: View {
     
     public var body: some View {
         slider
-            .compactSliderStyle(systemSliderStyle)
+            .compactSliderStyle(systemSliderStyle.slider)
             .compactSliderBackground { configuration, _ in
                 SystemSliderBackgroundView(configuration: configuration)
             }
             .compactSliderProgress {
                 SystemSliderProgressView(configuration: $0)
             }
-            .compactSliderHandleStyle(handleStyle())
+            .compactSliderHandleStyle(
+                systemSliderStyle.handle ?? .system(style: systemSliderStyle.slider, colorScheme: colorScheme)
+            )
             .compactSliderHandle { configuration, handleStyle, progress, _ in
                 SystemSliderHandleView(configuration: configuration, handleStyle: handleStyle, progress: progress)
             }
-            #if os(macOS)
-            .frame(
-                width: systemSliderStyle.type.isVertical ? 20 : nil,
-                height: systemSliderStyle.type.isHorizontal ? 20 : nil
-            )
-            #elseif os(visionOS)
-            .frame(
-                width: systemSliderStyle.type.isVertical ? 32 : nil,
-                height: systemSliderStyle.type.isHorizontal ? 32 : nil
-            )
-            #else
-            .frame(
-                width: systemSliderStyle.type.isVertical ? 27 : nil,
-                height: systemSliderStyle.type.isHorizontal ? 27 : nil
-            )
-            #endif
+            .compactSliderSystemFrame(for: systemSliderStyle.slider.type)
     }
     
     private var slider: some View {
@@ -79,25 +66,6 @@ public struct SystemSlider<Value: BinaryFloatingPoint>: View {
         case .multipleValues: CompactSlider(values: $values, in: bounds, step: step)
         case .rangeValues: CompactSlider(from: $lowerValue, to: $upperValue, in: bounds, step: step)
         }
-    }
-    
-    private func handleStyle() -> HandleStyle {
-        guard !systemSliderStyle.type.isScrollable else {
-            return .rectangle(visibility: .always, color: .accentColor, width: 3)
-        }
-        
-        #if os(macOS)
-        return .circle(
-            visibility: .always,
-            progressAlignment: .inside,
-            color: colorScheme == .light ? .white : Color(white: 0.8),
-            radius: 10
-        )
-        #elseif os(visionOS)
-        return .circle(visibility: .always, progressAlignment: .inside, color: .white.opacity(0.9), radius: 16)
-        #else
-        return .circle(visibility: .always, progressAlignment: .inside, color: .white, radius: 13.5)
-        #endif
     }
 }
 
@@ -162,36 +130,6 @@ extension SystemSlider {
         self.bounds = bounds
         self.step = step
         type = .rangeValues
-    }
-}
-
-// MARK: - Environment
-
-struct SystemSliderStyleKey: EnvironmentKey {
-    static var defaultValue = DefaultCompactSliderStyle.horizontal(clipShapeStyle: .none)
-}
-
-extension EnvironmentValues {
-    var systemSliderStyle: DefaultCompactSliderStyle {
-        get { self[SystemSliderStyleKey.self] }
-        set { self[SystemSliderStyleKey.self] = newValue }
-    }
-}
-
-extension View {
-    /// Sets a style for the "system" slider. The style supports horizontal and vertical sliders.
-    /// - Parameters:
-    /// - type: The type of the "system" slider.
-    /// - padding: The padding of the slider. Default is `.zero`.
-    public func systemSliderStyle(_ type: SystemSliderType, padding: EdgeInsets = .zero) -> some View {
-        environment(
-            \.systemSliderStyle,
-             DefaultCompactSliderStyle(
-                type: type.compactSliderType,
-                clipShapeStyle: .init(shape: .capsule, options: [.background, .progress, .scale]),
-                padding: padding
-             )
-        )
     }
 }
 

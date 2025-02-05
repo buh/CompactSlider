@@ -25,6 +25,8 @@ public enum CompactSliderOption: Hashable {
     case withoutBackground
     /// Allows the slider to loop values.
     case loopValues
+    /// Allows the slider to expand the background and progress view when focused.
+    case expandOnFocus(minScale: CGFloat)
 }
 
 /// A set of drag gesture options: minimum drag distance, delayed touch, and high priority.
@@ -44,6 +46,16 @@ extension Set<CompactSliderOption> {
     var dragGestureMinimumDistanceValue: CGFloat {
         for option in self {
             if case .dragGestureMinimumDistance(let value) = option {
+                return value
+            }
+        }
+        
+        return 1
+    }
+    
+    var expandOnFocusMinScale: CGFloat? {
+        for option in self {
+            if case .expandOnFocus(let value) = option {
                 return value
             }
         }

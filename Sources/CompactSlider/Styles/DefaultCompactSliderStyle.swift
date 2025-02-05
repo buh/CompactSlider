@@ -45,12 +45,12 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
     }
     
     public func makeBody(configuration: Configuration) -> some View {
-        ZStack(alignment: .center) {
+        ZStack {
             if !configuration.progress.isMultipleValues,
                !configuration.progress.isGridValues,
                !configuration.progress.isCircularGridValues,
                !configuration.type.isScrollable {
-                ProgressViewWrapper()
+                ProgressViewWrapper(configuration: configuration)
                     .clipShapeStyleIf(
                         !clipShapeStyle.options.contains(.all) && clipShapeStyle.options.contains(.progress),
                         shape: clipShapeStyle.shape
@@ -65,9 +65,10 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
             
             HandleViewWrapper(configuration: configuration)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(padding)
         .background(
-            BackgroundViewWrapper(padding: padding)
+            BackgroundViewWrapper(configuration: configuration, padding: padding)
                 .clipShapeStyleIf(
                     !clipShapeStyle.options.contains(.all) && clipShapeStyle.options.contains(.background),
                     shape: clipShapeStyle.shape

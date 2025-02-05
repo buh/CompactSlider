@@ -132,6 +132,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.compactSliderStyle) var compactSliderStyle
     @Environment(\.compactSliderGridStyle) var compactSliderGridStyle
     @Environment(\.compactSliderCircularGridStyle) var compactSliderCircularGridStyle
+    @Environment(\.compactSliderAnimations) var animations
     
     let bounds: ClosedRange<Value>
     let pointBounds: ClosedRange<Point>
@@ -190,7 +191,13 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
             .dragGesture(
                 options: options,
                 onChanged: {
-                    isDragging = true
+                    if let animation = animations[.dragging] {
+                        withAnimation(animation) {
+                            isDragging = true
+                        }
+                    } else {
+                        isDragging = true
+                    }
                     
                     if startDragLocation == nil {
                         startDragLocation = nearestProgressLocation(
@@ -221,7 +228,14 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                     }
                     
                     startDragLocation = nil
-                    isDragging = false
+                    
+                    if let animation = animations[.dragging] {
+                        withAnimation(animation) {
+                            isDragging = false
+                        }
+                    } else {
+                        isDragging = false
+                    }
                 }
             )
             #if os(macOS)
@@ -250,7 +264,15 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
         }
         .opacity(isEnabled ? 1 : 0.5)
         #if os(macOS) || os(iOS)
-        .onHover { isHovering = isEnabled && $0 }
+        .onHover { isHovering in
+            if let animation = animations[.hovering] {
+                withAnimation(animation) {
+                    self.isHovering = isEnabled && isHovering
+                }
+            } else {
+                self.isHovering = isEnabled && isHovering
+            }
+        }
         #endif
         .onChange(of: progress, perform: onProgressesChange)
         .onChange(of: lowerValue, perform: onLowerValueChange)

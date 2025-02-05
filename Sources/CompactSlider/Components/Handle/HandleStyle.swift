@@ -63,6 +63,19 @@ public struct HandleStyle: Equatable {
 // MARK: - Constructors
 
 extension HandleStyle {
+    /// Creates a handle style, which hides the handle.
+    public static func hidden() -> HandleStyle {
+        .init(
+            type: .rectangle,
+            visibility: .hidden,
+            progressAlignment: .center,
+            color: .accentColor,
+            width: 0,
+            cornerRadius: 0,
+            strokeStyle: nil
+        )
+    }
+    
     /// Creates a rectangle handle style.
     ///
     /// - Parameters:

@@ -8,15 +8,24 @@ import SwiftUI
 struct BackgroundViewWrapper: View {
     @Environment(\.compactSliderOptions) var sliderOptions
     @Environment(\.compactSliderBackgroundView) var backgroundView
+    let configuration: CompactSliderStyleConfiguration
     let padding: EdgeInsets
     
-    init(padding: EdgeInsets = .zero) {
+    init(configuration: CompactSliderStyleConfiguration, padding: EdgeInsets = .zero) {
+        self.configuration = configuration
         self.padding = padding
     }
     
     var body: some View {
         if !sliderOptions.contains(.withoutBackground) {
-            backgroundView(padding)
+            if configuration.type.isLinear,
+               let expandOnFocusMinScale = sliderOptions.expandOnFocusMinScale {
+                let maxValue = configuration.frameMaxValue(expandOnFocusMinScale)
+                backgroundView(padding)
+                    .frame(maxWidth: maxValue?.width, maxHeight: maxValue?.height)
+            } else {
+                backgroundView(padding)
+            }
         }
     }
 }

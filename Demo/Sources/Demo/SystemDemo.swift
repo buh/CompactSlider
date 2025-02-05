@@ -11,19 +11,29 @@ struct CompactSliderSystemDemo: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("System Slider")
+            Text("System slider")
             Slider(value:  $progress) {
                 Text("Progress")
             }
             
-            Text("\"System\" Sliders")
+            Text("\"System\" sliders")
             SystemSlider(value: $progress)
             SystemSlider(value: $progress, step: 0.1)
-
+            
+            Text("\"System\" expandable slider")
+            
+            SystemSlider(value: $progress)
+                .systemSliderStyle(handleStyle: .hidden())
+                .compactSliderOptionsByAdding(.expandOnFocus(minScale: 0.4))
+                .compactSliderAnimation(.bouncy, when: .dragging)
+                .compactSliderAnimation(.bouncy, when: .hovering)
+            
+            Text("\"System\" scrollable slider")
+            
             SystemSlider(value: $progress, step: 0.1)
                 .systemSliderStyle(.scrollableHorizontal)
             
-            Text("Vertical \"System\" Sliders")
+            Text("Vertical \"System\" sliders")
             
             HStack(spacing: 20) {
                 SystemSlider(value: $progress)

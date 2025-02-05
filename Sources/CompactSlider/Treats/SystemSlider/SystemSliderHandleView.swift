@@ -7,7 +7,6 @@ import SwiftUI
 
 /// A "system" slider handle view.
 public struct SystemSliderHandleView: View {
-    @Environment(\.systemSliderStyle) var systemSliderStyle
     let configuration: CompactSliderStyleConfiguration
     let handleStyle: HandleStyle
     let progress: Double
@@ -25,7 +24,7 @@ public struct SystemSliderHandleView: View {
     }
     
     public var body: some View {
-        if systemSliderStyle.type.isScrollable {
+        if configuration.type.isScrollable {
             HandleView(configuration: configuration, style: handleStyle)
         } else {
             #if os(visionOS)

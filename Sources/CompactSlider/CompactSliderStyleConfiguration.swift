@@ -288,6 +288,10 @@ extension CompactSliderStyleConfiguration {
     
     /// A handle visibility depending on the slider type, progress values and focus state.
     public func isHandleVisible(handleStyle: HandleStyle) -> Bool {
+        if handleStyle.visibility == .hidden {
+            return false
+        }
+        
         if progress.isMultipleValues
             || progress.isGridValues
             || progress.isCircularGridValues
@@ -353,6 +357,21 @@ extension CompactSliderStyleConfiguration {
         return visibility != .hidden
             && (type.isHorizontal || type.isVertical || type.isCircularGrid)
             && (visibility == .always || focusState.isFocused)
+    }
+}
+
+// MARK: Options
+
+extension CompactSliderStyleConfiguration {
+    /// A frame size depending on the focus state and the expand on focus min scale.
+    public func frameMaxValue(_ expandOnFocusMinScale: CGFloat) -> OptionalCGSize? {
+        guard !focusState.isFocused else { return nil }
+        
+        if type.isHorizontal {
+            return OptionalCGSize(height: size.height * expandOnFocusMinScale.clamped(0.01))
+        }
+        
+        return OptionalCGSize(width: size.width * expandOnFocusMinScale.clamped(0.01))
     }
 }
 
