@@ -110,6 +110,7 @@ public struct ScaleView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     VStack(spacing: 16) {
         ScaleView(
@@ -139,3 +140,4 @@ public struct ScaleView: View {
     .frame(width: 400, height: 800, alignment: .top)
     #endif
 }
+#endif

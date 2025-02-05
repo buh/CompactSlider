@@ -64,6 +64,7 @@ struct ScaleLabels: View {
     }
 }
 
+#if DEBUG
 #Preview {
     ScaleLabels(
         configuration: .preview(size: CGSize(width: 100, height: 100)),
@@ -75,3 +76,4 @@ struct ScaleLabels: View {
     .border(.blue)
     .padding()
 }
+#endif

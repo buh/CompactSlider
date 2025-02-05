@@ -20,6 +20,7 @@ struct ScaleZStackView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     ScaleZStackView(
         configuration: .preview(size: .init(width: 300, height: 300)),
@@ -33,3 +34,4 @@ struct ScaleZStackView: View {
     .frame(width: 300, height: 300)
     .padding()
 }
+#endif
