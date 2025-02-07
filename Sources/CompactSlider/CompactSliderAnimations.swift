@@ -9,6 +9,7 @@ import SwiftUI
 public enum CompactSliderAnimationEvent {
     case hovering
     case dragging
+    case tapping
 }
 
 // MARK: - Environment
@@ -27,24 +28,23 @@ extension EnvironmentValues {
 
 extension View {
     /// Sets the slider animations.
-    public func compactSliderAnimation(_ animation: Animation?, when event: CompactSliderAnimationEvent) -> some View {
-        modifier(CompactSliderAnimationsModifier(animation: animation, event: event))
+    public func compactSliderAnimation(_ animation: Animation?, when events: CompactSliderAnimationEvent...) -> some View {
+        modifier(CompactSliderAnimationsModifier(animation: animation, events: events))
     }
 }
-    
 
 struct CompactSliderAnimationsModifier: ViewModifier {
     @Environment(\.compactSliderAnimations) var animations
     
     var animation: Animation?
-    var event: CompactSliderAnimationEvent
+    var events: [CompactSliderAnimationEvent]
     
     func body(content: Content) -> some View {
         content.environment(
             \.compactSliderAnimations,
              {
                  var animations = animations
-                 animations[event] = animation
+                 events.forEach { animations[$0] = animation }
                  return animations
              }()
         )
