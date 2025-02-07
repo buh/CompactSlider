@@ -50,8 +50,42 @@ https://github.com/buh/CompactSlider.git
 
 # Documentation
 
-- [CompactSlider](https://swiftpackageindex.com/buh/compactslider/2.0.1/documentation/compactslider/compactslider)
-- [SystemSlider](https://swiftpackageindex.com/buh/compactslider/2.0.1/documentation/compactslider/systemslider)
+- [CompactSlider](https://swiftpackageindex.com/buh/compactslider/2.0.3/documentation/compactslider/compactslider)
+- [SystemSlider](https://swiftpackageindex.com/buh/compactslider/2.0.3/documentation/compactslider/systemslider)
+
+## Demo
+
+The demo package contains different usage cases.
+
+`Demo`
+| macOS  | iOS |
+| ------------- | ------------- |
+| <img width="387" alt="image" src="https://github.com/user-attachments/assets/44d1751c-2e99-4e62-ab8b-1ee011cebd11" /> | <img width="391" alt="image" src="https://github.com/user-attachments/assets/a2fa2bbf-f9e1-4fbd-a754-9e08dfc45a16" /> |
+| <img width="390" alt="image" src="https://github.com/user-attachments/assets/d5dfacca-26c1-4a0f-909a-309df4b60abf" /> | <img width="392" alt="image" src="https://github.com/user-attachments/assets/c619bed8-5634-4554-88f6-cac6bfa70587" /> |
+| <img width="420" alt="image" src="https://github.com/user-attachments/assets/16fb1ad5-0173-4f1b-8ec0-73070ae066f4" /> | <img width="391" alt="image" src="https://github.com/user-attachments/assets/167dc5ea-49b0-4b8c-b7e3-00337bce050c" /> |
+
+`GridDemo`
+| macOS  | iOS |
+| ------------- | ------------- |
+| <img width="371" alt="image" src="https://github.com/user-attachments/assets/34cd8742-a98b-4616-9388-bd6afac550e9" /> | <img width="354" alt="image" src="https://github.com/user-attachments/assets/ceac4cb0-b9ab-4fe8-823c-45729859155c" /> |
+
+`CircularGridDemo`
+| macOS  | iOS |
+| ------------- | ------------- |
+| <img width="371" alt="image" src="https://github.com/user-attachments/assets/8def037d-6d7b-4343-9d96-be4867249fdc" /> | <img width="379" alt="image" src="https://github.com/user-attachments/assets/9940d142-0c68-4282-ab75-f054c26e99fa" /> |
+
+`SystemDemo`
+| macOS  | iOS |
+| ------------- | ------------- |
+| <img width="394" alt="image" src="https://github.com/user-attachments/assets/ae6cc1fb-ae52-4ba9-b238-3d5e88345b38" /> | <img width="387" alt="image" src="https://github.com/user-attachments/assets/7bea24f0-c043-4c20-8714-6500b1862e0c" /> |
+
+**visionOS**
+<img width="950" alt="image" src="https://github.com/user-attachments/assets/7a42e4f8-b739-4b98-ba8c-1266884e1131" />
+
+`WatchOSDemo`
+| Horizontal  | Vertical | Grid | Circular Grid |
+| ------------- | ------------- | ------------- | ------------- |
+| <img width="274" alt="image" src="https://github.com/user-attachments/assets/9c85510c-47ac-401b-8fc6-d1c6508c2693" /> | <img width="272" alt="image" src="https://github.com/user-attachments/assets/370afdce-6944-4db3-b681-e28f811719e0" /> | <img width="270" alt="image" src="https://github.com/user-attachments/assets/eb0bbe15-a99a-4e9c-951e-7caa39ebd1b1" /> | <img width="269" alt="image" src="https://github.com/user-attachments/assets/ec29ecbb-159c-43b5-96dd-3b115b73fd61" /> |
 
 ## Version 1.0 (deprecated)
 
