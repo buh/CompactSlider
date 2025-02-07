@@ -57,7 +57,7 @@ https://github.com/buh/CompactSlider.git
 
 ### The default style composition
 
-<img width="520" alt="image" src="https://github.com/user-attachments/assets/85fb19f3-eaa5-47a8-9229-e7166cdbb9b0" />
+<img width="576" alt="image" src="https://github.com/user-attachments/assets/2320584c-6dc8-49a4-8193-05c09bd484f4" />
 
 ## Demo
 
