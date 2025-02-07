@@ -11,9 +11,7 @@ extension CompactSlider {
         
         isValueChangingInternally = true
         defer {
-            Task {
-                isValueChangingInternally = false
-            }
+            isValueChangingInternally = false
         }
         
         if progress.isMultipleValues {

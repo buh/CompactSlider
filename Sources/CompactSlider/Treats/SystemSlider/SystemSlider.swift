@@ -37,7 +37,6 @@ public struct SystemSlider<Value: BinaryFloatingPoint>: View {
     @Binding var lowerValue: Value
     @Binding var upperValue: Value
     @Binding var values: [Value]
-    @State private var visionOSHandleScaleEffect: CGFloat = 0.8
     let bounds: ClosedRange<Value>
     let step: Value
     let type: `Type`

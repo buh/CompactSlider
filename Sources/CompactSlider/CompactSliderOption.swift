@@ -27,7 +27,7 @@ public enum CompactSliderOption: Hashable {
     case loopValues
     /// Allows the slider to expand the background and progress view when focused.
     case expandOnFocus(minScale: CGFloat)
-    /// Allows tap to slide.
+    /// Allows the slider to accept tap gestures to slide.
     case tapToSlide
 }
 

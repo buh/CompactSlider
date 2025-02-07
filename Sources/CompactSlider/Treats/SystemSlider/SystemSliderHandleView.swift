@@ -7,6 +7,8 @@ import SwiftUI
 
 /// A "system" slider handle view.
 public struct SystemSliderHandleView: View {
+    @State private var visionOSHandleScaleEffect: CGFloat = 0.8
+    
     let configuration: CompactSliderStyleConfiguration
     let handleStyle: HandleStyle
     let progress: Double
