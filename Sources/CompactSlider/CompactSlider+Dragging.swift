@@ -44,7 +44,14 @@ extension CompactSlider {
         }
         
         if isTap() {
-            onTap()
+            if let animation = animations[.tapping] {
+                withAnimation(animation) {
+                    onTap(value, size: size)
+                }
+            } else {
+                onTap(value, size: size)
+            }
+            
             isDragging = false
             return
         }
@@ -380,7 +387,8 @@ extension CompactSlider {
 
 extension CompactSlider {
     func isTap() -> Bool {
-        guard style.type.isLinear,
+        guard options.contains(.tapToSlide),
+              style.type.isLinear,
               progress.isSingularValue,
               !style.type.isScrollable else {
             return false
@@ -389,7 +397,10 @@ extension CompactSlider {
         return CFAbsoluteTimeGetCurrent() - (startDragTime ?? 0) < 0.25
     }
     
-    func onTap() {
-        print("Tap")
+    func onTap(_ value: DragGesture.Value, size: CGSize) {
+        updateLinearProgress(
+            progress(at: value.location, size: size, type: style.type),
+            isEnded: true
+        )
     }
 }

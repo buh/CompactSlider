@@ -29,8 +29,7 @@ struct CompactSliderSystemDemo: View {
             SystemSlider(value: $progress)
                 .systemSliderStyle(handleStyle: .hidden())
                 .compactSliderOptionsByAdding(.expandOnFocus(minScale: 0.4))
-                .compactSliderAnimation(.bouncy, when: .dragging)
-                .compactSliderAnimation(.bouncy, when: .hovering)
+                .compactSliderAnimation(.bouncy, when: .dragging, .hovering)
             
             Text("\"System\" scrollable slider")
             
@@ -50,7 +49,8 @@ struct CompactSliderSystemDemo: View {
             .frame(maxHeight: 250)
         }
         .padding()
-        .compactSliderOptionsByAdding(.scrollWheel)
+        .compactSliderOptionsByAdding(.scrollWheel, .tapToSlide)
+        .compactSliderAnimation(.bouncy(duration: 0.2, extraBounce: 0.05), when: .tapping)
     }
 }
 
