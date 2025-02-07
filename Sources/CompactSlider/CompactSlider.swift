@@ -150,6 +150,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     
     @State var isHovering = false
     @State var isDragging = false
+    @State var startDragTime: CFAbsoluteTime?
     @State var startDragLocation: CGPoint?
     @State var scrollWheelEvent = ScrollWheelEvent.zero
     
@@ -191,74 +192,15 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
             .dragGesture(
                 options: options,
                 onChanged: {
-                    if let animation = animations[.dragging] {
-                        withAnimation(animation) {
-                            isDragging = true
-                        }
-                    } else {
-                        isDragging = true
-                    }
-                    
-                    if startDragLocation == nil {
-                        startDragLocation = nearestProgressLocation(
-                            at: $0.startLocation,
-                            size: size,
-                            type: style.type,
-                            isRightToLeft: layoutDirection == .rightToLeft
-                        )
-                    }
-                    
-                    onDragLocationChange(
-                        translation: $0.translation,
-                        size: size,
-                        type: style.type,
-                        isEnded: false,
-                        isRightToLeft: layoutDirection == .rightToLeft
-                    )
+                    dragGestureOnChange($0, size: size)
                 },
                 onEnded: {
-                    if step != nil, !options.contains(.snapToSteps) {
-                        onDragLocationChange(
-                            translation: $0.translation,
-                            size: proxy.size,
-                            type: style.type,
-                            isEnded: true,
-                            isRightToLeft: layoutDirection == .rightToLeft
-                        )
-                    }
-                    
-                    startDragLocation = nil
-                    
-                    if let animation = animations[.dragging] {
-                        withAnimation(animation) {
-                            isDragging = false
-                        }
-                    } else {
-                        isDragging = false
-                    }
+                    dragGestureOnEnded($0, size: size)
                 }
             )
             #if os(macOS)
-            .onScrollWheel(isEnabled: options.contains(.scrollWheel)) { event in
-                guard isHovering else { return }
-                
-                if !event.isEnded {
-                    if style.type.isHorizontal, !event.isHorizontalDelta {
-                        return
-                    }
-                    
-                    if style.type.isVertical, event.isHorizontalDelta {
-                        return
-                    }
-                }
-                
-                onScrollWheelChange(
-                    event,
-                    size: proxy.size,
-                    location: proxy.frame(in: .global).origin,
-                    type: style.type,
-                    isRightToLeft: layoutDirection == .rightToLeft
-                )
+            .onScrollWheel(isEnabled: options.contains(.scrollWheel)) {
+                scrollWheelOnChange($0, size: size, location: proxy.frame(in: .global).origin)
             }
             #endif
         }

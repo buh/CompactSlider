@@ -7,7 +7,29 @@
 import Foundation
 
 extension CompactSlider {
-    func onScrollWheelChange(
+    func scrollWheelOnChange(_ event: ScrollWheelEvent, size: CGSize, location: CGPoint) {
+        guard isHovering else { return }
+        
+        if !event.isEnded {
+            if style.type.isHorizontal, !event.isHorizontalDelta {
+                return
+            }
+            
+            if style.type.isVertical, event.isHorizontalDelta {
+                return
+            }
+        }
+        
+        onScrollWheelUpdateProgress(
+            event,
+            size: size,
+            location: location,
+            type: style.type,
+            isRightToLeft: layoutDirection == .rightToLeft
+        )
+    }
+    
+    func onScrollWheelUpdateProgress(
         _ event: ScrollWheelEvent,
         size: CGSize,
         location: CGPoint,

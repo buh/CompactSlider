@@ -11,6 +11,10 @@ struct CompactSliderSystemDemo: View {
     
     var body: some View {
         VStack(spacing: 20) {
+            Text("\(progress, format: .percent.precision(.fractionLength(1)))")
+                .monospacedDigit()
+                .font(.title)
+            Divider()
             Text("System slider")
             Slider(value:  $progress) {
                 Text("Progress")

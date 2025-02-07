@@ -3,10 +3,72 @@
 // Copyright (c) 2025 Alexey Bukhtin (github.com/buh).
 //
 
-import Foundation
+import SwiftUI
 
 extension CompactSlider {
-    func onDragLocationChange(
+    func dragGestureOnChange(_ value: DragGesture.Value, size: CGSize) {
+        if startDragTime == nil {
+            startDragTime = CFAbsoluteTimeGetCurrent()
+        }
+        
+        if let animation = animations[.dragging] {
+            withAnimation(animation) {
+                isDragging = true
+            }
+        } else {
+            isDragging = true
+        }
+        
+        if startDragLocation == nil {
+            startDragLocation = nearestProgressLocation(
+                at: value.startLocation,
+                size: size,
+                type: style.type,
+                isRightToLeft: layoutDirection == .rightToLeft
+            )
+        }
+        
+        dragGestureUpdateProgress(
+            translation: value.translation,
+            size: size,
+            type: style.type,
+            isEnded: false,
+            isRightToLeft: layoutDirection == .rightToLeft
+        )
+    }
+    
+    func dragGestureOnEnded(_ value: DragGesture.Value, size: CGSize) {
+        defer {
+            startDragTime = nil
+            startDragLocation = nil
+        }
+        
+        if isTap() {
+            onTap()
+            isDragging = false
+            return
+        }
+        
+        if step != nil, !options.contains(.snapToSteps) {
+            dragGestureUpdateProgress(
+                translation: value.translation,
+                size: size,
+                type: style.type,
+                isEnded: true,
+                isRightToLeft: layoutDirection == .rightToLeft
+            )
+        }
+        
+        if let animation = animations[.dragging] {
+            withAnimation(animation) {
+                isDragging = false
+            }
+        } else {
+            isDragging = false
+        }
+    }
+    
+    func dragGestureUpdateProgress(
         translation: CGSize,
         size: CGSize,
         type: CompactSliderType,
@@ -311,5 +373,23 @@ extension CompactSlider {
         }
         
         return .zero
+    }
+}
+
+// MARK: - Tap
+
+extension CompactSlider {
+    func isTap() -> Bool {
+        guard style.type.isLinear,
+              progress.isSingularValue,
+              !style.type.isScrollable else {
+            return false
+        }
+        
+        return CFAbsoluteTimeGetCurrent() - (startDragTime ?? 0) < 0.25
+    }
+    
+    func onTap() {
+        print("Tap")
     }
 }
