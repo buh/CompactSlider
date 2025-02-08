@@ -11,12 +11,14 @@ extension CompactSlider {
             startDragTime = CFAbsoluteTimeGetCurrent()
         }
         
-        if let animation = animations[.dragging] {
-            withAnimation(animation) {
+        if !isDragging {
+            if let animation = animations[.dragging] {
+                withAnimation(animation) {
+                    isDragging = true
+                }
+            } else {
                 isDragging = true
             }
-        } else {
-            isDragging = true
         }
         
         if startDragLocation == nil {
@@ -66,12 +68,14 @@ extension CompactSlider {
             )
         }
         
-        if let animation = animations[.dragging] {
-            withAnimation(animation) {
+        if isDragging {
+            if let animation = animations[.dragging] {
+                withAnimation(animation) {
+                    isDragging = false
+                }
+            } else {
                 isDragging = false
             }
-        } else {
-            isDragging = false
         }
     }
     

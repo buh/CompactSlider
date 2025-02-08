@@ -57,16 +57,19 @@ extension CompactSliderStyleConfiguration {
         public var isHovering: Bool
         /// True, when dragging the slider.
         public var isDragging: Bool
+        /// True, when wheel-scrolling the slider.
+        public var isWheelScrolling: Bool
         /// True, when dragging or hovering the slider.
-        public var isFocused: Bool { isHovering || isDragging }
+        public var isFocused: Bool { isHovering || isDragging || isWheelScrolling }
         
         /// Create a focus state.
-        init(isHovering: Bool, isDragging: Bool) {
+        init(isHovering: Bool, isDragging: Bool, isWheelScrolling: Bool) {
             self.isHovering = isHovering
             self.isDragging = isDragging
+            self.isWheelScrolling = isWheelScrolling
         }
         
-        static var none = FocusState(isHovering: false, isDragging: false)
+        static var none = FocusState(isHovering: false, isDragging: false, isWheelScrolling: false)
     }
 }
 
@@ -390,7 +393,7 @@ struct CompactSliderStyleConfigurationKey: EnvironmentKey {
     static var defaultValue: CompactSliderStyleConfiguration = CompactSliderStyleConfiguration(
         type: .horizontal(.leading),
         size: .zero,
-        focusState: .init(isHovering: false, isDragging: false),
+        focusState: .none,
         progress: Progress(),
         step: nil,
         colorScheme: .light

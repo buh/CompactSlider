@@ -111,6 +111,7 @@ struct CompactSliderDemo: View {
     private func baseHorizontalSliders() -> some View {
         Group {
             CompactSlider(value: $progress).compactSliderStyle(default: .horizontal(.leading))
+                .compactSliderOnChange { print("CompactSlider onChange:", $0.focusState) }
             CompactSlider(value: $progress).compactSliderStyle(default: .horizontal(.center))
             CompactSlider(value: $progress).compactSliderStyle(default: .horizontal(.trailing))
             

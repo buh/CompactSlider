@@ -10,7 +10,29 @@ extension CompactSlider {
     func scrollWheelOnChange(_ event: ScrollWheelEvent, size: CGSize, location: CGPoint) {
         guard isHovering else { return }
         
-        if !event.isEnded {
+        if event.isEnded {
+            defer {
+                if isWheelScrolling {
+                    if let animation = animations[.wheelScrolling] {
+                        withAnimation(animation) {
+                            isWheelScrolling = false
+                        }
+                    } else {
+                        isWheelScrolling = false
+                    }
+                }
+            }
+        } else {
+            if !isWheelScrolling {
+                if let animation = animations[.wheelScrolling] {
+                    withAnimation(animation) {
+                        isWheelScrolling = true
+                    }
+                } else {
+                    isWheelScrolling = true
+                }
+            }
+            
             if style.type.isHorizontal, !event.isHorizontalDelta {
                 return
             }

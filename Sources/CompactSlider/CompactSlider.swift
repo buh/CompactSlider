@@ -151,6 +151,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     
     @State var isHovering = false
     @State var isDragging = false
+    @State var isWheelScrolling = false
     @State var startDragTime: CFAbsoluteTime?
     @State var startDragLocation: CGPoint?
     @State var scrollWheelEvent = ScrollWheelEvent.zero
@@ -180,24 +181,27 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                 height: proxy.size.height - style.padding.vertical
             )
             
-            style.makeBody(
-                configuration: CompactSliderStyleConfiguration(
+            style.makeBody(configuration: {
+                let configuration = CompactSliderStyleConfiguration(
                     type: style.type,
                     size: size,
-                    focusState: .init(isHovering: isHovering, isDragging: isDragging),
+                    focusState: .init(
+                        isHovering: isHovering,
+                        isDragging: isDragging,
+                        isWheelScrolling: isWheelScrolling
+                    ),
                     progress: progress,
                     step: step,
                     colorScheme: colorScheme
                 )
-            )
+                
+                onChangeAction?(configuration)
+                return configuration
+            }())
             .dragGesture(
                 options: options,
-                onChanged: {
-                    dragGestureOnChange($0, size: size)
-                },
-                onEnded: {
-                    dragGestureOnEnded($0, size: size)
-                }
+                onChanged: { dragGestureOnChange($0, size: size) },
+                onEnded: { dragGestureOnEnded($0, size: size) }
             )
             #if os(macOS)
             .onScrollWheel(isEnabled: options.contains(.scrollWheel)) {
