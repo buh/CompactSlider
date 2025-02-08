@@ -133,6 +133,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.compactSliderGridStyle) var compactSliderGridStyle
     @Environment(\.compactSliderCircularGridStyle) var compactSliderCircularGridStyle
     @Environment(\.compactSliderAnimations) var animations
+    @Environment(\.compactSliderOnChangeAction) var onChangeAction
     
     let bounds: ClosedRange<Value>
     let pointBounds: ClosedRange<Point>
