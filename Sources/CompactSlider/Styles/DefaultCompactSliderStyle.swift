@@ -24,10 +24,6 @@ import SwiftUI
 /// - SeeAlso: `CompactSliderStyle`.
 /// - Note: You can create your own compact slider style by implementing the `CompactSliderStyle` protocol.
 public struct DefaultCompactSliderStyle: CompactSliderStyle {
-    #if os(macOS)
-    @Environment(\.appearsActive) var appearsActive
-    #endif
-    
     /// The type of the slider.
     public let type: CompactSliderType
     /// The internal padding of the slider from background to handle.
@@ -78,8 +74,5 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
         .contentShape(clipShapeStyle.shape)
         .clipShapeStyleIf(clipShapeStyle.options.contains(.all), shape: clipShapeStyle.shape)
         .environment(\.compactSliderStyleConfiguration, configuration)
-        #if os(macOS)
-        .saturation(appearsActive ? 1 : 0)
-        #endif
     }
 }
