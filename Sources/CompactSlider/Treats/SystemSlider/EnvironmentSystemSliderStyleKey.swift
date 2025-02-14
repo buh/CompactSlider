@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct SystemSliderStyleKey: EnvironmentKey {
-    static var defaultValue: (slider: DefaultCompactSliderStyle, handle: HandleStyle?) = (
+    static let defaultValue: (slider: DefaultCompactSliderStyle, handle: HandleStyle?) = (
         DefaultCompactSliderStyle.horizontal(clipShapeStyle: .none), nil
     )
 }

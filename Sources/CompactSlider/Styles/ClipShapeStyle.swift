@@ -31,7 +31,7 @@ extension ClipShapeStyle {
 }
 
 /// A set of clip shape options.
-public struct ClipShapeOptionSet: OptionSet {
+public struct ClipShapeOptionSet: OptionSet, Sendable {
     public let rawValue: Int
     
     /// Sets a clipping shape for the background.

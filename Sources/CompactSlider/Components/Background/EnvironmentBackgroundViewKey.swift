@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct BackgroundViewKey: EnvironmentKey {
-    static var defaultValue: (EdgeInsets) -> AnyView = { padding in
+    static let defaultValue: (EdgeInsets) -> AnyView = { padding in
         BackgroundContainerView(padding: padding) {
             DefaultBackgroundView(configuration: $0, padding: $1)
         }

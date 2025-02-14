@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct ScaleViewKey: EnvironmentKey {
-    static var defaultValue: AnyView? = ScaleContainerView {
+    static let defaultValue: AnyView? = ScaleContainerView {
         DefaultScaleView(configuration: $0)
     }.anyView()
 }

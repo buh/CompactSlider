@@ -390,7 +390,7 @@ extension CompactSliderStyleConfiguration {
 // MARK: - Environment
 
 struct CompactSliderStyleConfigurationKey: EnvironmentKey {
-    static var defaultValue: CompactSliderStyleConfiguration = CompactSliderStyleConfiguration(
+    static let defaultValue: CompactSliderStyleConfiguration = CompactSliderStyleConfiguration(
         type: .horizontal(.leading),
         size: .zero,
         focusState: .none,

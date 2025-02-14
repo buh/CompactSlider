@@ -106,7 +106,7 @@ extension View {
 // MARK: - Environment
 
 struct CompactSliderOptionKey: EnvironmentKey {
-    static var defaultValue: Set<CompactSliderOption> = .default
+    static let defaultValue: Set<CompactSliderOption> = .default
 }
 
 extension EnvironmentValues {

@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct HandleStyleKey: EnvironmentKey {
-    static var defaultValue = HandleStyle.default()
+    static let defaultValue = HandleStyle.default()
 }
 
 extension EnvironmentValues {

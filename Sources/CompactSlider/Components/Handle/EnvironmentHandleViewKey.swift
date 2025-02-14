@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct HandleViewKey: EnvironmentKey {
-    static var defaultValue: AnyView =
+    static let defaultValue: AnyView =
         HandleViewContainerView { configuration, style, _, _ in
             HandleView(configuration: configuration, style: style)
         }

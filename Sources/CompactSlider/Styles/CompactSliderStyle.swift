@@ -54,15 +54,15 @@ extension View {
 // MARK: - Environment
 
 struct CompactSliderStyleKey: EnvironmentKey {
-    static var defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle())
+    static let defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle())
 }
 
 struct CompactSliderGridStyleKey: EnvironmentKey {
-    static var defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle.grid())
+    static let defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle.grid())
 }
 
 struct CompactSliderCircularGridStyleKey: EnvironmentKey {
-    static var defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle.circularGrid())
+    static let defaultValue = AnyCompactSliderStyle(DefaultCompactSliderStyle.circularGrid())
 }
 
 extension EnvironmentValues {

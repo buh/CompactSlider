@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct CompactSliderOnChangeActionKey: EnvironmentKey {
-    static var defaultValue: ((CompactSliderStyleConfiguration) -> Void)? = nil
+    static let defaultValue: ((CompactSliderStyleConfiguration) -> Void)? = nil
 }
 
 extension EnvironmentValues {

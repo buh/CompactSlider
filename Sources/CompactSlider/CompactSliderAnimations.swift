@@ -16,7 +16,7 @@ public enum CompactSliderAnimationEvent {
 // MARK: - Environment
 
 struct CompactSliderAnimationsKey: EnvironmentKey {
-    static var defaultValue: [CompactSliderAnimationEvent: Animation] = [:]
+    static let defaultValue: [CompactSliderAnimationEvent: Animation] = [:]
 }
 
 extension EnvironmentValues {

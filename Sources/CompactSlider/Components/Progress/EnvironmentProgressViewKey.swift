@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct ProgressViewKey: EnvironmentKey {
-    static var defaultValue: AnyView =
+    static let defaultValue: AnyView =
         ProgressContainerView { configuration in
             ProgressView(
                 focusState: configuration.focusState,
