@@ -7,6 +7,7 @@ import SwiftUI
 
 struct ProgressContainerView<V: View>: View {
     @Environment(\.compactSliderStyleConfiguration) var configuration
+    @Environment(\.compactSliderAnimations) var animations
     @Environment(\.handleStyle) var environmentHandleStyle
     var handleStyle: HandleStyle { environmentHandleStyle.byType(configuration.type) }
     let progressView: (CompactSliderStyleConfiguration) -> V
@@ -32,5 +33,17 @@ struct ProgressContainerView<V: View>: View {
             .offset(x: offset.x, y: offset.y)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
             .allowsHitTesting(false)
+            .animateProgress(animations[.progressDidChange], progress: configuration.progress)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func animateProgress(_ progressAnimation: Animation?, progress: Progress) -> some View {
+        if let progressAnimation {
+            animation(progressAnimation, value: progress.progresses)
+        } else {
+            self
+        }
     }
 }

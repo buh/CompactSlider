@@ -11,6 +11,7 @@ struct CompactSliderSystemDemo: View {
     
     @State private var playerTime: TimeInterval = 10
     @State private var isPlaying = false
+    @State private var wasPlaying = false
     @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -59,6 +60,18 @@ struct CompactSliderSystemDemo: View {
                 .systemSliderStyle(handleStyle: .hidden())
                 .compactSliderOptionsByAdding(.expandOnFocus(minScale: 0.5))
                 .compactSliderAnimation(.bouncy, when: .dragging, .hovering)
+                .compactSliderAnimation(isPlaying ? .linear(duration: 1) : nil, when: .progressDidChange)
+                .compactSliderOnChange { configuration in
+                    if configuration.focusState.isDragging {
+                        Task {
+                            isPlaying = false
+                        }
+                    } else if wasPlaying {
+                        Task {
+                            isPlaying = true
+                        }
+                    }
+                }
             
             if #available(macOS 13.0, iOS 16.0, *) {
                 HStack(alignment: .top) {
@@ -67,8 +80,11 @@ struct CompactSliderSystemDemo: View {
                         .foregroundStyle(.secondary)
                     Spacer()
                     
-                    Button(action: { isPlaying.toggle() }) {
-                        Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                    Button(action: {
+                        isPlaying.toggle()
+                        wasPlaying = isPlaying
+                    }) {
+                        Image(systemName: wasPlaying ? "pause.fill" : "play.fill")
                     }
                     .buttonStyle(BorderlessButtonStyle())
                     .font(.title)
@@ -82,20 +98,20 @@ struct CompactSliderSystemDemo: View {
                 .font(.footnote)
                 .monospacedDigit()
                 .padding(.horizontal, 6)
+                .animation(.default, value: playerTime)
             }
         }
         .onReceive(timer) { _ in
             guard isPlaying else { return }
             
-            withAnimation {
-                if playerTime >= 59 {
-                    isPlaying = false
-                    playerTime = 60
-                    return
-                }
-                
-                playerTime += 1
+            if playerTime >= 59 {
+                isPlaying = false
+                wasPlaying = isPlaying
+                playerTime = 60
+                return
             }
+            
+            playerTime += 1
         }
     }
 }

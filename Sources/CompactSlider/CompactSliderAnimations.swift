@@ -10,6 +10,7 @@ public enum CompactSliderAnimationEvent {
     case hovering
     case dragging
     case tapping
+    case progressDidChange
     case wheelScrolling
 }
 
