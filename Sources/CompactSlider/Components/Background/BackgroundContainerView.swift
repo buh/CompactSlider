@@ -20,6 +20,6 @@ struct BackgroundContainerView<V: View>: View {
     
     var body: some View {
         backgroundView(configuration, padding)
-            .allowsTightening(false)
+            .allowsHitTesting(false)
     }
 }

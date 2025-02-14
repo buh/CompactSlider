@@ -31,6 +31,6 @@ struct ProgressContainerView<V: View>: View {
             .frame(width: size.width, height: size.height)
             .offset(x: offset.x, y: offset.y)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
-            .allowsTightening(false)
+            .allowsHitTesting(false)
     }
 }

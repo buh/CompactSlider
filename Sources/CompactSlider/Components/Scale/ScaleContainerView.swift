@@ -34,7 +34,7 @@ struct ScaleContainerView<V: View>: View {
                 .offset(x: offset.x, y: offset.y)
                 .frame(width: configuration.size.width * 3)
                 .frame(width: configuration.size.width)
-                .allowsTightening(false)
+                .allowsHitTesting(false)
             } else if configuration.type.isScrollable,
                       sliderOptions.contains(.loopValues),
                       configuration.type.isVertical {
@@ -46,11 +46,11 @@ struct ScaleContainerView<V: View>: View {
                 .offset(x: offset.x, y: offset.y)
                 .frame(height: configuration.size.height * 3)
                 .frame(height: configuration.size.height)
-                .allowsTightening(false)
+                .allowsHitTesting(false)
             } else {
                 scaleView(configuration)
                     .offset(x: offset.x, y: offset.y)
-                    .allowsTightening(false)
+                    .allowsHitTesting(false)
             }
         }
     }

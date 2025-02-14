@@ -16,10 +16,10 @@ struct HandleViewWrapper: View {
             if configuration.progress.isMultipleValues, configuration.progress.progresses.count == 0 {
                 Rectangle()
                     .fill(Color.clear)
-                    .allowsTightening(false)
+                    .allowsHitTesting(false)
             } else {
                 handleView
-                    .allowsTightening(false)
+                    .allowsHitTesting(false)
             }
         }
     }
