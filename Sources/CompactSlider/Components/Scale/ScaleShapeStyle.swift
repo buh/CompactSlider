@@ -42,7 +42,7 @@ extension ScaleShapeStyle {
     }
 }
 
-extension Alignment: @retroactive Hashable {
+extension Alignment: Swift.Hashable {
     public func hash(into hasher: inout Hasher) {
         switch self {
         case .top: hasher.combine(10)
@@ -65,7 +65,7 @@ extension Alignment: @retroactive Hashable {
     }
 }
 
-extension StrokeStyle: @retroactive Hashable {
+extension StrokeStyle: Swift.Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(lineWidth)
         hasher.combine(lineCap)

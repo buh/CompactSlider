@@ -31,7 +31,7 @@ extension CompactSliderPoint {
 
 // MARK: - Adopt CGPoint to CompactSliderPoint
 
-extension CGPoint: @retroactive Comparable {}
+extension CGPoint: Swift.Comparable {}
 extension CGPoint: CompactSliderPoint {}
 
 // MARK: - Placeholder
