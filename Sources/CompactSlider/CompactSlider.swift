@@ -134,9 +134,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.compactSliderCircularGridStyle) var compactSliderCircularGridStyle
     @Environment(\.compactSliderAnimations) var animations
     @Environment(\.compactSliderOnChangeAction) var onChangeAction
-    #if os(macOS)
-    @Environment(\.appearsActive) var appearsActive
-    #endif
     
     let bounds: ClosedRange<Value>
     let pointBounds: ClosedRange<Point>
@@ -201,9 +198,6 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                 onChangeAction?(configuration)
                 return configuration
             }())
-            #if os(macOS)
-            .saturation(appearsActive ? 1 : 0)
-            #endif
             .dragGesture(
                 options: options,
                 onChanged: { dragGestureOnChange($0, size: size) },
