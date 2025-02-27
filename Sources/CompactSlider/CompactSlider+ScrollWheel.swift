@@ -5,6 +5,7 @@
 
 #if os(macOS)
 import Foundation
+import SwiftUI
 
 extension CompactSlider {
     func scrollWheelOnChange(_ event: ScrollWheelEvent, size: CGSize, location: CGPoint) {
