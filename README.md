@@ -51,9 +51,9 @@ https://github.com/buh/CompactSlider.git
 # Documentation
 
 ### Getting started
-- [`CompactSlider`](https://swiftpackageindex.com/buh/compactslider/2.0.5/documentation/compactslider/compactslider)
-- [`DefaultCompactSliderStyle`](https://swiftpackageindex.com/buh/compactslider/2.0.5/documentation/compactslider/defaultcompactsliderstyle)
-- [`SystemSlider`](https://swiftpackageindex.com/buh/compactslider/2.0.5/documentation/compactslider/systemslider)
+- [`CompactSlider`](https://swiftpackageindex.com/buh/compactslider/2.0.6/documentation/compactslider/compactslider)
+- [`DefaultCompactSliderStyle`](https://swiftpackageindex.com/buh/compactslider/2.0.6/documentation/compactslider/defaultcompactsliderstyle)
+- [`SystemSlider`](https://swiftpackageindex.com/buh/compactslider/2.0.6/documentation/compactslider/systemslider)
 
 ### The default style composition
 
