@@ -135,7 +135,10 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.compactSliderAnimations) var animations
     @Environment(\.compactSliderOnChangeAction) var onChangeAction
     #if os(macOS)
-    @Environment(\.appearsActive) var appearsActive
+    @Environment(\.controlActiveState) var activeState
+    var appearsActive : Bool {
+        activeState == .key
+    }
     #endif
     
     let bounds: ClosedRange<Value>

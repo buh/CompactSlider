@@ -13,6 +13,14 @@ public struct ScaleShapeStyle: Hashable {
 
 extension ScaleShapeStyle {
     enum Style: Hashable {
+        public func hash(into hasher: inout Hasher) {
+            switch self {
+            case .linear: hasher.combine(10)
+            case .circular: hasher.combine(11)
+            case .labels: hasher.combine(12)
+            }
+        }
+
         case linear(
             strokeStyle: StrokeStyle,
             axis: Axis,
