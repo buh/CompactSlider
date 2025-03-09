@@ -32,7 +32,7 @@ Possible slider types defined by the `CompactSliderType`:
 # Requirements
 
 - Swift 5.9+
-- Xcode 15+
+- Xcode 16+ (Use `xcode15` branch, if you have to use Xcode 15)
 - SwiftUI 3+
 - macOS 12+
 - iOS 15+
