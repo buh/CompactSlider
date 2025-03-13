@@ -135,7 +135,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
     @Environment(\.compactSliderAnimations) var animations
     @Environment(\.compactSliderOnChangeAction) var onChangeAction
     #if os(macOS)
-    @Environment(\.controlActiveState) var activeState
+    @Environment(\.appearsActive) var appearsActive
     #endif
     
     let bounds: ClosedRange<Value>
@@ -202,7 +202,7 @@ public struct CompactSlider<Value: BinaryFloatingPoint, Point: CompactSliderPoin
                 return configuration
             }())
             #if os(macOS)
-            .saturation(activeState == .key ? 1 : 0)
+            .saturation(appearsActive ? 1 : 0)
             #endif
             .dragGesture(
                 options: options,
