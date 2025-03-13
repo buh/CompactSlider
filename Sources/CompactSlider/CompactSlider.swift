@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// `CompactSlider` is a highly customizable multi-purpose slider control for SwiftUI. It can be used
+/// ``CompactSlider`` is a highly customizable multi-purpose slider control for SwiftUI. It can be used
 /// to select a single value, or a range of values, or multiple values, or a point in a grid,
 /// or a polar point in a circular grid. The slider can be displayed horizontally, vertically,
 /// or in a (circular) grid. The slider can be customized with a variety of styles and options,
@@ -27,7 +27,7 @@ import SwiftUI
 ///
 /// - Note: Values by default are mapped to the range 0...1. The slider type by default is horizontal.
 ///
-/// Possible slider types defined by the `CompactSliderType`:
+/// Possible slider types defined by the ``CompactSliderType``:
 ///  - a horizontal slider with alignments: leading, center, trailing.
 ///  - a vertical slider with alignments: top, center, bottom.
 ///  - a scrollable horizontal slider.
@@ -37,11 +37,11 @@ import SwiftUI
 ///
 ///  The slider can be customized with a variety of styles and options, including the possibility
 ///  to design your own style. Use the modifiers to set the style or customize components separately.
-///  Take a look at the `CompactSliderStyle` protocol and the default style `DefaultCompactSliderStyle`.
+///  Take a look at the ``CompactSliderStyle`` protocol and the default style ``DefaultCompactSliderStyle``.
 ///  Possible components to customize are the background, progress, handle, and scale.
 ///
 ///  The slider can be customized with a variety of options, including the possibility to enable haptic feedback,
-///  snap to steps, and scroll wheel support. Use `.compactSliderOptions()` and `.compactSliderOptionsByAdding()`
+///  snap to steps, and scroll wheel support. Use ``.compactSliderOptions()`` and ``.compactSliderOptionsByAdding()``
 ///  modifiers to change options.
 ///
 /// ## Examples

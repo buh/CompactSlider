@@ -5,15 +5,17 @@
 
 import SwiftUI
 
-/// A set of options for the `CompactSlider`. The options are used to configure the slider behavior.
+/// A set of options for the ``CompactSlider``. The options are used to configure the slider behavior.
 public enum CompactSliderOption: Hashable {
     /// Enable haptic feedback. Enabled by default.
     case enabledHapticFeedback
     /// The minimum distance a drag gesture must move before it's considered a drag.
     /// Default value is 1 and 0 for macOS.
     case dragGestureMinimumDistance(CGFloat)
-    /// Attaches a high priority gesture to the slider.
+    /// Attaches a high priority gesture to the slider and it has the priority over ``.simultaneousGesture`` option.
     case highPriorityGesture
+    /// Attaches a simultaneous gesture to the slider and it has less priority than ``.highPriorityGesture`` option.
+    case simultaneousGesture
     /// Delays the touch gesture. Enabled by default for iOS.
     /// It's useful for sliders in a scroll view or forms.
     case delayedGesture
@@ -76,7 +78,7 @@ extension View {
         onEnded: @escaping (DragGesture.Value) -> Void
     ) -> some View {
         delayedGesture(options: options)
-            .prioritizedGesture(
+            .prioritizedOrSimultaneousGesture(
                 DragGesture(minimumDistance: options.dragGestureMinimumDistanceValue)
                     .onChanged(onChanged)
                     .onEnded(onEnded),
@@ -94,9 +96,14 @@ extension View {
     }
     
     @ViewBuilder
-    private func prioritizedGesture<T: Gesture>(_ gesture: T, options: Set<CompactSliderOption>) -> some View {
+    private func prioritizedOrSimultaneousGesture<T: Gesture>(
+        _ gesture: T,
+        options: Set<CompactSliderOption>
+    ) -> some View {
         if options.contains(.highPriorityGesture) {
             highPriorityGesture(gesture)
+        } else if options.contains(.simultaneousGesture) {
+            simultaneousGesture(gesture)
         } else {
             self.gesture(gesture)
         }

@@ -71,7 +71,7 @@ public struct DefaultCompactSliderStyle: CompactSliderStyle {
                 )
         )
         .compositingGroup()
-        .contentShape(clipShapeStyle.shape)
+        .contentShape(ClipShapeStyle.default(for: configuration.type).shape)
         .clipShapeStyleIf(clipShapeStyle.options.contains(.all), shape: clipShapeStyle.shape)
         .environment(\.compactSliderStyleConfiguration, configuration)
     }

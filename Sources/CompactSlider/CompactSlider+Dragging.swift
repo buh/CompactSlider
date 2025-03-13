@@ -7,6 +7,14 @@ import SwiftUI
 
 extension CompactSlider {
     func dragGestureOnChange(_ value: DragGesture.Value, size: CGSize) {
+        if style.type.isHorizontal, abs(value.translation.width) < abs(value.translation.height) {
+            return
+        }
+        
+        if style.type.isVertical, abs(value.translation.height) < abs(value.translation.width) {
+            return
+        }
+        
         if startDragTime == nil {
             startDragTime = CFAbsoluteTimeGetCurrent()
         }
@@ -44,6 +52,8 @@ extension CompactSlider {
             startDragTime = nil
             startDragLocation = nil
         }
+        
+        guard startDragLocation != nil else { return }
         
         if isTap() {
             if let animation = animations[.tapping] {
