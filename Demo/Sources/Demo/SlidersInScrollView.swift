@@ -3,17 +3,33 @@ import CompactSlider
 
 @available(iOS 16.0, macOS 13.0, *)
 struct SlidersInScrollView: View {
-    @State private var showEditSheet = false
-    
+    @State private var showVerticalSheet = false
+    @State private var showHorizontalSheet = false
+
     var body: some View {
-        Button {
-            showEditSheet = true
-        } label: {
-            Text("Sliders in Sheet in ScrollView")
+        VStack(spacing: 16) {
+            Text("Sliders in Sheet")
                 .font(.title2.bold())
+            
+            Button {
+                showVerticalSheet = true
+            } label: {
+                Text("Vertical ScrollView")
+            }
+            
+            Button {
+                showHorizontalSheet = true
+            } label: {
+                Text("Horizontal ScrollView")
+            }
         }
-        .sheet(isPresented: $showEditSheet) {
-            Sheet()
+        .sheet(isPresented: $showVerticalSheet) {
+            Sheet(isVertical: true)
+                .ignoresSafeArea()
+                .presentationDetents([.fraction(0.3)])
+        }
+        .sheet(isPresented: $showHorizontalSheet) {
+            Sheet(isVertical: false)
                 .ignoresSafeArea()
                 .presentationDetents([.fraction(0.3)])
         }
@@ -25,23 +41,48 @@ struct SlidersInScrollView: View {
 @available(iOS 16.0, macOS 13.0, *)
 struct Sheet: View {
     @State private var value = 0.5
+    let isVertical: Bool
     
     var body: some View {
-        ScrollView {
-            VStack {
-                ForEach(0..<20) { index in
-                    HStack {
-                        Text("\(index < 10 ? "0": "")\(index)")
-                        CustomSlider(value: $value, range: 0...1)
-                        CompactSlider(value: $value)
+        Group {
+            if isVertical {
+                ScrollView {
+                    VStack {
+                        ForEach(0..<20) { index in
+                            HStack {
+                                Text("\(index < 10 ? "0": "")\(index)")
+                                CustomSlider(value: $value, range: 0...1)
+                                CompactSlider(value: $value)
+                            }
+                        }
+                        .compactSliderOptionsByAdding(.simultaneousGesture)
                     }
+                    .padding()
+                    .padding(.bottom)
+                }
+            } else {
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(0..<20) { index in
+                            VStack(spacing: 16) {
+                                Text("\(index < 10 ? "0": "")\(index)")
+                                CustomSlider(value: $value, range: 0...1)
+                                    .frame(height: 40)
+                                CompactSlider(value: $value)
+                                    .frame(height: 30)
+                                Spacer()
+                            }
+                            .frame(width: 150)
+                        }
+                    }
+                    .padding()
+                    .padding(.bottom)
+                    .compactSliderOptionsByAdding(.highPriorityGesture)
+                    .frame(maxHeight: .infinity)
                 }
             }
-            .padding()
-            .padding(.bottom)
         }
         .monospacedDigit()
-        .compactSliderOptionsByAdding(.simultaneousGesture)
     }
 }
 
