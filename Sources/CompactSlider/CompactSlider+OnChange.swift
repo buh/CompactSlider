@@ -11,7 +11,9 @@ extension CompactSlider {
         
         isValueChangingInternally = true
         defer {
-            isValueChangingInternally = false
+            Task { @MainActor in
+                isValueChangingInternally = false
+            }
         }
         
         if progress.isMultipleValues {
@@ -49,10 +51,6 @@ extension CompactSlider {
         upperValue = convertProgressToValue(newValue.progresses[1])
     }
     
-    func convertProgressToValue(_ newValue: Double) -> Value {
-        newValue.convertPercentageToValue(in: bounds, step: step?.linearStep() ?? 0.0)
-    }
-    
     func onLowerValueChange(_ newValue: Value) {
         if isValueChangingInternally { return }
         progress.updateLowerProgress(convertValueToProgress(newValue))
@@ -81,6 +79,14 @@ extension CompactSlider {
     func onPolarPointChange(_ newValue: CompactSliderPolarPoint) {
         if isValueChangingInternally { return }
         progress.updatePolarPoint(newValue)
+    }
+}
+
+// MARK: - Convert values
+
+extension CompactSlider {
+    func convertProgressToValue(_ newValue: Double) -> Value {
+        newValue.convertPercentageToValue(in: bounds, step: step?.linearStep() ?? 0.0)
     }
     
     func convertValueToProgress(_ value: Value) -> Double {
