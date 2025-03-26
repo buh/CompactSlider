@@ -319,7 +319,7 @@ extension CompactSliderStyleConfiguration {
                 return progress.progress == 0.5
             }
             
-            return progress.progress == 0
+            return progress.progress == 0 || progress.progress == 1
         }
         
         if type.isVertical {
@@ -327,7 +327,7 @@ extension CompactSliderStyleConfiguration {
                 return progress.progress == 0.5
             }
             
-            return progress.progress == 0
+            return progress.progress == 0 || progress.progress == 1
         }
         
         return false
