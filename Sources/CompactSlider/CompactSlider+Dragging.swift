@@ -161,11 +161,20 @@ extension CompactSlider {
     }
     
     func updateLinearProgress(_ newValue: Double, isEnded: Bool) {
-        let newValue = newValue.clampedOrRotated(rotated: options.contains(.loopValues))
+        var newValue = newValue.clampedOrRotated(rotated: options.contains(.loopValues))
         let progressAndIndex = nearestProgress(for: newValue)
         
         guard let linearProgressStep = step?.linearProgressStep else {
-            if progress.update(newValue, at: progressAndIndex.index), (newValue == 1 || newValue == 0) {
+            let precision: Double = style.type.isCenter ? 250 : 500
+            let isHalf = (newValue * precision).rounded() / precision == 0.5
+            
+            // Help to find the 0 value for the center type.
+            if isHalf, style.type.isCenter {
+                newValue = 0.5
+            }
+            
+            if progress.update(newValue, at: progressAndIndex.index),
+               (newValue == 1 || isHalf || newValue == 0) {
                 HapticFeedback.vibrate(isEnabled: isHapticFeedbackEnabled)
             }
             
