@@ -7,6 +7,10 @@ import SwiftUI
 
 struct DefaultScaleView: View {
     var alignment: Alignment = .center
+    var lineLength: CGFloat = Defaults.scaleLineLength
+    var strokeStyle: StrokeStyle = .init(lineWidth: 1)
+    var color: Color = Defaults.scaleLineColor
+    var secondaryColor: Color = Defaults.secondaryScaleLineColor
     let configuration: CompactSliderStyleConfiguration
     
     var body: some View {
@@ -17,11 +21,18 @@ struct DefaultScaleView: View {
                 configuration: configuration,
                 alignment: alignment,
                 shapeStyles: [
-                    .linear(axis: axis, count: 11, lineLength: Defaults.scaleLineLength),
+                    .linear(
+                        axis: axis,
+                        count: 11,
+                        color: color,
+                        strokeStyle: strokeStyle,
+                        lineLength: lineLength
+                    ),
                     .linear(
                         axis: axis,
                         count: 51,
-                        color: Defaults.secondaryScaleLineColor,
+                        color: secondaryColor,
+                        strokeStyle: strokeStyle,
                         lineLength: Defaults.secondaryScaleLineLength,
                         skip: .each(5)
                     )
@@ -35,7 +46,9 @@ struct DefaultScaleView: View {
                     .linear(
                         axis: configuration.type.isVertical ? .vertical : .horizontal,
                         count: linearSteps,
-                        lineLength: Defaults.scaleLineLength,
+                        color: color,
+                        strokeStyle: strokeStyle,
+                        lineLength: lineLength,
                         skipFirst: 1,
                         skipLast: 1
                     )

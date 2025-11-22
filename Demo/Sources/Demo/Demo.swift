@@ -276,7 +276,7 @@ struct CompactSliderDemo: View {
             Group {
                 CompactSlider(values: $progresses)
                 CompactSlider(values: $progresses, step: 0.05)
-                    .compactSliderScale(
+                    .compactSliderScaleStyles(
                         visibility: .always,
                         .linear(count: 21, lineLength: 8, skipFirst: 1, skipLast: 1)
                     )
@@ -320,7 +320,7 @@ struct CompactSliderDemo: View {
                 .compactSliderOptionsByAdding(.withoutBackground, .loopValues)
                 .compactSliderHandleStyle(.rectangle(color: Defaults.labelColor, width: 1))
                 .compactSliderStyle(default: .scrollable())
-                .compactSliderScale(
+                .compactSliderScaleStyles(
                     visibility: .always,
                     alignment: .bottom,
                     .linear(count: 19, lineLength: 20),
@@ -488,7 +488,7 @@ struct CompactSliderDemo: View {
         Group {
             CompactSlider(values: $progresses)
             CompactSlider(values: $progresses, step: 0.05)
-                .compactSliderScale(
+                .compactSliderScaleStyles(
                     visibility: .always,
                     .linear(axis: .vertical, count: 21, lineLength: 8, skipFirst: 1, skipLast: 1)
                 )
