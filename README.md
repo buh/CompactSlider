@@ -48,12 +48,133 @@ https://github.com/buh/CompactSlider.git
 ```
 3. Select to which target you want to add it and select `Add Package`.
 
+# Quick Start
+
+## Basic Usage
+
+```swift
+import CompactSlider
+
+// Single value
+@State private var volume: Double = 0.5
+
+CompactSlider(value: $volume)
+    .frame(height: 44)
+```
+
+```swift
+// With range and steps
+@State private var brightness: Double = 50
+
+CompactSlider(value: $brightness, in: 0...100, step: 5)
+    .frame(height: 44)
+```
+
+```swift
+// Range selection
+@State private var minPrice: Double = 20
+@State private var maxPrice: Double = 80
+
+CompactSlider(from: $minPrice, to: $maxPrice, in: 0...100)
+    .frame(height: 44)
+```
+
+```swift
+// Multiple values
+@State private var markers: [Double] = [0.2, 0.5, 0.8]
+
+CompactSlider(values: $markers)
+    .frame(height: 44)
+```
+
+## Slider Types
+
+```swift
+// Horizontal alignments
+CompactSlider(value: $value)
+    .compactSliderStyle(default: .horizontal(.leading))  // Default
+    .compactSliderStyle(default: .horizontal(.center))
+    .compactSliderStyle(default: .horizontal(.trailing))
+
+// Vertical alignments
+CompactSlider(value: $value)
+    .compactSliderStyle(default: .vertical(.top))
+    .compactSliderStyle(default: .vertical(.center))
+    .compactSliderStyle(default: .vertical(.bottom))
+    .frame(width: 44)
+
+// Scrollable (fixed handle, moving scale)
+CompactSlider(value: $value)
+    .compactSliderStyle(default: .scrollable())
+    .frame(height: 44)
+
+// Grid (2D point selection)
+@State private var point = CGPoint(x: 50, y: 50)
+
+CompactSlider(point: $point, in: .zero...CGPoint(x: 100, y: 100))
+    .compactSliderStyle(default: .grid())
+    .frame(width: 200, height: 200)
+
+// Circular grid (polar coordinates)
+@State private var polarPoint = CompactSliderPolarPoint(angle: .zero, normalizedRadius: 0.5)
+
+CompactSlider(polarPoint: $polarPoint)
+    .compactSliderStyle(default: .circularGrid())
+    .frame(width: 200, height: 200)
+```
+
+## Common Options
+
+```swift
+CompactSlider(value: $value)
+    .compactSliderOptionsByAdding(
+        .tapToSlide,              // Click to set value
+        .scrollWheel,             // macOS scroll wheel support
+        .snapToSteps,             // Snap while dragging
+        .precisionControl()       // Drag perpendicular for fine control
+    )
+```
+
+## Customization
+
+```swift
+// Colors and styling
+CompactSlider(value: $value)
+    .accentColor(.purple)
+    .frame(height: 44)
+
+// Custom scale
+CompactSlider(value: $value)
+    .compactSliderScale(
+        visibility: .always,
+        lineLength: 8,
+        color: .blue
+    )
+
+// Custom handle
+CompactSlider(value: $value)
+    .compactSliderHandleStyle(
+        .circle(visibility: .always, radius: 20)
+    )
+```
+
+## SystemSlider
+
+For a native system-styled slider:
+
+```swift
+import CompactSlider
+
+SystemSlider(value: $volume)
+SystemSlider(from: $min, to: $max)
+```
+
 # Documentation
 
-### Getting started
-- [`CompactSlider`](https://swiftpackageindex.com/buh/compactslider/2.0.6/documentation/compactslider/compactslider)
-- [`DefaultCompactSliderStyle`](https://swiftpackageindex.com/buh/compactslider/2.0.6/documentation/compactslider/defaultcompactsliderstyle)
-- [`SystemSlider`](https://swiftpackageindex.com/buh/compactslider/2.0.6/documentation/compactslider/systemslider)
+Full API documentation available at:
+- [`CompactSlider`](https://swiftpackageindex.com/buh/compactslider/documentation/compactslider/compactslider)
+- [`DefaultCompactSliderStyle`](https://swiftpackageindex.com/buh/compactslider/documentation/compactslider/defaultcompactsliderstyle)
+- [`SystemSlider`](https://swiftpackageindex.com/buh/compactslider/documentation/compactslider/systemslider)
 
 ### The default style composition
 
