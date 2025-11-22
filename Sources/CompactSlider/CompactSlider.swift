@@ -274,7 +274,7 @@ extension CompactSlider {
             return
         }
         
-        let progress = Double(value.wrappedValue - bounds.lowerBound) / distance
+        let progress = (Double(value.wrappedValue - bounds.lowerBound) / distance).clamped()
         _progress = .init(initialValue: Progress([progress]))
     }
     
@@ -309,7 +309,7 @@ extension CompactSlider {
         }
         
         let progresses = values.wrappedValue.map {
-            Double($0 - bounds.lowerBound) / distance
+            (Double($0 - bounds.lowerBound) / distance).clamped()
         }
         
         _progress = .init(initialValue: Progress(progresses, isMultipleValues: true))
@@ -348,8 +348,8 @@ extension CompactSlider {
             return
         }
         
-        let lowerProgress = Double(lowerValue.wrappedValue - bounds.lowerBound) / distance
-        let upperProgress = Double(upperValue.wrappedValue - bounds.lowerBound) / distance
+        let lowerProgress = (Double(lowerValue.wrappedValue - bounds.lowerBound) / distance).clamped()
+        let upperProgress = (Double(upperValue.wrappedValue - bounds.lowerBound) / distance).clamped()
         _progress = .init(initialValue: Progress([lowerProgress, upperProgress]))
     }
     
@@ -383,8 +383,8 @@ extension CompactSlider {
         }
         
         let progresses: [Double] = [
-            Double(point.wrappedValue.x - bounds.lowerBound.x) / distanceX,
-            Double(point.wrappedValue.y - bounds.lowerBound.y) / distanceY,
+            (Double(point.wrappedValue.x - bounds.lowerBound.x) / distanceX).clamped(),
+            (Double(point.wrappedValue.y - bounds.lowerBound.y) / distanceY).clamped(),
         ]
         
         _progress = .init(initialValue: Progress(progresses, isGridValues: true))
