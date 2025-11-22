@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct DefaultScaleView: View {
+    var alignment: Alignment = .center
     let configuration: CompactSliderStyleConfiguration
     
     var body: some View {
@@ -14,7 +15,7 @@ struct DefaultScaleView: View {
             
             ScaleZStackView(
                 configuration: configuration,
-                alignment: .center,
+                alignment: alignment,
                 shapeStyles: [
                     .linear(axis: axis, count: 11, lineLength: Defaults.scaleLineLength),
                     .linear(
@@ -29,7 +30,7 @@ struct DefaultScaleView: View {
         } else if let linearSteps = configuration.step?.linearSteps, linearSteps > 1 {
             ScaleZStackView(
                 configuration: configuration,
-                alignment: .center,
+                alignment: alignment,
                 shapeStyles: [
                     .linear(
                         axis: configuration.type.isVertical ? .vertical : .horizontal,

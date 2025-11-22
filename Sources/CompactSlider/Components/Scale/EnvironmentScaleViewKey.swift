@@ -33,7 +33,14 @@ extension View {
         _ scaleShapeStyles: ScaleShapeStyle...
     ) -> some View {
         if scaleShapeStyles.isEmpty {
-            environment(\.scaleView, nil)
+            // Keep default scale with custom visibility/alignment
+            environment(
+                \.scaleView,
+                 ScaleContainerView(visibility: visibility) { configuration in
+                     DefaultScaleView(alignment: alignment, configuration: configuration)
+                 }
+                .anyView()
+            )
         } else {
             environment(
                 \.scaleView,
