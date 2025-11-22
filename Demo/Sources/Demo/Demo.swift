@@ -14,6 +14,7 @@ struct CompactSliderDemo: View {
         case capsuleHorizontal
         case vertical
         case capsuleVertical
+        case precisionControl
     }
     
     @State private var layoutDirection: LayoutDirection = .leftToRight
@@ -24,6 +25,8 @@ struct CompactSliderDemo: View {
     @State private var fromProgress: Double = 0.2
     @State private var toProgress: Double = 0.7
     @State private var progresses: [Double] = [0.3, 0.5, 0.9]
+    @State private var precisionValue: Double = 0.5
+    @State private var precisionFineValue: Double = 128
     
     let type: `Type`
     
@@ -97,8 +100,14 @@ struct CompactSliderDemo: View {
                 HStack(spacing: 8) {
                     capsuleVerticalSliders()
                 }
+            case .precisionControl:
+                ScrollView {
+                    VStack {
+                        precisionControlSliders()
+                    }
+                }
             }
-            
+
             Spacer()
         }
         .padding()
@@ -515,6 +524,117 @@ struct CompactSliderDemo: View {
                 .opacity(config.colorScheme == .dark ? 0.2 : 0.2)
         }
     }
+
+    @ViewBuilder
+    private func precisionControlSliders() -> some View {
+        VStack(spacing: 24) {
+            Text("Precision Control Demo")
+                .font(.title2)
+                .fontWeight(.semibold)
+
+            Text("Drag perpendicular to the slider axis (up/down for horizontal sliders) to enable precise control")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Without Precision Control").font(.headline)
+                Text("Value: \(precisionValue, format: .percent.precision(.fractionLength(2)))")
+                    .monospacedDigit()
+
+                CompactSlider(value: $precisionValue)
+                    .frame(height: 44)
+
+                Text("Try making fine adjustments - it's difficult!")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding()
+            .background(Color.secondary.opacity(0.1))
+            .cornerRadius(12)
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("With Precision Control (Default)").font(.headline)
+                Text("Value: \(precisionValue, format: .percent.precision(.fractionLength(2)))")
+                    .monospacedDigit()
+
+                CompactSlider(value: $precisionValue)
+                    .compactSliderOptionsByAdding(.precisionControl())
+                    .frame(height: 44)
+
+                Text("Drag up/down while dragging to get precise control!")
+                    .font(.caption)
+                    .foregroundStyle(.green)
+            }
+            .padding()
+            .background(Color.green.opacity(0.1))
+            .cornerRadius(12)
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("High Precision Example").font(.headline)
+                Text("Color Value: \(Int(precisionFineValue)) / 255")
+                    .monospacedDigit()
+
+                CompactSlider(value: $precisionFineValue, in: 0...255, step: 1)
+                    .compactSliderOptionsByAdding(.precisionControl(sensitivity: 80))
+                    .frame(height: 44)
+                    .accentColor(Color(red: precisionFineValue / 255, green: 0.5, blue: 0.8))
+
+                Text("With steps + precision control (sensitivity: 80)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Rectangle()
+                    .fill(Color(red: precisionFineValue / 255, green: 0.5, blue: 0.8))
+                    .frame(height: 30)
+                    .cornerRadius(8)
+            }
+            .padding()
+            .background(Color.secondary.opacity(0.1))
+            .cornerRadius(12)
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Vertical Slider").font(.headline)
+                Text("Value: \(precisionValue, format: .percent.precision(.fractionLength(2)))")
+                    .monospacedDigit()
+
+                HStack(spacing: 40) {
+                    VStack {
+                        Text("Without")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        CompactSlider(value: $precisionValue)
+                            .compactSliderStyle(default: .vertical())
+                            .frame(width: 44, height: 200)
+                    }
+
+                    VStack {
+                        Text("With Precision")
+                            .font(.caption)
+                            .foregroundStyle(.green)
+
+                        CompactSlider(value: $precisionValue)
+                            .compactSliderStyle(default: .vertical())
+                            .compactSliderOptionsByAdding(.precisionControl())
+                            .frame(width: 44, height: 200)
+                    }
+                }
+
+                Text("Drag left/right while dragging to get precise control!")
+                    .font(.caption)
+                    .foregroundStyle(.green)
+            }
+            .padding()
+            .background(Color.green.opacity(0.1))
+            .cornerRadius(12)
+        }
+        .padding()
+    }
 }
 
 #Preview("Horizontal") {
@@ -545,6 +665,12 @@ struct CompactSliderDemo: View {
     CompactSliderDemo(type: .capsuleVertical)
         #if os(macOS)
         .frame(width: 800, height: 500, alignment: .top)
+        #endif
+}
+#Preview("Precision Control") {
+    CompactSliderDemo(type: .precisionControl)
+        #if os(macOS)
+        .frame(width: 500, height: 800, alignment: .top)
         #endif
 }
 #endif

@@ -31,6 +31,10 @@ public enum CompactSliderOption: Hashable {
     case expandOnFocus(minScale: CGFloat)
     /// Allows the slider to accept tap gestures to slide.
     case tapToSlide
+    /// Enables precision control by reducing sensitivity when dragging perpendicular to the slider axis.
+    /// The CGFloat parameter controls the sensitivity curve (higher = more aggressive reduction).
+    /// Default is 100.0. Typical range is 50-200.
+    case precisionControl(sensitivity: CGFloat = 100.0)
 }
 
 /// A set of drag gesture options: minimum drag distance, delayed touch, and high priority.
@@ -65,6 +69,16 @@ extension Set<CompactSliderOption> {
         }
         
         return 1
+    }
+
+    var precisionControlSensitivity: CGFloat? {
+        for option in self {
+            if case .precisionControl(let value) = option {
+                return value
+            }
+        }
+
+        return nil
     }
 }
 

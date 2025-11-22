@@ -124,7 +124,14 @@ extension CompactSlider {
         
         if type.isHorizontal {
             var translationX = translation.width
-            
+
+            // Apply precision control if enabled and slider is not scrollable
+            if let sensitivity = options.precisionControlSensitivity, !type.isScrollable {
+                let perpendicularDistance = abs(translation.height)
+                let precisionMultiplier = 1.0 / (1.0 + (perpendicularDistance / sensitivity))
+                translationX *= precisionMultiplier
+            }
+
             if isRightToLeft {
                 translationX = -translationX
             }
@@ -144,7 +151,14 @@ extension CompactSlider {
         
         if type.isVertical {
             var translationY = translation.height
-            
+
+            // Apply precision control if enabled and slider is not scrollable
+            if let sensitivity = options.precisionControlSensitivity, !type.isScrollable {
+                let perpendicularDistance = abs(translation.width)
+                let precisionMultiplier = 1.0 / (1.0 + (perpendicularDistance / sensitivity))
+                translationY *= precisionMultiplier
+            }
+
             if type.isScrollable || progress.isRangeValues || progress.isMultipleValues {
                 translationY = -translationY
             } else if case .vertical(.center) = type {
